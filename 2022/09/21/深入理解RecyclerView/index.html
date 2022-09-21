@@ -1,0 +1,894 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="浅析RecyclerView 本文大致会先讲解RecyclerView的基础知识及使用，最后会深入讲解一点原理。当然，本人知识水平有限哈，太深入的东西我现在还没接触到，还请大家包容，阿里嘎多~  一、RecyclerView的历史与发展既然讲到了RV，那不得不先知道它怎么来的。&amp;nbsp;RecyclerView是Android 5.0提出的新的UI控件，与其一起诞生的还有著名的Mater">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解RecyclerView">
+<meta property="og:url" content="http://example.com/2022/09/21/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3RecyclerView/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="浅析RecyclerView 本文大致会先讲解RecyclerView的基础知识及使用，最后会深入讲解一点原理。当然，本人知识水平有限哈，太深入的东西我现在还没接触到，还请大家包容，阿里嘎多~  一、RecyclerView的历史与发展既然讲到了RV，那不得不先知道它怎么来的。&amp;nbsp;RecyclerView是Android 5.0提出的新的UI控件，与其一起诞生的还有著名的Mater">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/008d5818f9954d968093b25019c19bc7.png#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/6b870794d9d74e89b82ebcee100aebc7.png#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/01311bed9ff14912a061a972e1fe52b7.png#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/e795a9e5b80643f1abbf26c834284dcc.png#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/c0331cf83e0b43dca7f1d0e0de38c92d.png#pic_center">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/d6c8313a69af450e8dc6807be187c7f7.png#pic_center">
+<meta property="article:published_time" content="2022-09-21T13:44:18.000Z">
+<meta property="article:modified_time" content="2022-09-21T13:45:00.437Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Android">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/008d5818f9954d968093b25019c19bc7.png#pic_center">
+  
+  
+  
+  <title>深入理解RecyclerView - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="深入理解RecyclerView"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-09-21 21:44" pubdate>
+          September 21, 2022 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          40k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          337 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">深入理解RecyclerView</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="浅析RecyclerView"><a href="#浅析RecyclerView" class="headerlink" title="浅析RecyclerView"></a>浅析RecyclerView</h1><blockquote>
+<p>本文大致会先讲解RecyclerView的基础知识及使用，最后会深入讲解一点原理。当然，本人知识水平有限哈，太深入的东西我现在还没接触到，还请大家包容，阿里嘎多~</p>
+</blockquote>
+<h2 id="一、RecyclerView的历史与发展"><a href="#一、RecyclerView的历史与发展" class="headerlink" title="一、RecyclerView的历史与发展"></a>一、RecyclerView的历史与发展</h2><p>既然讲到了RV，那不得不先知道它怎么来的。<br>&amp;nbsp;<br>RecyclerView是<strong>Android 5.0</strong>提出的新的UI控件，与其一起诞生的还有著名的Material Design以及CardView等新特性。最初位于support.v7包中，这里既然提到了v7，那我就简单介绍一点v4，v7包以及androidx的历史发展。support-v4是<strong>Android 3.0</strong>推出的库，为了加入Fragment以及向下兼容老系统，即最低兼容到Android 1.6。support-v7向下兼容到Android 2.1，这两个库中包含有RecyclerView、ViewPager等常用控件。随着时间的推移，现在的Android系统已经发展到13了，显然这两个库就有些跟不上时代了，于是从<strong>Android 9.0</strong>开始，Google推出了<strong>androidx</strong>，以后推出的所有新特性都会加入到androidx中，并且androidx包下面的API都是随着扩展库发布的，这些API基本不会依赖于操作系统的具体版本，所有命名中它就不再包含版本号了。<br>&amp;nbsp;<br>所以，现在我们使用的RecyclerView都是包含在androidx包中。我们最开始学Android的时候肯定都接触过ListView，ListView的功能也很强大，在RecyclerView没出现之前，开发者们使用的都是ListView来展示大量的数据。但是ListView的性能比较差，<strong>之后我会对比一下二者的缓存策略</strong>，扩展性也不是很好，所以具有更加强大功能的RecyclerView诞生了。它包含有横向纵向排列的LinearLayoutManager、网格排列的GridLayoutManager和瀑布流排列的StaggeredGridLayoutManager。下面我先来带大家简单了解一下RecyclerView的使用。</p>
+<h2 id="二、RecyclerView的使用"><a href="#二、RecyclerView的使用" class="headerlink" title="二、RecyclerView的使用"></a>二、RecyclerView的使用</h2><p>这部分我不会讲很多，毕竟学会使用它也不是很难，具体的大家可以去参考一下《第一行代码》，本文的重点还是放在更深一点的缓存策略，回收复用，LayoutManager 以及 ItemTouchHelper等分析上。</p>
+<h3 id="（1）创建数据列表"><a href="#（1）创建数据列表" class="headerlink" title="（1）创建数据列表"></a>（1）创建数据列表</h3><p>这里演示的就不搞那么复杂了</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Data</span>(<span class="hljs-keyword">val</span> string: String)<br></code></pre></td></tr></table></figure>
+
+<h3 id="（2）创建Adapter"><a href="#（2）创建Adapter" class="headerlink" title="（2）创建Adapter"></a>（2）创建Adapter</h3><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">class</span> <span class="hljs-title class_">BasicAdapter</span>(<span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> dataList: List&lt;Data&gt;) : RecyclerView.Adapter&lt;BasicAdapter.ViewHolder&gt;() &#123;<br><br>    <span class="hljs-keyword">inner</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ViewHolder</span>(view: View) : RecyclerView.ViewHolder(view) &#123;<br>        <span class="hljs-keyword">val</span> dataString: TextView = view.findViewById(R.id.tv_str)<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onCreateViewHolder</span><span class="hljs-params">(parent: <span class="hljs-type">ViewGroup</span>, viewType: <span class="hljs-type">Int</span>)</span></span>: ViewHolder &#123;<br>        <span class="hljs-keyword">val</span> view = LayoutInflater.from(parent.context)<br>            .inflate(R.layout.title_item, parent, <span class="hljs-literal">false</span>)<br>        <span class="hljs-keyword">return</span> ViewHolder(view)<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onBindViewHolder</span><span class="hljs-params">(holder: <span class="hljs-type">ViewHolder</span>, position: <span class="hljs-type">Int</span>)</span></span> &#123;<br>        <span class="hljs-keyword">val</span> <span class="hljs-keyword">data</span> = dataList[position]<br>        holder.dataString.text = <span class="hljs-keyword">data</span>.string<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">getItemCount</span><span class="hljs-params">()</span></span>: <span class="hljs-built_in">Int</span> = dataList.size<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="（3）Activity创建RecyclerView对象"><a href="#（3）Activity创建RecyclerView对象" class="headerlink" title="（3）Activity创建RecyclerView对象"></a>（3）Activity创建RecyclerView对象</h3><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">// 这是单向布局</span><br><span class="hljs-keyword">val</span> layoutManager = LinearLayoutManager(<span class="hljs-keyword">this</span>)<br>vb.recyclerView.layoutManager = layoutManager<br><span class="hljs-keyword">val</span> adapter = BasicAdapter(dataList)<br>vb.recyclerView.adapter = adapter<br><br><span class="hljs-comment">// 网格布局</span><br><span class="hljs-comment">// 将第一行代码替换为</span><br><span class="hljs-keyword">val</span> layoutManager = LinearLayoutManager(<span class="hljs-keyword">this</span>， <span class="hljs-number">2</span>) <span class="hljs-comment">// 表示分两列排布</span><br><br><span class="hljs-comment">// 瀑布流布局</span><br><span class="hljs-keyword">val</span> layoutManager = StaggeredGridLayoutManager(<span class="hljs-number">2</span>, StaggeredGridLayoutManager.VERTICAL)<br></code></pre></td></tr></table></figure>
+
+<p>演示结果就不给大家展示了，比较简单，一笔带过。接下来的内容就涉及到更加深入的部分了。</p>
+<h2 id="三、RecyclerView的缓存复用机制"><a href="#三、RecyclerView的缓存复用机制" class="headerlink" title="三、RecyclerView的缓存复用机制"></a>三、RecyclerView的缓存复用机制</h2><p>RecyclerView的性能之所以强大，就是得益于它的缓存机制。我们通常认为RV具有四级缓存机制，而官方表示只有三级，这里我还是以四级缓存来讲述。下面是RV的四级缓存结构图。<br><img src="https://img-blog.csdnimg.cn/008d5818f9954d968093b25019c19bc7.png#pic_center" srcset="/img/loading.gif" lazyload alt="RV四级缓存结构"></p>
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>缓存变量</th>
+<th>缓存名</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>mChangeScrap与 mAttachedScrap</td>
+<td>可见缓存</td>
+<td>用于布局过程中屏幕可见表项的回收和复用</td>
+</tr>
+<tr>
+<td>2</td>
+<td>mCachedViews</td>
+<td>缓存列表</td>
+<td>用于移出屏幕表项的回收和复用，不会清空数据</td>
+</tr>
+<tr>
+<td>3</td>
+<td>mViewCacheExtension</td>
+<td>自定义缓存</td>
+<td>自定义一个缓存，我们一般用不到</td>
+</tr>
+<tr>
+<td>4</td>
+<td>RecycledViewPool</td>
+<td>缓存池</td>
+<td>用于移出屏幕表项的回收和复用，会将ViewHolder的数据重置</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>在正式介绍四级缓存之前，我们还需要了解一下RV的Item的几个状态。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th align="left">方法</th>
+<th align="left">FLAG</th>
+<th align="left">含义</th>
+<th align="left">具体场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">isInvalid()</td>
+<td align="left">FLAG_INVALID</td>
+<td align="left">ViewHolder的数据是无效的</td>
+<td align="left">1. 调用了setAdapter()<br>2. 调用了notifyDataSetChanged()等方法</td>
+</tr>
+<tr>
+<td align="left">isRemoved()</td>
+<td align="left">FLAG_REMOVED</td>
+<td align="left">ViewHolder的数据已经被移除</td>
+<td align="left">调用了notifyItemRemoved()</td>
+</tr>
+<tr>
+<td align="left">isUpdated()</td>
+<td align="left">FLAG_UPDATE</td>
+<td align="left">ViewHolder的数据需要重新绑定</td>
+<td align="left">1. isInvalid的几种情况<br>2. 调用了onBindViewHolder()<br>3. 调用了notifyItemChanged()</td>
+</tr>
+<tr>
+<td align="left">isBound()</td>
+<td align="left">FLAG_BOUND</td>
+<td align="left">数据已经绑定了某个Item上，数据是有效状态</td>
+<td align="left">调用了onBindViewHolder()</td>
+</tr>
+</tbody></table>
+<h3 id="1-一级缓存"><a href="#1-一级缓存" class="headerlink" title="1. 一级缓存"></a>1. 一级缓存</h3><h4 id="（1）一级缓存原理"><a href="#（1）一级缓存原理" class="headerlink" title="（1）一级缓存原理"></a>（1）一级缓存原理</h4><p>Scrap是RV中最轻量的缓存，包括mChangeScrap和mAttachedScrap，只是作为临时缓存的存在。主要用于缓存出现在屏幕内的item，当我们通过notifyItemRemoved()，notifyItemChanged()通知item发生变化的时候，通过mAttachedScrap缓存没有发生变化的ViewHolder，其他的则由mChangedScrap缓存，添加itemView的时候快速从里面取出，完成局部刷新。通过源码理解一下。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">void</span> <span class="hljs-title function_">scrapView</span><span class="hljs-params">(View view)</span> &#123;<br>	<span class="hljs-keyword">final</span> <span class="hljs-type">ViewHolder</span> <span class="hljs-variable">holder</span> <span class="hljs-operator">=</span> getChildViewHolderInt(view);<br>    <span class="hljs-keyword">if</span> (holder.hasAnyOfTheFlags(ViewHolder.FLAG_REMOVED | ViewHolder.FLAG_INVALID)<br>        || !holder.isUpdated() || canReuseUpdatedViewHolder(holder)) &#123;<br>    	<span class="hljs-keyword">if</span> (holder.isInvalid() &amp;&amp; !holder.isRemoved() &amp;&amp; !mAdapter.hasStableIds()) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalArgumentException</span>(<span class="hljs-string">&quot;Called scrap view with an invalid view.&quot;</span><br>                    + <span class="hljs-string">&quot; Invalid views cannot be reused from scrap, they should rebound from&quot;</span><br>                    + <span class="hljs-string">&quot; recycler pool.&quot;</span> + exceptionLabel());<br>        &#125;<br>        holder.setScrapContainer(<span class="hljs-built_in">this</span>, <span class="hljs-literal">false</span>);<br>        mAttachedScrap.add(holder);<br>   	&#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-keyword">if</span> (mChangedScrap == <span class="hljs-literal">null</span>) &#123;<br>            mChangedScrap = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;ViewHolder&gt;();<br>        &#125;<br>        holder.setScrapContainer(<span class="hljs-built_in">this</span>, <span class="hljs-literal">true</span>);<br>        mChangedScrap.add(holder);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>可以看到，对于页面中显示的Item，当调用 <strong>LayoutManage</strong>r 类的 <strong>onLayoutChildren()</strong> 方法对views进行布局，这时会将RecyclerView上的items全部暂存到一个 <strong>ArrayList</strong> 集合，这里的数据是没有做修改的，所以不用重新绑定 Adapter。而如果其他情况比如调用了 <strong>notifyItemChanged()</strong> 和 <strong>notifyItemRangeChanged()</strong> 来通知数据发生了更新，数据或位置发生改变，那么该ViewHolder会被缓存到mChangedScrap中，这里存储的是发生了变化的ViewHolder，所以要重新走Adapter的绑定方法。可能我 文字表述的不是很清楚，下面我放一张图来助大家理解。<br><img src="https://img-blog.csdnimg.cn/6b870794d9d74e89b82ebcee100aebc7.png#pic_center" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"><br>图中的itemB删除掉，然后itemC，itemD依次移动上来，这里itemA和itemB前后参数没有发生变化（虽然itemB被移除了，但移除的时候它还是有效的，会被打上REMOVED标签，表示它是要删除的），所以他们两个存储到mAttachedscrap()，而itemC和itemD的位置发生了改变，所以他俩要存到mChangedScrap()中去。总结来说，删除itemB时，ABCD都会进入Scrap缓存，删除后，会从Scrap中将ACD取出，A的位置和数据都没有发生变化，CD的位置发生了变化但数据还是原封不动。</p>
+<h4 id="（2）一级缓存复用"><a href="#（2）一级缓存复用" class="headerlink" title="（2）一级缓存复用"></a>（2）一级缓存复用</h4><p>复用的源码在ViewHolder tryGetViewHolderForPositionByDeadline(*)方法中。我对源码的解释在代码的注释里。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">ViewHolder</span> <span class="hljs-variable">holder</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br><span class="hljs-comment">// 0) If there is a changed scrap, try to find from there</span><br><span class="hljs-comment">// 这里是从mChangedScrap()取ViewHolder，isPreLayout()判断是否为预布局，是一个特殊情况。</span><br><span class="hljs-comment">// 那什么是预布局呢？稍后我讲LayoutManager的时候会具体说一下</span><br><span class="hljs-keyword">if</span> (mState.isPreLayout()) &#123;            <br>	holder = getChangedScrapViewForPosition(position);            <br>    fromScrapOrHiddenOrCache = holder != <span class="hljs-literal">null</span>;<br>&#125;<br><br><span class="hljs-comment">// OK，现在我们点进getChangedScrapViewForPosition()方法中看一下是怎么取得ViewHolder</span><br><span class="hljs-comment">// find by position</span><br><span class="hljs-comment">// 这是按照position来取</span><br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; changedScrapSize; i++) &#123;<br>	<span class="hljs-keyword">final</span> <span class="hljs-type">ViewHolder</span> <span class="hljs-variable">holder</span> <span class="hljs-operator">=</span> mChangedScrap.get(i);<br>    <span class="hljs-keyword">if</span> (!holder.wasReturnedFromScrap() &amp;&amp; holder.getLayoutPosition() == position) &#123;<br>    	holder.addFlags(ViewHolder.FLAG_RETURNED_FROM_SCRAP); <span class="hljs-comment">// 添加标签表示从Scrap取</span><br>        <span class="hljs-keyword">return</span> holder;<br>    &#125;<br>&#125;<br><span class="hljs-comment">// find by id</span><br><span class="hljs-comment">// 这是通过定义的id来取</span><br><span class="hljs-keyword">if</span> (mAdapter.hasStableIds()) &#123;<br>	<span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">offsetPosition</span> <span class="hljs-operator">=</span> mAdapterHelper.findPositionOffset(position);<br>    <span class="hljs-keyword">if</span> (offsetPosition &gt; <span class="hljs-number">0</span> &amp;&amp; offsetPosition &lt; mAdapter.getItemCount()) &#123;<br>    	<span class="hljs-keyword">final</span> <span class="hljs-type">long</span> <span class="hljs-variable">id</span> <span class="hljs-operator">=</span> mAdapter.getItemId(offsetPosition);<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; changedScrapSize; i++) &#123;<br>            <span class="hljs-comment">// 从mChangedScrap中取holder</span><br>        	<span class="hljs-keyword">final</span> <span class="hljs-type">ViewHolder</span> <span class="hljs-variable">holder</span> <span class="hljs-operator">=</span> mChangedScrap.get(i);<br>            <span class="hljs-keyword">if</span> (!holder.wasReturnedFromScrap() &amp;&amp; holder.getItemId() == id) &#123;<br>            	holder.addFlags(ViewHolder.FLAG_RETURNED_FROM_SCRAP);<br>                <span class="hljs-keyword">return</span> holder;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>从这里开始就是缓存复用真正的第一步，上面的是预加载的特殊情况。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 1) Find by position from scrap/hidden list/cache</span><br><span class="hljs-comment">// 这里就是从mAttachedScrap()中取ViewHolder了</span><br><span class="hljs-keyword">if</span> (holder == <span class="hljs-literal">null</span>) &#123;<br>	holder = getScrapOrHiddenOrCachedHolderForPosition(position, dryRun);<br>    <span class="hljs-keyword">if</span> (holder != <span class="hljs-literal">null</span>) &#123;<br>    	<span class="hljs-comment">// 这里还要检验ViewHolder的有效性</span><br>    	<span class="hljs-keyword">if</span> (!validateViewHolderForOffsetPosition(holder)) &#123;<br>        	<span class="hljs-comment">// recycle holder (and unscrap if relevant) since it can&#x27;t be used</span><br>            <span class="hljs-keyword">if</span> (!dryRun) &#123;<br>            	<span class="hljs-comment">// we would like to recycle this but need to make sure it is not used by</span><br>                <span class="hljs-comment">// animation logic etc.</span><br>                holder.addFlags(ViewHolder.FLAG_INVALID);<br>                <span class="hljs-keyword">if</span> (holder.isScrap()) &#123;<br>                	removeDetachedView(holder.itemView, <span class="hljs-literal">false</span>);<br>                    holder.unScrap();<br>                &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (holder.wasReturnedFromScrap()) &#123;<br>                  	holder.clearReturnedFromScrapFlag();<br>                &#125;<br>                <span class="hljs-comment">// 如果不满足有效性则直接回收该ViewHolder</span><br>                recycleViewHolderInternal(holder);<br>            &#125;<br>            holder = <span class="hljs-literal">null</span>;<br>         &#125; <span class="hljs-keyword">else</span> &#123;<br>          	fromScrapOrHiddenOrCache = <span class="hljs-literal">true</span>;<br>         &#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">// 这是从mAttachedScrap()取VH的核心源码，和上面的差不多。</span><br><span class="hljs-comment">// 只是多了几个判断条件，该holder须是有效的并且未被移除。</span><br><span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">scrapCount</span> <span class="hljs-operator">=</span> mAttachedScrap.size();<br><br><span class="hljs-comment">// Try first for an exact, non-invalid match from scrap.</span><br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; scrapCount; i++) &#123;<br>	<span class="hljs-keyword">final</span> <span class="hljs-type">ViewHolder</span> <span class="hljs-variable">holder</span> <span class="hljs-operator">=</span> mAttachedScrap.get(i);<br>	<span class="hljs-comment">// 第二个条件为索引判断，表示只能复用到指定位置</span><br>    <span class="hljs-keyword">if</span> (!holder.wasReturnedFromScrap() &amp;&amp; holder.getLayoutPosition() == position<br>    		&amp;&amp; !holder.isInvalid() &amp;&amp; (mState.mInPreLayout || !holder.isRemoved())) &#123;<br>    	holder.addFlags(ViewHolder.FLAG_RETURNED_FROM_SCRAP);<br>        <span class="hljs-keyword">return</span> holder;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>从源码中可以看到，ViewHolder的复用是有顺序的，首先会判断是否预布局，如果是就从一级缓存中的mChangedScrap()中获取。如果没获取到就去mAttachScrap()和二级缓存中找。而一级缓存之所以说轻量，首先是因为它只针对当前页面显示的这些item，其次是因为它用完就会清空缓存，不占空间，效率也快。所以通知数据更新我们推荐使用notifyItemChanged()，实现局部刷新，用的是一级缓存来实现复用。而如果我们调用notifyDataChanged()来通知更新，会使数据全部进行刷新，不会走Scrap，性能低下。</p>
+<h3 id="3-二级缓存"><a href="#3-二级缓存" class="headerlink" title="3. 二级缓存"></a>3. 二级缓存</h3><h4 id="（1）二级缓存原理"><a href="#（1）二级缓存原理" class="headerlink" title="（1）二级缓存原理"></a>（1）二级缓存原理</h4><p>CacheView用于RecyclerView列表位置产生变动时，通常称为离屏缓存，对刚刚移出屏幕的view进行回收。它的默认容量是2（可以修改），同样我们用一张图来帮助理解一下。<br><img src="https://img-blog.csdnimg.cn/01311bed9ff14912a061a972e1fe52b7.png#pic_center" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<h4 id="（2）二级缓存复用"><a href="#（2）二级缓存复用" class="headerlink" title="（2）二级缓存复用"></a>（2）二级缓存复用</h4><p>接着上面的一级缓存复用讲。<br>这里还是getScrapOrHiddenOrCachedHolderForPosition()方法里的，如果刚才从mAttachScrap里没取到ViewHolder，那么就会走二级缓存，从mCachedViews里找。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// Search in our first-level recycled view cache. 官方说这里是第一级，但在我们日常使用中还是称他为第二级缓存</span><br><span class="hljs-comment">// 这是根据position来取</span><br><span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">cacheSize</span> <span class="hljs-operator">=</span> mCachedViews.size();<br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; cacheSize; i++) &#123;<br>	<span class="hljs-keyword">final</span> <span class="hljs-type">ViewHolder</span> <span class="hljs-variable">holder</span> <span class="hljs-operator">=</span> mCachedViews.get(i);<br>    <span class="hljs-comment">// invalid view holders may be in cache if adapter has stable ids as they can be</span><br>    <span class="hljs-comment">// retrieved via getScrapOrCachedViewForId</span><br>    <span class="hljs-comment">// 这里要对索引进行判断，只有当位置对得上才能拿来复用，</span><br>    <span class="hljs-comment">// 这也就意味着从mCatchedViews中取出的ViewHolder只能复用到指定的位置。</span><br>    <span class="hljs-keyword">if</span> (!holder.isInvalid() &amp;&amp; holder.getLayoutPosition() == position<br>    		&amp;&amp; !holder.isAttachedToTransitionOverlay()) &#123;<br>    	<span class="hljs-comment">// 如果不在容量范围内，就把ViewHolder丢出去，丢到缓存池中。</span><br>    	<span class="hljs-keyword">if</span> (!dryRun) &#123;<br>        	mCachedViews.remove(i);<br>        &#125;<br>        <span class="hljs-keyword">if</span> (DEBUG) &#123;<br>        	Log.d(TAG, <span class="hljs-string">&quot;getScrapOrHiddenOrCachedHolderForPosition(&quot;</span> + position<br>            		+ <span class="hljs-string">&quot;) found match in cache: &quot;</span> + holder);<br>        &#125;<br>        <span class="hljs-keyword">return</span> holder;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>接下来就是源码里的第三步，这里是根据id来取，上面的是根据position来取，相差不大。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 2) Find from scrap/cache via stable ids, if exists</span><br><span class="hljs-keyword">if</span> (mAdapter.hasStableIds()) &#123;<br>	holder = getScrapOrCachedViewForId(mAdapter.getItemId(offsetPosition),<br>    		type, dryRun);<br>    <span class="hljs-keyword">if</span> (holder != <span class="hljs-literal">null</span>) &#123;<br>    	<span class="hljs-comment">// update position</span><br>        holder.mPosition = offsetPosition;<br>        fromScrapOrHiddenOrCache = <span class="hljs-literal">true</span>;<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">// 点进getScrapOrCachedViewForId()</span><br><span class="hljs-comment">// Search the first-level cache</span><br><span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">cacheSize</span> <span class="hljs-operator">=</span> mCachedViews.size();<br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> cacheSize - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) &#123;<br>	<span class="hljs-keyword">final</span> <span class="hljs-type">ViewHolder</span> <span class="hljs-variable">holder</span> <span class="hljs-operator">=</span> mCachedViews.get(i);<br>    ......<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>CachedView的缓存主要是应对来回滑动的情况，这时候CachedView才会真正的起作用，其缓存的ViewHolder不需要重新赋值，就可以直接拿来用了。而且我们还可以修改它的容量，通过下面这个方法来修改。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setItemViewCacheSize</span><span class="hljs-params">(<span class="hljs-type">int</span> size)</span> &#123;<br>    mRecycler.setViewCacheSize(size);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>总结一下，mAttachedScrap和mCachedViews都是需要进行索引判断，也就是说从这两个缓存中取出的ViewHolder只能复用到指定的位置。mCachedViews只能缓存屏幕外它容量大小的ViewHolder，超出容量的部分会被移除，丢到缓存池中，一会我再来具体讲解缓存池。</p>
+<h3 id="5-三级缓存"><a href="#5-三级缓存" class="headerlink" title="5. 三级缓存"></a>5. 三级缓存</h3><p>三级缓存ViewCacheExtension是我们自定义的缓存，一般来说官方给的一、二、四级缓存就够用了，我们不会用到它，所以我也就一笔带过了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">if</span> (holder == <span class="hljs-literal">null</span> &amp;&amp; mViewCacheExtension != <span class="hljs-literal">null</span>) &#123;<br>	<span class="hljs-comment">// We are NOT sending the offsetPosition because LayoutManager does not know it.</span><br>	<span class="hljs-keyword">final</span> <span class="hljs-type">View</span> <span class="hljs-variable">view</span> <span class="hljs-operator">=</span> mViewCacheExtension.getViewForPositionAndType(<span class="hljs-built_in">this</span>, position, type);<br>	......<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>从源码中分析，如果我们自定义了一个缓存并且前面的一二级缓存没有找到ViewHolder，系统就会从我们自定义的这个缓存里去找ViewHolder。</p>
+<h3 id="6-四级缓存"><a href="#6-四级缓存" class="headerlink" title="6. 四级缓存"></a>6. 四级缓存</h3><p>好的，本文的<strong>第一个重点</strong>来了！在这里我会详细地分析<strong>RV的缓存池</strong>机制。<br>先来看看这一级的复用机制。</p>
+<h4 id="（1）缓存池结构"><a href="#（1）缓存池结构" class="headerlink" title="（1）缓存池结构"></a>（1）缓存池结构</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">if</span> (holder == <span class="hljs-literal">null</span>) &#123; <span class="hljs-comment">// fallback to pool</span><br>	<span class="hljs-keyword">if</span> (DEBUG) &#123;<br>    	Log.d(TAG, <span class="hljs-string">&quot;tryGetViewHolderForPositionByDeadline(&quot;</span><br>        		+ position + <span class="hljs-string">&quot;) fetching from shared pool&quot;</span>);<br>    &#125;<br>    holder = getRecycledViewPool().getRecycledView(type);<br>    <span class="hljs-keyword">if</span> (holder != <span class="hljs-literal">null</span>) &#123;<br>    	holder.resetInternal();<br>        <span class="hljs-keyword">if</span> (FORCE_INVALIDATE_DISPLAY_LIST) &#123;<br>        	invalidateDisplayListInt(holder);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>可以看到，这一部分和之前的一二级缓存复用机制有很大区别，没有那么多的限制条件了，不用判断索引是不是指定位置。但是它需要根据<strong>itemType</strong>来区分不同类型的<strong>ViewHolder</strong>。但在了解缓存池的复用机制之前，我们得先知道RecycledViewPool的基本结构。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RecycledViewPool</span> &#123;<br>	<span class="hljs-comment">//同类ViewHolder缓存个数上限为5</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">DEFAULT_MAX_SCRAP</span> <span class="hljs-operator">=</span> <span class="hljs-number">5</span>;<br>    <span class="hljs-comment">// Tracks both pooled holders, as well as create/bind timing metadata for the given type.</span><br>    <span class="hljs-comment">// 回收池中存放单个类型ViewHolder的容器</span><br>    <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ScrapData</span> &#123;<br>    	<span class="hljs-comment">//同类ViewHolder存储在ArrayList中</span><br>        ArrayList&lt;ViewHolder&gt; mScrapHeap = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>        <span class="hljs-type">int</span> <span class="hljs-variable">mMaxScrap</span> <span class="hljs-operator">=</span> DEFAULT_MAX_SCRAP;<br>    &#125;<br>    <span class="hljs-comment">//回收池中存放所有类型ViewHolder的容器</span><br>    SparseArray&lt;ScrapData&gt; mScrap = <span class="hljs-keyword">new</span> <span class="hljs-title class_">SparseArray</span>&lt;&gt;();<br>    ...<br>    <span class="hljs-comment">//ViewHolder入池按viewType分类入池，一个类型的ViewType存放在一个ScrapData中</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">putRecycledView</span><span class="hljs-params">(ViewHolder scrap)</span> &#123;<br>    	<span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">viewType</span> <span class="hljs-operator">=</span> scrap.getItemViewType();<br>        <span class="hljs-keyword">final</span> ArrayList&lt;ViewHolder&gt; scrapHeap = getScrapDataForType(viewType).mScrapHeap;<br>        <span class="hljs-comment">//如果超限了，则放弃入池</span><br>        <span class="hljs-keyword">if</span> (mScrap.get(viewType).mMaxScrap &lt;= scrapHeap.size()) &#123;<br>        	<span class="hljs-keyword">return</span>;<br>        &#125;<br>        <span class="hljs-keyword">if</span> (DEBUG &amp;&amp; scrapHeap.contains(scrap)) &#123;<br>        	<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalArgumentException</span>(<span class="hljs-string">&quot;this scrap item already exists&quot;</span>);<br>        &#125;<br>        scrap.resetInternal();<br>        <span class="hljs-comment">//回收时，ViewHolder从列表尾部插入</span><br>        scrapHeap.add(scrap);<br>    &#125;<br>    <br>    <span class="hljs-comment">//从回收池中获取ViewHolder对象</span><br>    <span class="hljs-keyword">public</span> ViewHolder <span class="hljs-title function_">getRecycledView</span><span class="hljs-params">(<span class="hljs-type">int</span> viewType)</span> &#123;<br>    	<span class="hljs-comment">// 获取到viewType</span><br>    	<span class="hljs-keyword">final</span> <span class="hljs-type">ScrapData</span> <span class="hljs-variable">scrapData</span> <span class="hljs-operator">=</span> mScrap.get(viewType);<br>        <span class="hljs-keyword">if</span> (scrapData != <span class="hljs-literal">null</span> &amp;&amp; !scrapData.mScrapHeap.isEmpty()) &#123;<br>        	<span class="hljs-keyword">final</span> ArrayList&lt;ViewHolder&gt; scrapHeap = scrapData.mScrapHeap;<br>            <span class="hljs-comment">//复用时，从列表尾部获取ViewHolder（优先复用刚入池的ViewHoler）</span><br>            <span class="hljs-keyword">return</span> scrapHeap.remove(scrapHeap.size() - <span class="hljs-number">1</span>);<br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>我们可以根据上述分析得到如下结论：RecycledViewPool中的ViewHolder存储在<strong>SparseArray</strong>中，并且按viewType分类存储，同一类型的ViewHolder存放在一个<strong>ArrayList</strong>中。虽然没有了对索引的判断，但是从mRecyclerPool中取出的ViewHolder**只能复用于相同viewType的表项。</p>
+<p>那么现在我们再来分析缓存池的复用过程。</p>
+<h4 id="（2）缓存池复用"><a href="#（2）缓存池复用" class="headerlink" title="（2）缓存池复用"></a>（2）缓存池复用</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java">holder = getRecycledViewPool().getRecycledView(type);<br><br><span class="hljs-comment">// 这里是getRecyclerViewPool()，主要作用就是new了一个RecyclerViewPool对象出来。</span><br><span class="hljs-comment">// 然后再根据type来从缓存池中获取对应类型的ViewHolder。</span><br>RecycledViewPool <span class="hljs-title function_">getRecycledViewPool</span><span class="hljs-params">()</span> &#123;<br>	<span class="hljs-keyword">if</span> (mRecyclerPool == <span class="hljs-literal">null</span>) &#123;<br>    	mRecyclerPool = <span class="hljs-keyword">new</span> <span class="hljs-title class_">RecycledViewPool</span>();<br>    &#125;<br>    <span class="hljs-keyword">return</span> mRecyclerPool;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这就是缓存池复用的运作机制，相信大家都已经对这部分的内容有所了解了，那么什么时候数据会被放到缓存池中呢？</p>
+<h4 id="（3）表项放入缓存池的几种情况"><a href="#（3）表项放入缓存池的几种情况" class="headerlink" title="（3）表项放入缓存池的几种情况"></a>（3）表项放入缓存池的几种情况</h4><h5 id="item移出屏幕"><a href="#item移出屏幕" class="headerlink" title="item移出屏幕"></a>item移出屏幕</h5><p>如果大家有印象的话，上面交代了一部分，超出mCachedViews的部分会被丢到这里来。这种情况就是当你滑动屏幕，item移出到屏幕之外后，超出屏幕两个之外的item被缓存池回收，为什么是两个之外呢？因为这两个是缓存在mCachedViews中的，因为它的复用效率更快，优先级更高。超出两个之外的按照先入先出的原则，被mCachedViews移出缓存。从这里可以看出，当你在滑动屏幕的过程中mCachedViews是不断进行 <strong>“输入输出”</strong> 的。</p>
+<h5 id="一级缓存的ViewHolder无效"><a href="#一级缓存的ViewHolder无效" class="headerlink" title="一级缓存的ViewHolder无效"></a>一级缓存的ViewHolder无效</h5><p>在讲一级二级缓存复用机制的时候，我说过从mAttachedScrap，mCachedViews中取ViewHolder时，还需要检验有效性，具体是怎么检验的呢，我们从源码入手。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">boolean</span> <span class="hljs-title function_">validateViewHolderForOffsetPosition</span><span class="hljs-params">(ViewHolder holder)</span> &#123;<br>	<span class="hljs-comment">// if it is a removed holder, nothing to verify since we cannot ask adapter anymore</span><br>    <span class="hljs-comment">// if it is not removed, verify the type and id.</span><br>    <span class="hljs-comment">// item是否被移除</span><br>    <span class="hljs-keyword">if</span> (holder.isRemoved()) &#123;<br>    	<span class="hljs-comment">// 如果是被移除的，返回是否为预加载</span><br>        <span class="hljs-keyword">return</span> mState.isPreLayout();<br>    &#125;<br>    <br>    <span class="hljs-comment">// 如果不是预加载布局，就检查ViewType是否和Adapter对应位置的ViewHolder相同</span><br>    <span class="hljs-keyword">if</span> (!mState.isPreLayout()) &#123;<br>    	<span class="hljs-comment">// don&#x27;t check type if it is pre-layout.</span><br>        <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">type</span> <span class="hljs-operator">=</span> mAdapter.getItemViewType(holder.mPosition);<br>        <span class="hljs-keyword">if</span> (type != holder.getItemViewType()) &#123;<br>        	<span class="hljs-comment">// 如果类型不相同，返回false，即无效</span><br>        	<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>        &#125;<br>    &#125;<br><br>	<span class="hljs-comment">// 这里是检查id</span><br>    <span class="hljs-keyword">if</span> (mAdapter.hasStableIds()) &#123;<br>    	<span class="hljs-keyword">return</span> holder.getItemId() == mAdapter.getItemId(holder.mPosition);<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>从源码上看，只有当缓存中 ViewHolder 的 viewType 或 id 和 Adapter 对应位置上的属性相同时（简单来说就是只有对得上号的才是有效的ViewHolder）才会从一二级缓存中取出复用。否则就会将无效的ViewHolder丢到缓存池中。</p>
+<p>还有其他几种情况我就不一一列举了，大体差不多。缓存池就相当于一个回收站，别人不要的都会往缓存池里塞。接下来我要讲一下从缓存池里拿出来复用的ViewHolder和前面几种有什么区别。</p>
+<h4 id="（4）从缓存池取出的ViewHolder和前面的区别"><a href="#（4）从缓存池取出的ViewHolder和前面的区别" class="headerlink" title="（4）从缓存池取出的ViewHolder和前面的区别"></a>（4）从缓存池取出的ViewHolder和前面的区别</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java">holder = getRecycledViewPool().getRecycledView(type);<br><span class="hljs-comment">// 刚才没贴的代码现在补上</span><br><span class="hljs-keyword">if</span> (holder != <span class="hljs-literal">null</span>) &#123;<br>	holder.resetInternal();<br>    <span class="hljs-keyword">if</span> (FORCE_INVALIDATE_DISPLAY_LIST) &#123;<br>    	invalidateDisplayListInt(holder);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这段代码什么意思呢？就是当ViewHolder从缓存池取出来后，判断holder是否为空，如果不为空，说明holder从缓存池中取出来了。那么就执行 holder.resetInternal() ，意思是将取出的ViewHolder<strong>重置</strong>，我们点进这个方法看一下。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">void</span> <span class="hljs-title function_">resetInternal</span><span class="hljs-params">()</span> &#123;<br>	<span class="hljs-comment">//将ViewHolder的flag置0，剩下的一些属性也将其重置，要么置0，要么置空</span><br>	mFlags = <span class="hljs-number">0</span>;<br>	mPosition = NO_POSITION;<br>    mOldPosition = NO_POSITION;<br>    mItemId = NO_ID;<br>    mPreLayoutPosition = NO_POSITION;<br>    mIsRecyclableCount = <span class="hljs-number">0</span>;<br>    mShadowedHolder = <span class="hljs-literal">null</span>;<br>    mShadowingHolder = <span class="hljs-literal">null</span>;<br>    clearPayload();<br>    mWasImportantForAccessibilityBeforeHidden = ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_AUTO;<br>    mPendingAccessibilityState = PENDING_ACCESSIBILITY_STATE_NOT_SET;<br>    clearNestedRecyclerViewIfNotNested(<span class="hljs-built_in">this</span>);<br>&#125;<br><br><span class="hljs-comment">// 上面重置时将flag置0，这里flag与FLAG_BOUND与操作，结果必为0</span><br><span class="hljs-comment">// 所以将flag置0相当于解绑</span><br><span class="hljs-type">boolean</span> <span class="hljs-title function_">isBound</span><span class="hljs-params">()</span> &#123;<br>	<span class="hljs-keyword">return</span> (mFlags &amp; FLAG_BOUND) != <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="（5）总结"><a href="#（5）总结" class="headerlink" title="（5）总结"></a>（5）总结</h4><blockquote>
+<p>在滚动过程中，当需要 ViewHolder 进行布局时，先去一二级缓存里找有没有这个刚刚移除 ViewHolder，如果有就直接拿出来复用。如果没有，就去缓存池里拿出来一个 <code>ViewHolder</code> 返回给 RecyclerView ，让他重新绑定数据。</p>
+<p>综上所述，从缓存池里取出来的ViewHolder将其重置，复用的时候再重新绑定数据。而一二级缓存无需再绑定数据，<strong>直接拿来复用</strong>，因为他们的位置和数据都没有变化。当有相同类型的表项插入列表时，<strong>不用重新创建 ViewHolder 实例</strong>（执行 onCreateViewHolder()），从缓存池中获取即可。到这里，RV的四级缓存复用机制就差不多讲完了，大家也对RV有了更深一步的了解，但是，RV是什么时候又是怎么将这些ViewHolder填充屏幕的呢？这个问题我们还需深入探讨一下LayoutManager，相信大家对这个也不陌生。</p>
+</blockquote>
+<h2 id="四、LayoutManager"><a href="#四、LayoutManager" class="headerlink" title="四、LayoutManager"></a>四、LayoutManager</h2><p>LayoutManager是<strong>布局管理器</strong>，主要的作用是布局子视图，处理滚动过程中子视图的添加与回收。接下来我会讲一下它是怎么处理表项的加载和布局的。说实话，刚开始讲这个我都不知道从哪入手，在源码中遨游，跳来跳去的，往往看一个方法，就要跳到更多方法去理解这个方法，然后那些方法中还有更多的方法需要理解……</p>
+<h3 id="1-LayoutManager管理表项的添加"><a href="#1-LayoutManager管理表项的添加" class="headerlink" title="1. LayoutManager管理表项的添加"></a>1. LayoutManager管理表项的添加</h3><p>首先，我们既然要理解滚动过程中表项的状态，肯定还是要从 onTouchEvent() 入手，这个是RV的触摸事件。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RecyclerView</span> &#123;<br>	...<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">onTouchEvent</span><span class="hljs-params">(MotionEvent e)</span> &#123;<br>        <span class="hljs-keyword">switch</span> (action) &#123;<br>            <span class="hljs-comment">// RecyclerView 对滑动事件的处理</span><br>            <span class="hljs-keyword">case</span> MotionEvent.ACTION_MOVE: &#123;<br>            	<span class="hljs-comment">// 前面是判断启动条件的一些代码，就不展示了</span><br>                ...<br>                <span class="hljs-comment">// 滚动的内部</span><br>                <span class="hljs-keyword">if</span> (scrollByInternal(<br>                        canScrollHorizontally ? dx : <span class="hljs-number">0</span>,<br>                        canScrollVertically ? dy : <span class="hljs-number">0</span>,<br>                        e)) &#123;...&#125;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>可以看到，触摸事件调用了 scrollByInternal() 方法，并把滑动的距离传了进去。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">boolean</span> <span class="hljs-title function_">scrollByInternal</span><span class="hljs-params">(<span class="hljs-type">int</span> x, <span class="hljs-type">int</span> y, MotionEvent ev)</span> &#123;<br>	<span class="hljs-keyword">if</span> (mAdapter != <span class="hljs-literal">null</span>) &#123;<br>    	mReusableIntPair[<span class="hljs-number">0</span>] = <span class="hljs-number">0</span>;<br>    	mReusableIntPair[<span class="hljs-number">1</span>] = <span class="hljs-number">0</span>;<br>    	<span class="hljs-comment">// 在这里调用了 scrollStep()，滑动步骤</span><br>    	scrollStep(x, y, mReusableIntPair);<br>        <br>    	consumedX = mReusableIntPair[<span class="hljs-number">0</span>];<br>    	consumedY = mReusableIntPair[<span class="hljs-number">1</span>];<br>    	unconsumedX = x - consumedX;<br>    	unconsumedY = y - consumedY;<br>    &#125;<br>    ...<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>scrollStep() 是滚动之前进行的操作，dispatchNestedScroll() 是真正滚动的方法，dispatch是分发调度的意思。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">void</span> <span class="hljs-title function_">scrollStep</span><span class="hljs-params">(<span class="hljs-type">int</span> dx, <span class="hljs-type">int</span> dy, <span class="hljs-meta">@Nullable</span> <span class="hljs-type">int</span>[] consumed)</span> &#123;<br>	<span class="hljs-type">int</span> <span class="hljs-variable">consumedX</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>    <span class="hljs-type">int</span> <span class="hljs-variable">consumedY</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">if</span> (dx != <span class="hljs-number">0</span>) &#123;<br>    	consumedX = mLayout.scrollHorizontallyBy(dx, mRecycler, mState);<br>    &#125;<br>    <span class="hljs-keyword">if</span> (dy != <span class="hljs-number">0</span>) &#123;<br>        consumedY = mLayout.scrollVerticallyBy(dy, mRecycler, mState);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在 scrollStep() 方法里，我们终于看到了 mLayout，这是一个 <strong>LayoutManager</strong> 对象，说明从这开始，由布局管理器来接管。我们以 LinearLayoutManager 为例，将垂直位移作为参数传给 scrollBy()。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">scrollVerticallyBy</span><span class="hljs-params">(<span class="hljs-type">int</span> dy, RecyclerView.Recycler recycler,</span><br><span class="hljs-params">		RecyclerView.State state)</span> &#123;<br>	<span class="hljs-keyword">if</span> (mOrientation == HORIZONTAL) &#123;<br>    	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>    &#125;<br>    <span class="hljs-keyword">return</span> scrollBy(dy, recycler, state);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">int</span> <span class="hljs-title function_">scrollBy</span><span class="hljs-params">(<span class="hljs-type">int</span> delta, RecyclerView.Recycler recycler, RecyclerView.State state)</span> &#123;<br>	<span class="hljs-comment">// 更新LayoutState</span><br>	updateLayoutState(layoutDirection, absDelta, <span class="hljs-literal">true</span>, state);<br>	<span class="hljs-comment">// 滚动时向列表中填充新的表项</span><br>    <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">consumed</span> <span class="hljs-operator">=</span> mLayoutState.mScrollingOffset<br>    		+ fill(recycler, mLayoutState, state, <span class="hljs-literal">false</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>scrollBy() 中终于找到了我们想看到的 **fill()**，是填充表项的意思，这个意思是在滚动之前将未显示在界面的表项进行预布局吗？我们继续往下走。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">int</span> <span class="hljs-title function_">fill</span><span class="hljs-params">(RecyclerView.Recycler recycler, LayoutState layoutState,</span><br><span class="hljs-params">		RecyclerView.State state, <span class="hljs-type">boolean</span> stopOnFocusable)</span> &#123;<br>	...<br>	<span class="hljs-keyword">while</span> ((layoutState.mInfinite || remainingSpace &gt; <span class="hljs-number">0</span>) &amp;&amp; layoutState.hasMore(state)) &#123;<br>		...<br>		<span class="hljs-comment">// 如果剩余空间 &gt; 0，就循环添加item，layoutChunk()就是这个作用</span><br>		layoutChunk(recycler, state, layoutState, layoutChunkResult);<br>		...<br>		<span class="hljs-comment">// 如果 layoutChunk 中将 mFinished 设置为 true ，就退出循环</span><br>		<span class="hljs-keyword">if</span> (layoutChunkResult.mFinished) &#123;<br>        	<span class="hljs-keyword">break</span>;<br>        &#125;<br>        ...<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">void</span> <span class="hljs-title function_">layoutChunk</span><span class="hljs-params">(RecyclerView.Recycler recycler, RecyclerView.State state,</span><br><span class="hljs-params">            LayoutState layoutState, LayoutChunkResult result)</span> &#123;<br>    <br>	<span class="hljs-type">View</span> <span class="hljs-variable">view</span> <span class="hljs-operator">=</span> layoutState.next(recycler);<br>	<span class="hljs-comment">// 如果view为空，即 layoutState 没有下一个item了，就结束布局</span><br>	<span class="hljs-keyword">if</span> (view == <span class="hljs-literal">null</span>) &#123;<br>    	<span class="hljs-keyword">if</span> (DEBUG &amp;&amp; layoutState.mScrapList == <span class="hljs-literal">null</span>) &#123;<br>        	<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(<span class="hljs-string">&quot;received null view when unexpected&quot;</span>);<br>        &#125;<br>        <span class="hljs-comment">// if we are laying out views in scrap, this may return null which means there is</span><br>        <span class="hljs-comment">// no more items to layout.</span><br>        result.mFinished = <span class="hljs-literal">true</span>;<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>	...<br>	<span class="hljs-keyword">if</span> (mShouldReverseLayout == (layoutState.mLayoutDirection<br>    		== LayoutState.LAYOUT_START)) &#123;<br>    	<span class="hljs-comment">// 将获取到的下一个 view 添加进来</span><br>    	addView(view);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>    	addView(view, <span class="hljs-number">0</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>fill()</strong> 方法会根据剩余空间来循环地调用 <strong>layoutChunk()</strong> 向列表中填充表项，滚动列表的场景中，剩余空间的值由滚动距离决定。而填充用到的 view 其实就是从缓存里取出的，这就回到了之前讲过的<strong>缓存复用</strong>的步骤中去了。大家看一下源码就懂了~。<strong>addView()</strong> 就是向列表里添加视图的具体方法，在这里面将要添加的子视图与RecyclerView绑定起来，成为它的子视图。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java">View <span class="hljs-title function_">next</span><span class="hljs-params">(RecyclerView.Recycler recycler)</span> &#123;<br>	<span class="hljs-keyword">if</span> (mScrapList != <span class="hljs-literal">null</span>) &#123;<br>		<span class="hljs-keyword">return</span> nextViewFromScrapList();<br>	&#125;<br>	<span class="hljs-keyword">final</span> <span class="hljs-type">View</span> <span class="hljs-variable">view</span> <span class="hljs-operator">=</span> recycler.getViewForPosition(mCurrentPosition);<br>	mCurrentPosition += mItemDirection;<br>	<span class="hljs-keyword">return</span> view;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这个就是循环填充表项中，获取 <strong>layoutState</strong> 下一个 view 的方法，它又调用了 <strong>Recycler</strong> 的<strong>getViewForPosition()</strong> 方法，通过当前的位置获取 view。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> View <span class="hljs-title function_">getViewForPosition</span><span class="hljs-params">(<span class="hljs-type">int</span> position)</span> &#123;<br>	<span class="hljs-keyword">return</span> getViewForPosition(position, <span class="hljs-literal">false</span>);<br>&#125;<br><br>View <span class="hljs-title function_">getViewForPosition</span><span class="hljs-params">(<span class="hljs-type">int</span> position, <span class="hljs-type">boolean</span> dryRun)</span> &#123;<br>	<span class="hljs-keyword">return</span> tryGetViewHolderForPositionByDeadline(position, dryRun, FOREVER_NS).itemView;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>大家看到 <strong>tryGetViewHolderForPositionByDeadline()</strong> 可能就恍然大悟了，这不就是复用吗，从一到四级缓存中获取到 ViewHolder。经过以上分析，我做一下这部分的总结。</p>
+<blockquote>
+<p>我们从 RecyclerView 的 <strong>onTouchEvent()</strong> 入手，通过调用链一步一步往下分析，终于在 <strong>layoutChunk()</strong> 方法里找到了LayoutManager 管理表项添加的内容。它是通过 <strong>next()</strong> 方法从缓存中获取到下一个表项，然后将其添加到列表中，这样，在用户来回滑动的过程中，在屏幕之外的 item 就可以正常的显示出来。而子视图要显示在什么位置是需要进行测量的，知道了显示的位置，才可以将它布局到界面上。那我们就来看看是怎么布局的。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 还是这个方法里</span><br><span class="hljs-keyword">void</span> <span class="hljs-title function_">layoutChunk</span><span class="hljs-params">(RecyclerView.Recycler recycler, RecyclerView.State state,</span><br><span class="hljs-params">            LayoutState layoutState, LayoutChunkResult result)</span> &#123;<br>    ...<br>    <span class="hljs-comment">// 测量获取到的子视图所占的空间和位置</span><br>    measureChildWithMargins(view, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);<br>    <span class="hljs-comment">// 得到填充该视图所需要消耗的空间</span><br>    result.mConsumed = mOrientationHelper.getDecoratedMeasurement(view);<br>    ...<br>    <span class="hljs-comment">// We calculate everything with View&#x27;s bounding box (which includes decor and margins)</span><br>    <span class="hljs-comment">// To calculate correct layout position, we subtract margins.</span><br>    <span class="hljs-comment">// 计算位置并将该表项布局</span><br>    layoutDecoratedWithMargins(view, left, top, right, bottom);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>经过这个方法后布局子视图后，回到 <strong>fill()</strong> 中，剩余空间 <strong>remainingSpace</strong> 将布局子视图消耗的空间减掉以作为循环退出条件，所以最多会填充 <strong>remainingSpace</strong> 容量大小的表项，这个大小是通过滚动位移绝对值计算的，源码我就不放了。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">if</span> (!layoutChunkResult.mIgnoreConsumed || layoutState.mScrapList != <span class="hljs-literal">null</span><br>		|| !state.isPreLayout()) &#123;<br>	layoutState.mAvailable -= layoutChunkResult.mConsumed;<br>    <span class="hljs-comment">// we keep a separate remaining space because mAvailable is important for recycling</span><br>    remainingSpace -= layoutChunkResult.mConsumed;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>好啦，至此我们就应该知道 <strong>LayoutManager</strong> 是如何添加和布局表项的了。以下两条就是阅读源码总结出的精华。</p>
+<blockquote>
+<p>RecyclerView 在滚动发生之前，会有一个填充新表项的动作，填充的是当前还未显示的表项。</p>
+<p>RecyclerView 填充表项是通过<code>while</code>循环实现的，当列表没有剩余空间时，填充表项也就结束了。</p>
+</blockquote>
+<h3 id="2-LayoutManager管理表项的回收"><a href="#2-LayoutManager管理表项的回收" class="headerlink" title="2. LayoutManager管理表项的回收"></a>2. LayoutManager管理表项的回收</h3><p>LayoutManager 的另一个作用便是回收了，有新表项入就有旧表项出。我在讲表项的添加的时候，有一个 **fill() ** 函数，它完成列表的填充，但填充之后的代码我没有放，现在来给大家看一下。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">int</span> <span class="hljs-title function_">fill</span><span class="hljs-params">(RecyclerView.Recycler recycler, LayoutState layoutState,</span><br><span class="hljs-params">            RecyclerView.State state, <span class="hljs-type">boolean</span> stopOnFocusable)</span> &#123;<br>    ...<br>    <span class="hljs-comment">// 添加的操作</span><br>    layoutChunk(recycler, state, layoutState, layoutChunkResult);<br>    ...<br>    <span class="hljs-keyword">if</span> (layoutState.mScrollingOffset != LayoutState.SCROLLING_OFFSET_NaN) &#123;<br>    	...<br>        <span class="hljs-comment">// 回收的操作</span><br>        recycleByLayoutState(recycler, layoutState);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>fill() 每次添加一个表项之后，都会执行一次回收操作，我们继续沿着调用链走。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">recycleByLayoutState</span><span class="hljs-params">(RecyclerView.Recycler recycler, LayoutState layoutState)</span> &#123;<br>    ...<br>    <span class="hljs-keyword">if</span> (layoutState.mLayoutDirection == LayoutState.LAYOUT_START) &#123;<br>    	recycleViewsFromEnd(recycler, scrollingOffset, noRecycleSpace);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        recycleViewsFromStart(recycler, scrollingOffset, noRecycleSpace);<br>    &#125;<br>&#125;<br><br><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">recycleViewsFromStart</span><span class="hljs-params">(RecyclerView.Recycler recycler, <span class="hljs-type">int</span> scrollingOffset,</span><br><span class="hljs-params">		<span class="hljs-type">int</span> noRecycleSpace)</span> &#123;<br>    ...<br>    <span class="hljs-comment">// 一条控制线</span><br>    <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">limit</span> <span class="hljs-operator">=</span> scrollingOffset - noRecycleSpace;<br>    <span class="hljs-comment">// 列表中子视图的数量</span><br>	<span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">childCount</span> <span class="hljs-operator">=</span> getChildCount();<br>    <br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; childCount; i++) &#123;<br>    	<span class="hljs-type">View</span> <span class="hljs-variable">child</span> <span class="hljs-operator">=</span> getChildAt(i);<br>        <span class="hljs-comment">// getDecoratedEnd(item)就是获取该item底部纵坐标的方法</span><br>        <span class="hljs-keyword">if</span> (mOrientationHelper.getDecoratedEnd(child) &gt; limit<br>        		|| mOrientationHelper.getTransformedEndWithDecoration(child) &gt; limit) &#123;<br>        	<span class="hljs-comment">// stop here</span><br>            <span class="hljs-comment">// 回收子视图的方法，会将旧的表项从列表中删除</span><br>            recycleChildren(recycler, <span class="hljs-number">0</span>, i);<br>            <span class="hljs-keyword">return</span>;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>注意！</strong>重点来了，recycleViewsFromStart() 中出现了一个 <strong>limit</strong>，这个 limit 是什么？大家之前可能有个疑问，说是将旧的表项回收掉，但是从哪里开始回收呢，又该回收多少呢？而这个 <strong>limit</strong> 就是解答疑问的关键，它是一条隐形的控制线，控制的就是回收的具体位置。 <code>mOrientationHelper.getDecoratedEnd(child) &gt; limit</code> 当表项底部的纵坐标大于 limit 的值时，就回收该表项。也就是说位于 limit <strong>控制线上</strong>的表项就会被回收。用一张图理解一下~</p>
+<p><img src="https://img-blog.csdnimg.cn/e795a9e5b80643f1abbf26c834284dcc.png#pic_center" srcset="/img/loading.gif" lazyload alt="limit线理解"></p>
+<p>limit 的值为 <strong>scrollingOffset - noRecycleSpace</strong> ，其中 noRecycleSpace &#x3D; 0（源码中被赋值为零），那么 limit 就只与 scrollingOffset 有关了，那这个 scrollingOffset 又是怎么计算的呢？我们在源码中继续寻找。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">updateLayoutState</span><span class="hljs-params">(<span class="hljs-type">int</span> layoutDirection, <span class="hljs-type">int</span> requiredSpace,</span><br><span class="hljs-params">            <span class="hljs-type">boolean</span> canUseExistingSpace, RecyclerView.State state)</span> &#123;<br>    ...<br>    <span class="hljs-comment">// 获取到列表最后一个item</span><br>    <span class="hljs-keyword">final</span> <span class="hljs-type">View</span> <span class="hljs-variable">child</span> <span class="hljs-operator">=</span> getChildClosestToEnd();<br>    <span class="hljs-comment">// 计算 scrollingOffset</span><br>    <span class="hljs-comment">// getDecoratedEnd()获取列表最后一个item底部的位置，getEndAfterPadding()获取列表底部的位置</span><br>    scrollingOffset = mOrientationHelper.getDecoratedEnd(child)<br>    		- mOrientationHelper.getEndAfterPadding();<br>    <span class="hljs-comment">// 为 mScrollingOffset 赋值</span><br>    mLayoutState.mScrollingOffset = scrollingOffset;<br>&#125; <br></code></pre></td></tr></table></figure>
+
+<p>它是在这里被引用的，大家一定不陌生。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">int</span> <span class="hljs-title function_">scrollBy</span><span class="hljs-params">(<span class="hljs-type">int</span> delta, RecyclerView.Recycler recycler, RecyclerView.State state)</span> &#123;<br>    ...<br>    <span class="hljs-comment">// 滑动位移绝对值</span><br>    <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">absDelta</span> <span class="hljs-operator">=</span> Math.abs(delta);<br>    <span class="hljs-comment">// 更新 LayoutState</span><br>    updateLayoutState(layoutDirection, absDelta, <span class="hljs-literal">true</span>, state);<br>    <span class="hljs-comment">// 计算表项消耗的像素</span><br>    <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">consumed</span> <span class="hljs-operator">=</span> mLayoutState.mScrollingOffset<br>    		+ fill(recycler, mLayoutState, state, <span class="hljs-literal">false</span>);<br>    ...<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在 <strong>updateLayoutState()</strong> 方法里，<strong>scrollingOffset</strong> 的大小为列表最后一个 item 的底部到列表底部的距离，这样 <strong>limit</strong> 的值就算出来了。比较抽象的一个概念，我也用一张图来带大家理解一下。</p>
+<p><img src="https://img-blog.csdnimg.cn/c0331cf83e0b43dca7f1d0e0de38c92d.png#pic_center" srcset="/img/loading.gif" lazyload alt="计算距离"></p>
+<p>用户上拉下滑时，limit 的值如此计算，可能有人会问到，limit 线不是在上面的吗，怎么在下面计算？没错！因为下面的这段距离也正是 limit 线离顶部的距离。因此，我们可以认为，limit 的值就是这一次滚动的总距离，<strong>limit当前所在位置，在滚动完成后会和列表顶部重合</strong> 。这里我也画了一张图来助大家理解。</p>
+<p><img src="https://img-blog.csdnimg.cn/d6c8313a69af450e8dc6807be187c7f7.png#pic_center" srcset="/img/loading.gif" lazyload alt="在这里插入图片描述"></p>
+<p>相信大家看了图就会更理解了一些，结合前面所讲，limit 线上面就是需要回收的（即<strong>item1</strong>），而列表底部下面的是将要添加进列表的（即<strong>item8</strong>）。但是 item8 之后的 item 呢？答案是，随着我们的滚动，用于计算 limit 值的 <strong>scrollingOffset</strong> 在不断变大，因为每添加一个新表项，它就会更新值，将新表项消耗的像素值加进来。这样 limit 的值也就在不断地变化，是动态更新的。</p>
+<blockquote>
+<p>在循环填充新表项时，新表项占用的像素值每次都会追加到 <code>layoutState.mScrollingOffset</code>，即它的值在不断增大（<code>limit 隐形线</code>在不断下移）。在一次<code>while</code>循环的最后，会调用<code>recycleByLayoutState()</code>根据当前<code>limit 隐形线</code>的位置回收表项。</p>
+</blockquote>
+<p>我们通过源码看一下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">int</span> <span class="hljs-title function_">fill</span><span class="hljs-params">(RecyclerView.Recycler recycler, LayoutState layoutState,</span><br><span class="hljs-params">            RecyclerView.State state, <span class="hljs-type">boolean</span> stopOnFocusable)</span> &#123;<br>    ...<br>    <span class="hljs-keyword">while</span> ((layoutState.mInfinite || remainingSpace &gt; <span class="hljs-number">0</span>) &amp;&amp; layoutState.hasMore(state)) &#123;<br>        <span class="hljs-comment">// 循环添加表项</span><br>        layoutChunk(recycler, state, layoutState, layoutChunkResult);<br>    	...<br>        <span class="hljs-comment">// 每次添加一个新表项，都会重新计算 mScrollingOffset 的值</span><br>    	layoutState.mScrollingOffset += layoutChunkResult.mConsumed;<br>        <span class="hljs-comment">// 计算后，回收 limit 线上面的表项</span><br>    	recycleByLayoutState(recycler, layoutState);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>看到这，我相信你们就更加的理解了 <strong>LayoutManager</strong> 的<code>回收机制</code>了，也能够将它和<code>添加机制</code>连接起来。</p>
+<h3 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h3><p>讲完了 LayoutManager 的添加和回收机制，最后我来总结一下：</p>
+<blockquote>
+<ol>
+<li><p>RecyclerView 在滚动发生之前，会根据预计滚动位移大小来决定需要向列表中填充多少新的表项。</p>
+</li>
+<li><p>RecyclerView 填充表项是通过<code>while</code>循环一个一个实现的，当列表没有剩余空间时，填充表项也就结束了。</p>
+</li>
+<li><p>RecyclerView 滑动发生之前，会计算出一条 <strong>limit 控制线</strong>，它是决定哪些表项该被回收的重要依据。它可以理解为：隐形线当前所在位置，在滚动完成后会和列表顶部重叠</p>
+</li>
+<li><p><strong>limit 控制线</strong>的初始值 &#x3D; 列表当前可见表项的底部到列表底部的距离，即列表在不填充新表项时，可以滑动的最大距离。每一个新填充表项消耗的像素值都会被追加到 limit 值之上，即 <strong>limit 控制线</strong>会随着新表项的填充而不断地下移。</p>
+</li>
+<li><p>触发回收逻辑时，会遍历当前所有表项，若某表项的底部位于 <strong>limit 控制线</strong>下方，则该表项上方的所有表项都会被回收。</p>
+</li>
+</ol>
+</blockquote>
+<p>以上是我对源码的分析与看别人博客所总结，如果有不正确之处，还请大家批评指正~</p>
+<h2 id="五、ItemTouchHelper"><a href="#五、ItemTouchHelper" class="headerlink" title="五、ItemTouchHelper"></a>五、ItemTouchHelper</h2><p>ItemTouchHelper 这个类是我们用来给表项添加各种修饰的帮助类，我们可以用它来实现表项的侧滑删除和拖拽等效果。对于这部分内容，我会先讲一点应用，然后从应用入手跟着源码逐步分析原理。</p>
+<h3 id="（1）ItemTouchHelper基本使用"><a href="#（1）ItemTouchHelper基本使用" class="headerlink" title="（1）ItemTouchHelper基本使用"></a>（1）ItemTouchHelper基本使用</h3><p>首先，实现一个 Callback 继承自 ItemTouchHelper.Callback。重写它的几个重要函数。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">class</span> <span class="hljs-title class_">RecyclerTouchHelpCallBack</span>(<span class="hljs-keyword">var</span> onCallBack: OnHelperCallBack) : ItemTouchHelper.Callback() &#123;<br>    <br>    <span class="hljs-keyword">var</span> edit = <span class="hljs-literal">false</span><br>    <span class="hljs-comment">// 该函数是用来设置滑动方向的，比如下面的 dragFlags 和 swipeFlags</span><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">getMovementFlags</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">		recyclerView: <span class="hljs-type">RecyclerView</span></span></span><br><span class="hljs-params"><span class="hljs-function">    	<span class="hljs-type">viewHolder</span>: <span class="hljs-type">RecyclerView</span>.<span class="hljs-type">V</span></span></span><br><span class="hljs-params"><span class="hljs-function">	)</span></span>: <span class="hljs-built_in">Int</span> &#123;<br>    	<span class="hljs-keyword">if</span> (!edit) &#123;<br>     	   <span class="hljs-keyword">return</span> <span class="hljs-number">0</span><br>    	&#125;<br>    	<span class="hljs-comment">// 拖拽方向（上下左右）</span><br>       	<span class="hljs-keyword">val</span> dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN <br>        	or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT <br>        <br>        <span class="hljs-comment">// 侧滑删除（左右）</span><br>        <span class="hljs-keyword">val</span> swipeFlags = ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT<br>        <br>        <span class="hljs-keyword">return</span> makeMovementFlags(dragFlags, swipeFlags)<br>	&#125;<br>    <br>    <span class="hljs-comment">// 该方法主要用来通知你拖拽的item从哪里移动到了哪里</span><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onMove</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">        recyclerView: <span class="hljs-type">RecyclerView</span>,</span></span><br><span class="hljs-params"><span class="hljs-function">        viewHolder: <span class="hljs-type">RecyclerView</span>.<span class="hljs-type">ViewHolder</span>,</span></span><br><span class="hljs-params"><span class="hljs-function">        target: <span class="hljs-type">RecyclerView</span>.<span class="hljs-type">ViewHolder</span></span></span><br><span class="hljs-params"><span class="hljs-function">    )</span></span>: <span class="hljs-built_in">Boolean</span> &#123;<br>        <span class="hljs-comment">// 如果当前拖拽的item与目标item的类型不一样，将无法交换位置</span><br>        <span class="hljs-keyword">if</span> (viewHolder.itemViewType != target.itemViewType) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span><br><br>        <span class="hljs-keyword">val</span> fromPosition = viewHolder.adapterPosition<br>        <span class="hljs-keyword">val</span> targetPosition = target.adapterPosition<br><br>        onCallBack.onMove(fromPosition, targetPosition)<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span><br>    &#125;<br>    <br>    <span class="hljs-comment">// 侧滑的部分我们以删除为例</span><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onSwiped</span><span class="hljs-params">(viewHolder: <span class="hljs-type">RecyclerView</span>.<span class="hljs-type">ViewHolder</span>, direction: <span class="hljs-type">Int</span>)</span></span> &#123;<br>        <span class="hljs-comment">// 调用Callback的remove将侧滑删除的item移出列表</span><br>        onCallBack.remove(viewHolder, direction, viewHolder.layoutPosition)<br>    &#125;<br>    <br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">itemMove</span><span class="hljs-params">(adapter: <span class="hljs-type">RecyclerView</span>.<span class="hljs-type">Adapter</span>&lt;<span class="hljs-type">RecyclerView</span>.<span class="hljs-type">ViewHolder</span>&gt;, <span class="hljs-keyword">data</span>: <span class="hljs-type">List</span>&lt;*&gt;, fromPosition: <span class="hljs-type">Int</span>, targetPosition: <span class="hljs-type">Int</span>)</span></span> &#123;<br>        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">data</span>.isEmpty()) &#123;<br>            <span class="hljs-keyword">return</span><br>        &#125;<br><br>        <span class="hljs-keyword">if</span> (fromPosition &lt; targetPosition) &#123;<br>            <span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> fromPosition until targetPosition) &#123;<br>                Collections.swap(<span class="hljs-keyword">data</span>, i, i + <span class="hljs-number">1</span>)<br>            &#125;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">for</span> (i <span class="hljs-keyword">in</span> targetPosition until fromPosition) &#123;<br>                Collections.swap(<span class="hljs-keyword">data</span>, i, i + <span class="hljs-number">1</span>)<br>            &#125;<br>        &#125;<br><br>        adapter.notifyItemMoved(fromPosition, targetPosition)<br>    &#125;<br>    ...<br>    <span class="hljs-comment">// 后面还有一些功能函数我就不一一列举了，知道这么个流程就行</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>上述代码中，主要实现的有三个函数，第一个就是 <strong>getMovementFlags()</strong> ，该方法主要用来设置拖拽和侧滑的方向，第二个是 <strong>onMove()</strong> ，该方法用来设置拖拽的 item 的起始位置和目的地。然后通过 <strong>itemMove()</strong> 方法将拖拽的 item 移动到目的地，剩下的 item 依次前移或后移。第三个就是 <strong>onSwiped()</strong> 用于实现侧滑的方法。</p>
+<p>接下里就是Activity中的代码了，我只展示其中主要的一些代码。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">callback = RecyclerTouchHelpCallBack(<span class="hljs-keyword">object</span> : RecyclerTouchHelpCallBack.OnHelperCallBack &#123;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onMove</span><span class="hljs-params">(fromPosition: <span class="hljs-type">Int</span>, targetPosition: <span class="hljs-type">Int</span>)</span></span> &#123;<br>        <span class="hljs-comment">// 移动item</span><br>        callback.itemMove(adapter, adapter.mData, fromPosition, targetPosition)<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onSelectedChanged</span><span class="hljs-params">(viewHolder: <span class="hljs-type">RecyclerView</span>.<span class="hljs-type">ViewHolder</span>, actionState: <span class="hljs-type">Int</span>)</span></span> &#123;<br>        <span class="hljs-comment">// 选中的改变样式</span><br>        viewHolder.itemView.alpha = <span class="hljs-number">1f</span><br>        viewHolder.itemView.scaleX = <span class="hljs-number">1.2f</span><br>        viewHolder.itemView.scaleY = <span class="hljs-number">1.2f</span><br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">clearView</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">        recyclerView: <span class="hljs-type">RecyclerView</span>,</span></span><br><span class="hljs-params"><span class="hljs-function">        viewHolder: <span class="hljs-type">RecyclerView</span>.<span class="hljs-type">ViewHolder</span></span></span><br><span class="hljs-params"><span class="hljs-function">    )</span></span> &#123;<br>        callback.edit = <span class="hljs-literal">false</span><br>        <span class="hljs-comment">// 完成移动，选中的改变样式</span><br>        adapter.mData<br>        viewHolder.itemView.alpha = <span class="hljs-number">1f</span><br>        viewHolder.itemView.scaleY = <span class="hljs-number">1f</span><br>        viewHolder.itemView.scaleX = <span class="hljs-number">1f</span><br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">remove</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">        viewHolder: <span class="hljs-type">RecyclerView</span>.<span class="hljs-type">ViewHolder</span>,</span></span><br><span class="hljs-params"><span class="hljs-function">        direction: <span class="hljs-type">Int</span>,</span></span><br><span class="hljs-params"><span class="hljs-function">        position: <span class="hljs-type">Int</span></span></span><br><span class="hljs-params"><span class="hljs-function">    )</span></span> &#123;<br>    	<span class="hljs-comment">// </span><br>        adapter.removeData(position)<br>    &#125;<br><br>&#125;)<br><br>ItemTouchHelper(callback).attachToRecyclerView(binding.rvItem)<br></code></pre></td></tr></table></figure>
+
+<p>这里的 <strong>Callback</strong> 就是为了实现我们定义的接口，然后具体实现其功能，其实最主要的还是最后一行代码，这一行的主要作用我一会会通过源码进行分析。</p>
+<p>这就是 ItemTouchHelper 的基本使用，其实挺简单的，作用就是辅助 RecyclerView 对其子视图添加一些额外的功能。但我们学习嘛，就要知其然还要知其所以然。接下来我会从 <strong>attachToRecyclerView()</strong> 入手，这个就是入口方法，我们逐步分析实现原理。</p>
+<h3 id="（2）ItemTouchHelper原理"><a href="#（2）ItemTouchHelper原理" class="headerlink" title="（2）ItemTouchHelper原理"></a>（2）ItemTouchHelper原理</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">attachToRecyclerView</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> RecyclerView recyclerView)</span> &#123;<br>	<span class="hljs-keyword">if</span> (mRecyclerView == recyclerView) &#123;<br>        <span class="hljs-comment">// 如果已经赋值过了，就直接返回，不执行后面的操作</span><br>    	<span class="hljs-keyword">return</span>; <span class="hljs-comment">// nothing to do</span><br>    &#125;<br>    <span class="hljs-comment">// 如果 mRecyclerView 不为 null 就摧毁重置</span><br>    <span class="hljs-keyword">if</span> (mRecyclerView != <span class="hljs-literal">null</span>) &#123;<br>    	destroyCallbacks();<br>    &#125;<br>    mRecyclerView = recyclerView;<br>    <span class="hljs-keyword">if</span> (recyclerView != <span class="hljs-literal">null</span>) &#123;<br>    	<span class="hljs-keyword">final</span> <span class="hljs-type">Resources</span> <span class="hljs-variable">resources</span> <span class="hljs-operator">=</span> recyclerView.getResources();<br>        mSwipeEscapeVelocity = resources<br>        		.getDimension(R.dimen.item_touch_helper_swipe_escape_velocity);<br>        mMaxSwipeVelocity = resources<br>                .getDimension(R.dimen.item_touch_helper_swipe_escape_max_velocity);<br>        setupCallbacks();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这个方法就是将我们自己的 RecyclerView 与源码中的 RV 绑定，然后对其进行一系列的操作。最后，该方法继续调用 setupCallbacks() </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setupCallbacks</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-type">ViewConfiguration</span> <span class="hljs-variable">vc</span> <span class="hljs-operator">=</span> ViewConfiguration.get(mRecyclerView.getContext());<br>    <span class="hljs-comment">// 注意这个变量 mSlop 后面会提</span><br>    mSlop = vc.getScaledTouchSlop();<br>    mRecyclerView.addItemDecoration(<span class="hljs-built_in">this</span>);<br>    <span class="hljs-comment">// 添加 Item 触摸监听器，后面会用到，里面包含 onInterceptTouchEvent()、onTouchEvent()</span><br>    mRecyclerView.addOnItemTouchListener(mOnItemTouchListener);<br>    mRecyclerView.addOnChildAttachStateChangeListener(<span class="hljs-built_in">this</span>);<br>    <span class="hljs-comment">// 启动手势检测，检测是不是长按操作</span><br>    startGestureDetection();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>我们沿着调用链一步一步走，startGestureDetection() 启动手势检测</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">startGestureDetection</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-comment">// new 一个监听器对象，对用户手势进行监听</span><br>    mItemTouchHelperGestureListener = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ItemTouchHelperGestureListener</span>();<br>    mGestureDetector = <span class="hljs-keyword">new</span> <span class="hljs-title class_">GestureDetectorCompat</span>(mRecyclerView.getContext(),<br>            mItemTouchHelperGestureListener);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>这就是检测是否为长按动作的具体方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ItemTouchHelperGestureListener</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">GestureDetector</span>.SimpleOnGestureListener &#123;<br>    ...<br>    <span class="hljs-meta">@Override</span><br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onLongPress</span><span class="hljs-params">(MotionEvent e)</span> &#123;<br>    	<span class="hljs-keyword">if</span> (!mShouldReactToLongPress) &#123;<br>      		<span class="hljs-keyword">return</span>;<br>    	&#125;<br>        <span class="hljs-comment">// 先找到子视图，onLongPress()在 GestureDetectorCompat类中调用，</span><br>        <span class="hljs-comment">// 然后将e传进来，通过刚才的startGestureDetection方法</span><br>        <span class="hljs-comment">// findChildView()就是通过获取event坐标定位到子视图的</span><br>    	<span class="hljs-type">View</span> <span class="hljs-variable">child</span> <span class="hljs-operator">=</span> findChildView(e);<br>    	<span class="hljs-keyword">if</span> (child != <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-comment">// 获取子视图对应的ViewHolder，接下来对ViewHolder进行操作</span><br>        	<span class="hljs-type">ViewHolder</span> <span class="hljs-variable">vh</span> <span class="hljs-operator">=</span> mRecyclerView.getChildViewHolder(child);<br>        	<span class="hljs-keyword">if</span> (vh != <span class="hljs-literal">null</span>) &#123;<br>         		<span class="hljs-keyword">if</span> (!mCallback.hasDragFlag(mRecyclerView, vh)) &#123;<br>         	    	<span class="hljs-keyword">return</span>;<br>         	   	&#125;<br>                <span class="hljs-comment">// 对这个pointerId不了解的请移步最后的补充项</span><br>            	<span class="hljs-type">int</span> <span class="hljs-variable">pointerId</span> <span class="hljs-operator">=</span> e.getPointerId(<span class="hljs-number">0</span>);<br>            	<span class="hljs-comment">// Long press is deferred.</span><br>            	<span class="hljs-comment">// Check w/ active pointer id to avoid selecting after motion</span><br>            	<span class="hljs-comment">// event is canceled.</span><br>            	<span class="hljs-keyword">if</span> (pointerId == mActivePointerId) &#123;<br>               		<span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">index</span> <span class="hljs-operator">=</span> e.findPointerIndex(mActivePointerId);<br>               	 	<span class="hljs-keyword">final</span> <span class="hljs-type">float</span> <span class="hljs-variable">x</span> <span class="hljs-operator">=</span> e.getX(index);<br>               	 	<span class="hljs-keyword">final</span> <span class="hljs-type">float</span> <span class="hljs-variable">y</span> <span class="hljs-operator">=</span> e.getY(index);<br>                	mInitialTouchX = x;<br>                	mInitialTouchY = y;<br>                	mDx = mDy = <span class="hljs-number">0f</span>;<br>                	<span class="hljs-keyword">if</span> (DEBUG) &#123;<br>                    	Log.d(TAG,<br>                        		<span class="hljs-string">&quot;onlong press: x:&quot;</span> + mInitialTouchX + <span class="hljs-string">&quot;,y:&quot;</span> + mInitialTouchY);<br>                	&#125;<br>                	<span class="hljs-keyword">if</span> (mCallback.isLongPressDragEnabled()) &#123;<br>                        <span class="hljs-comment">// 通过select()方法选中当前ViewHolder，以便对其进行拖拽操作</span><br>                        <span class="hljs-comment">// select()方法主要就是选中功能</span><br>                        <span class="hljs-comment">// 将 FLAG = ACTION_STATE_DRAG 传入，代表是拖拽操作</span><br>                   		select(vh, ACTION_STATE_DRAG);<br>                	&#125;<br>            	&#125;<br>        	&#125;<br>    	&#125;<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>我们可以看一下 <strong>findChildView()</strong> 是怎么进行寻找子视图的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs java">View <span class="hljs-title function_">findChildView</span><span class="hljs-params">(MotionEvent event)</span> &#123;<br>    <span class="hljs-comment">// first check elevated views, if none, then call RV</span><br>    <span class="hljs-comment">// 获取触摸点相对于view的坐标</span><br>    <span class="hljs-keyword">final</span> <span class="hljs-type">float</span> <span class="hljs-variable">x</span> <span class="hljs-operator">=</span> event.getX();<br>    <span class="hljs-keyword">final</span> <span class="hljs-type">float</span> <span class="hljs-variable">y</span> <span class="hljs-operator">=</span> event.getY();<br>    <span class="hljs-comment">// mSelected != null 即当前选中了一个子视图</span><br>    <span class="hljs-keyword">if</span> (mSelected != <span class="hljs-literal">null</span>) &#123;<br>    	<span class="hljs-comment">// 获取选中的ViewHolder对应的View，然后将其返回，这样就找到的View实例</span><br>        <span class="hljs-comment">// mSelected是一个ViewHolder对象</span><br>        <span class="hljs-keyword">final</span> <span class="hljs-type">View</span> <span class="hljs-variable">selectedView</span> <span class="hljs-operator">=</span> mSelected.itemView;<br>        <span class="hljs-keyword">if</span> (hitTest(selectedView, x, y, mSelectedStartX + mDx, mSelectedStartY + mDy)) &#123;<br>            <span class="hljs-keyword">return</span> selectedView;<br>        &#125;<br>    &#125;<br>    ...<br>    <span class="hljs-comment">// 我们先只考虑选中的情况</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>上面的 <strong>onLongPress()</strong> 是我们用来监听手指是否进行了长按的操作，同样的，肯定还有方法可以监听手指是否进行了侧滑操作，从源码中看，我们发现是 <strong>checkSelectForSwipe()</strong> 进行侧滑操作的判断。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">void</span> <span class="hljs-title function_">checkSelectForSwipe</span><span class="hljs-params">(<span class="hljs-type">int</span> action, MotionEvent motionEvent, <span class="hljs-type">int</span> pointerIndex)</span> &#123;<br>    <span class="hljs-comment">// 一些判断是否是侧滑操作的代码，无关紧要，如果不是就返回</span><br>    <span class="hljs-keyword">if</span> (mSelected != <span class="hljs-literal">null</span> || action != MotionEvent.ACTION_MOVE<br>    		|| mActionState == ACTION_STATE_DRAG || !mCallback.isItemViewSwipeEnabled()) &#123;<br>    	<span class="hljs-keyword">return</span>;<br>    &#125;<br>    <span class="hljs-keyword">if</span> (mRecyclerView.getScrollState() == RecyclerView.SCROLL_STATE_DRAGGING) &#123;<br>    	<span class="hljs-keyword">return</span>;<br>    &#125;<br>    ...<br>    <span class="hljs-comment">// mDx and mDy are only set in allowed directions. We use custom x/y here instead of</span><br>    <span class="hljs-comment">// updateDxDy to avoid swiping if user moves more in the other direction</span><br>    <span class="hljs-keyword">final</span> <span class="hljs-type">float</span> <span class="hljs-variable">x</span> <span class="hljs-operator">=</span> motionEvent.getX(pointerIndex);<br>    <span class="hljs-keyword">final</span> <span class="hljs-type">float</span> <span class="hljs-variable">y</span> <span class="hljs-operator">=</span> motionEvent.getY(pointerIndex);<br><br>    <span class="hljs-comment">// Calculate the distance moved -&gt; 计算滑动距离</span><br>    <span class="hljs-keyword">final</span> <span class="hljs-type">float</span> <span class="hljs-variable">dx</span> <span class="hljs-operator">=</span> x - mInitialTouchX;<br>    <span class="hljs-keyword">final</span> <span class="hljs-type">float</span> <span class="hljs-variable">dy</span> <span class="hljs-operator">=</span> y - mInitialTouchY;<br>    <span class="hljs-comment">// swipe target is chose w/o applying flags so it does not really check if swiping in that</span><br>    <span class="hljs-comment">// direction is allowed. This why here, we use mDx mDy to check slope value again.</span><br>    <span class="hljs-keyword">final</span> <span class="hljs-type">float</span> <span class="hljs-variable">absDx</span> <span class="hljs-operator">=</span> Math.abs(dx);<br>    <span class="hljs-keyword">final</span> <span class="hljs-type">float</span> <span class="hljs-variable">absDy</span> <span class="hljs-operator">=</span> Math.abs(dy);<br>	<br>    <span class="hljs-comment">// 这里的 mSlop 在上面提到的 setupCallbacks() 中被赋值</span><br>    <span class="hljs-comment">// 主要用于解决滑动冲突，如果我们侧滑的距离不够则不进行下一步操作（如删除），直接返回</span><br>    <span class="hljs-comment">// 只有滑动的距离大于 mSlop 值，才继续执行</span><br>    <span class="hljs-comment">// 说起来，和我们的日常习惯对上了</span><br>    <span class="hljs-keyword">if</span> (absDx &lt; mSlop &amp;&amp; absDy &lt; mSlop) &#123;<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>    <span class="hljs-comment">// 下面一部分代码也是判断滑动距离的</span><br>    ...<br>    <span class="hljs-comment">// 这里也通过 select() 方法进行选中操作</span><br>    <span class="hljs-comment">// 将 FLAG = ACTION_STATE_SWIPE 传入，代表是侧滑操作</span><br>    select(vh, ACTION_STATE_SWIPE);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>好了，了解了如何判断手势进行了何种操作，接下来我们该重点研究 <strong>select()</strong> 方法了，这是一个十分重要的方法，我们需要通过它来选中我们想要进行拖拽或侧滑操作的View。然后对其进行具体的操作。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">void</span> <span class="hljs-title function_">select</span><span class="hljs-params">(<span class="hljs-meta">@Nullable</span> ViewHolder selected, <span class="hljs-type">int</span> actionState)</span> &#123;<br>    <span class="hljs-comment">// 如果已经选中就直接返回</span><br>    <span class="hljs-keyword">if</span> (selected == mSelected &amp;&amp; actionState == mActionState) &#123;<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>    ...<br>    <span class="hljs-comment">// 赋值操作，之前的状态</span><br>    <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">prevActionState</span> <span class="hljs-operator">=</span> mActionState;<br>    mActionState = actionState;<br>    <span class="hljs-comment">// 执行当前状态为&#x27;拖拽&#x27;的操作</span><br>    <span class="hljs-keyword">if</span> (actionState == ACTION_STATE_DRAG) &#123;<br>        <span class="hljs-comment">// 如果没有选中一个item，就抛出异常</span><br>        <span class="hljs-keyword">if</span> (selected == <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalArgumentException</span>(<span class="hljs-string">&quot;Must pass a ViewHolder when dragging&quot;</span>);<br>        &#125;<br>		<span class="hljs-comment">// 为选中的子视图设置绘制监听，主要为了设置绘制的顺序</span><br>        mOverdrawChild = selected.itemView;<br>        addChildDrawingOrderCallback();<br>    &#125;<br>    ...<br>    <span class="hljs-keyword">if</span> (mSelected != <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">final</span> <span class="hljs-type">ViewHolder</span> <span class="hljs-variable">prevSelected</span> <span class="hljs-operator">=</span> mSelected;<br>        <span class="hljs-keyword">if</span> (prevSelected.itemView.getParent() != <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-comment">// 如果之前的状态是拖拽，则给swipeDir赋值为0，否则执行swipeIfNecessary()操作</span><br>            <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">swipeDir</span> <span class="hljs-operator">=</span> prevActionState == ACTION_STATE_DRAG ? <span class="hljs-number">0</span><br>                    : swipeIfNecessary(prevSelected);<br>            <span class="hljs-type">int</span> animationType;<br>            ...<br>            <span class="hljs-comment">// 执行一系列判断操作，代码简单我就不过多解释了</span><br>            <span class="hljs-keyword">if</span> (prevActionState == ACTION_STATE_DRAG) &#123;<br>                animationType = ANIMATION_TYPE_DRAG;<br>            &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (swipeDir &gt; <span class="hljs-number">0</span>) &#123;<br>                animationType = ANIMATION_TYPE_SWIPE_SUCCESS;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                animationType = ANIMATION_TYPE_SWIPE_CANCEL;<br>            &#125;<br>            ...<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            removeChildDrawingOrderCallbackIfNecessary(prevSelected.itemView);<br>            mCallback.clearView(mRecyclerView, prevSelected);<br>        &#125;<br>        <span class="hljs-comment">// 将选中状态置为空</span><br>        mSelected = <span class="hljs-literal">null</span>;<br>    &#125;<br>    <span class="hljs-keyword">if</span> (selected != <span class="hljs-literal">null</span>) &#123;<br>        mSelectedFlags =<br>                (mCallback.getAbsoluteMovementFlags(mRecyclerView, selected) &amp; actionStateMask)<br>                        &gt;&gt; (mActionState * DIRECTION_FLAG_COUNT);<br>        mSelectedStartX = selected.itemView.getLeft();<br>        mSelectedStartY = selected.itemView.getTop();<br>        mSelected = selected;<br><br>        <span class="hljs-keyword">if</span> (actionState == ACTION_STATE_DRAG) &#123;<br>            mSelected.itemView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);<br>        &#125;<br>    &#125;<br>    ...<br>    <span class="hljs-comment">// 这是一个ItemTouchUIUtil的一个接口，需要我们自己来实现具体功能，比如选中改变item的样式</span><br>    mCallback.onSelectedChanged(mSelected, mActionState);<br>    <span class="hljs-comment">// 刷新拖拽或侧滑更新后的位置</span><br>    mRecyclerView.invalidate();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>我们自己实现的 <strong>onSelectedChanged()</strong> 如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 长按时调用</span><br>override fun <span class="hljs-title function_">onSelectedChanged</span><span class="hljs-params">(viewHolder: RecyclerView.ViewHolder?, actionState: Int)</span> &#123;<br>	<span class="hljs-built_in">super</span>.onSelectedChanged(viewHolder, actionState)<br>    viewHolder?.let &#123;<br>    	onCallBack.onSelectedChanged(viewHolder, actionState)<br>    &#125;<br>&#125;<br><br>override fun <span class="hljs-title function_">onSelectedChanged</span><span class="hljs-params">(viewHolder: RecyclerView.ViewHolder, actionState: Int)</span> &#123;<br>	<span class="hljs-comment">// 选中的改变样式</span><br>	viewHolder.itemView.alpha = <span class="hljs-number">1f</span><br>	viewHolder.itemView.scaleX = <span class="hljs-number">1.2f</span><br>	viewHolder.itemView.scaleY = <span class="hljs-number">1.2f</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>好了，看了这么多源码以及我对部分源码的讲解，我们现在来总结一下整个流程，这个过程也是在教大家如何看源码，在源码中找到关键之处。</p>
+<blockquote>
+<p>我们通过<code>ItemTouchHelper</code>实现拖拽，侧滑功能，为了实现这两个功能，我们得先要将我们自己的<code>RecyclerView</code>和源码中的绑定，然后进行手势操作的监听，监听我们对<code>item</code>进行了何种操作，是侧滑操作还是长按拖拽操作。我们记得是通过 <strong>onLongPress()</strong> 和 <strong>checkSelectForSwipe()</strong> 两个方法来判断的，判断之后，两个方法都调用了 <strong>select()</strong> 来选中执行的 Item。关于 select() 方法呢，我还有一点补充：</p>
+<ol>
+<li><p>如果处于手势开始阶段，即<code>selected</code>不为null，那么会通过<code>getAbsoluteMovementFlags</code>方法来获取执行我们设置的flag，这个方法就是我们通过 <strong>checkSelectForSwipe()</strong> 和 <strong>onLongPress()</strong> 传进来的，上面也讲到了。这样我们就知道执行哪些行为(侧滑或者拖动)和方向(上、下、左和右)。同时还会记录下被选中<code>ItemView</code>的位置。简而言之，就是一些变量的初始化。</p>
+</li>
+<li><p>如果处于手势释放阶段，即<code>selected</code>为null，同时<code>mSelected</code>不为null，那么此时需要做的事情就稍微有一点复杂。手势释放之后，需要做的事情无非有两件：1. 相关的<code>ItemView</code>到正确的位置，就比如说，如果滑动条件不满足，那么就返回原来的位置，这个就是一个动画；2. 清理操作，比如说将<code>mSelected</code>重置为null之类的。</p>
+</li>
+</ol>
+</blockquote>
+<p>到了这里，我们已经可以对自己的 RecyclerView 的 Item 选中并进行下一步操作了。我们先带着一个疑问来继续分析，那就是我们怎么让选中的 Item 跟随我们的手指进行移动呢？</p>
+<p>我们知道，View 的 <strong>onTouchEvent()</strong> 方法是专门对触摸事件进行操作的，那我们就从源码中找到这个方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onTouchEvent</span><span class="hljs-params">(<span class="hljs-meta">@NonNull</span> RecyclerView recyclerView, <span class="hljs-meta">@NonNull</span> MotionEvent event)</span> &#123;<br>    ...<br>    <span class="hljs-comment">// 如果速度轨迹不为空，就是当前有触摸事件，将该event添加进去</span><br>    <span class="hljs-keyword">if</span> (mVelocityTracker != <span class="hljs-literal">null</span>) &#123;<br>        mVelocityTracker.addMovement(event);<br>    &#125;<br>    <span class="hljs-comment">// 当前的手势操作ID为NONE，直接返回</span><br>    <span class="hljs-keyword">if</span> (mActivePointerId == ACTIVE_POINTER_ID_NONE) &#123;<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>    <span class="hljs-comment">// 获取该event的Id,对MotionEvent不太懂的移步 -&gt; &#x27;补充&#x27;</span><br>    <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">action</span> <span class="hljs-operator">=</span> event.getActionMasked();<br>    <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">activePointerIndex</span> <span class="hljs-operator">=</span> event.findPointerIndex(mActivePointerId);<br>    <span class="hljs-comment">// 进行是否为侧滑事件的判断</span><br>    <span class="hljs-keyword">if</span> (activePointerIndex &gt;= <span class="hljs-number">0</span>) &#123;<br>        checkSelectForSwipe(action, event, activePointerIndex);<br>    &#125;<br>    <span class="hljs-type">ViewHolder</span> <span class="hljs-variable">viewHolder</span> <span class="hljs-operator">=</span> mSelected;<br>    <span class="hljs-comment">// 如果没选中 ViewHolder 直接返回</span><br>    <span class="hljs-keyword">if</span> (viewHolder == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>    <span class="hljs-keyword">switch</span> (action) &#123;<br>        <span class="hljs-keyword">case</span> MotionEvent.ACTION_MOVE: &#123;<br>            <span class="hljs-comment">// Find the index of the active pointer and fetch its position</span><br>            <span class="hljs-keyword">if</span> (activePointerIndex &gt;= <span class="hljs-number">0</span>) &#123;<br>                updateDxDy(event, mSelectedFlags, activePointerIndex);<br>                moveIfNecessary(viewHolder);<br>                mRecyclerView.removeCallbacks(mScrollRunnable);<br>                mScrollRunnable.run();<br>                mRecyclerView.invalidate();<br>            &#125;<br>            <span class="hljs-keyword">break</span>;<br>        &#125;<br>        <span class="hljs-comment">// 被其他事件拦截的处理，将轨迹清除</span><br>        <span class="hljs-keyword">case</span> MotionEvent.ACTION_CANCEL:<br>            <span class="hljs-keyword">if</span> (mVelocityTracker != <span class="hljs-literal">null</span>) &#123;<br>                mVelocityTracker.clear();<br>            &#125;<br>        <span class="hljs-comment">// fall through</span><br>        <span class="hljs-comment">// 手指抬起，将Id置为NONE，退出switch</span><br>        <span class="hljs-keyword">case</span> MotionEvent.ACTION_UP:<br>            select(<span class="hljs-literal">null</span>, ACTION_STATE_IDLE);<br>            mActivePointerId = ACTIVE_POINTER_ID_NONE;<br>            <span class="hljs-keyword">break</span>;<br>        ...<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>对 onTouchEvent() 我对这个方法讲的很清楚，也相信大家明白了大致流程，其中对我们来说最重要的就是 <strong>ACTION_MOVE</strong> ，在这里面的就是我们手指滑动过程中进行的。我们对这里面的代码一行一行分析。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">case</span> MotionEvent.ACTION_MOVE: &#123;<br>    <span class="hljs-comment">// Find the index of the active pointer and fetch its position</span><br>    <span class="hljs-keyword">if</span> (activePointerIndex &gt;= <span class="hljs-number">0</span>) &#123;<br>        updateDxDy(event, mSelectedFlags, activePointerIndex);<br>        moveIfNecessary(viewHolder);<br>        mRecyclerView.removeCallbacks(mScrollRunnable);<br>        mScrollRunnable.run();<br>        mRecyclerView.invalidate();<br>    &#125;<br>    <span class="hljs-keyword">break</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>第一步：更新<code>mDx</code>和<code>mDy</code>的值。<code>mDx</code>和<code>mDy</code>表示手指在x轴和y轴上分别滑动的距离，将<code>mSelectedFlags</code>和<code>activePointerIndex</code>作为参数传过去，第一个代表选中的操作，是侧滑还是拖拽；第二个是当前触摸事件的Id，唯一标识。</p>
+<p>第二步：如果需要，移动其他<code>ItemView</code>的位置。这个主要针对拖动行为，我们具体来看看这部分的源码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">void</span> <span class="hljs-title function_">moveIfNecessary</span><span class="hljs-params">(ViewHolder viewHolder)</span> &#123;<br>    <span class="hljs-comment">// 下面这些代码都是不符合 move 的条件</span><br>    ...<br>    <span class="hljs-comment">// 找可能会交换位置的ItemView</span><br>    List&lt;ViewHolder&gt; swapTargets = findSwapTargets(viewHolder);<br>    <span class="hljs-keyword">if</span> (swapTargets.size() == <span class="hljs-number">0</span>) &#123;<br>    	<span class="hljs-keyword">return</span>;<br>    &#125;<br>    <span class="hljs-comment">// may swap. -&gt; 找到符合条件交换的ItemView</span><br>    <span class="hljs-type">ViewHolder</span> <span class="hljs-variable">target</span> <span class="hljs-operator">=</span> mCallback.chooseDropTarget(viewHolder, swapTargets, x, y);<br>    <span class="hljs-keyword">if</span> (target == <span class="hljs-literal">null</span>) &#123;<br>        mSwapTargets.clear();<br>        mDistances.clear();<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>    <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">toPosition</span> <span class="hljs-operator">=</span> target.getAdapterPosition();<br>    <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">fromPosition</span> <span class="hljs-operator">=</span> viewHolder.getAdapterPosition();<br>    <span class="hljs-comment">// 回调Callback里面的onMove方法，这个方法需要我们手动实现，在基本使用里有，大家可以上去翻翻</span><br>    <span class="hljs-keyword">if</span> (mCallback.onMove(mRecyclerView, viewHolder, target)) &#123;<br>        <span class="hljs-comment">// keep target visible</span><br>        mCallback.onMoved(mRecyclerView, viewHolder, fromPosition,<br>                target, toPosition, x, y);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>总的来说，分为三步：</p>
+<ol>
+<li><p>调用<code>findSwapTarget</code>方法，寻找可能会跟选中的<code>Item</code>交换位置的<code>Item</code>。这里判断的条件是只要选中的<code>Item</code>跟某一个<code>Item</code>重叠，那么这个<code>Item</code>可能会跟选中的<code>Item</code>交换位置。</p>
+</li>
+<li><p>调用Callback的<code>chooseDropTarget</code>方法来找到符合交换条件的<code>Item</code>。这里符合的条件是指，选中的<code>Item</code>的<code>bottom</code>大于目标<code>Item</code>的<code>bottom</code>或者<code>Item</code>的<code>top</code>大于目标<code>Item</code>的<code>top</code>。一般我们可以重写<code>chooseDropTarget</code>方法，来定义什么条件下就交换位置。</p>
+</li>
+<li><p>回调<code>Callback</code>的<code>onMove</code>方法,这个方法需要我们自己实现。这里需要注意的是，如果<code>onMove</code>方法返回为true的话，会调用<code>Callback</code>另一个<code>onMove</code>方法来保证target可见。为什么必须保证target可见呢？从官方文档上来看的话，如果target不可见，在某些滑动的情形下，target会被remove掉。</p>
+</li>
+</ol>
+<p>刚才说，<code>findSwapTargets()</code> 是找到可能会交换位置的<code>item</code>，而<code>chooseDropTarget()</code>是找到会交换位置的<code>item</code>就直接交换，听起来好抽象，那二者具体有什么区别呢？其中<code>findSwapTarget</code>方法是找到可能会交换位置的<code>ItemView</code>，<code>chooseDropTarget</code>方法是找到一定会交换位置的<code>ItemView</code>，这是两个方法的不同点。同时，如果此时在拖动，但是拖动的<code>ItemView</code>还未达到交换条件，也就是跟另一个<code>ItemView</code>只是重叠了一小部分，这种情况下，<code>findSwapTargets</code>方法返回的集合不为空，但是<code>chooseDropTarget</code>方法寻找的<code>ItemView</code>为空。</p>
+</blockquote>
+<p>第三步：如果当页展示的<code>Item</code>不符合条件，需要拖拽到更远的地方，这时就需要滑动<code>RecyclerView</code>。这个主要针对拖拽行为，此时如果拖动一个<code>ItemView</code>达到<code>RecyclerView</code>的底部或者顶部，会滑动<code>RecyclerView</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">final</span> <span class="hljs-type">Runnable</span> <span class="hljs-variable">mScrollRunnable</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Runnable</span>() &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">run</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">if</span> (mSelected != <span class="hljs-literal">null</span> &amp;&amp; scrollIfNecessary()) &#123;<br>            <span class="hljs-keyword">if</span> (mSelected != <span class="hljs-literal">null</span>) &#123; <span class="hljs-comment">//it might be lost during scrolling</span><br>                moveIfNecessary(mSelected);<br>            &#125;<br>            mRecyclerView.removeCallbacks(mScrollRunnable);<br>            ViewCompat.postOnAnimation(mRecyclerView, <span class="hljs-built_in">this</span>);<br>        &#125;<br>    &#125;<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<p>在<code>run</code>方法里面通过<code>scrollIfNecessary</code>方法来判断<code>RecyclerView</code>是否滚动，如果需要滚动,<code>scrollIfNecessary</code>方法会自动完成滚动操作。</p>
+<p>第四步：这步就是更新侧滑或者拖拽完成之后的视图了。<code>ItemView</code>在随着手指移动时，变化的是<code>translationX</code>和<code>translationY</code>两个属性，所以只需要调用<code>invalidate</code>方法就行。调用<code>invalidate</code>方法之后，相当于<code>RecyclerView</code>会重新绘制一次，那么所有<code>ItemDecoration</code>的<code>onDraw</code>和<code>onDrawOver</code>方法都会被调用，而恰好的是，<code>ItemTouchHelper</code>继承了<code>ItemDecoration</code>。而绘制的方法就是 <strong>onDraw()</strong> 。我们具体来看一下。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onDraw</span><span class="hljs-params">(Canvas c, RecyclerView parent, RecyclerView.State state)</span> &#123;<br>    <span class="hljs-comment">// we don&#x27;t know if RV changed something so we should invalidate this index.</span><br>    mOverdrawChildPosition = -<span class="hljs-number">1</span>;<br>    <span class="hljs-type">float</span> <span class="hljs-variable">dx</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>, dy = <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">if</span> (mSelected != <span class="hljs-literal">null</span>) &#123;<br>        getSelectedDxDy(mTmpPosition);<br>        dx = mTmpPosition[<span class="hljs-number">0</span>];<br>        dy = mTmpPosition[<span class="hljs-number">1</span>];<br>    &#125;<br>    <span class="hljs-comment">// 这里又调用了 Callback 的 onDraw 方法</span><br>    mCallback.onDraw(c, parent, mSelected,<br>            mRecoverAnimations, mActionState, dx, dy);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">void</span> <span class="hljs-title function_">onDraw</span><span class="hljs-params">(Canvas c, RecyclerView parent, ViewHolder selected,</span><br><span class="hljs-params">        List&lt;ItemTouchHelper.RecoverAnimation&gt; recoverAnimationList,</span><br><span class="hljs-params">        <span class="hljs-type">int</span> actionState, <span class="hljs-type">float</span> dX, <span class="hljs-type">float</span> dY)</span> &#123;<br>    <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">recoverAnimSize</span> <span class="hljs-operator">=</span> recoverAnimationList.size();<br>    ...<br>    <span class="hljs-keyword">if</span> (selected != <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">count</span> <span class="hljs-operator">=</span> c.save();<br>        onChildDraw(c, parent, selected, dX, dY, actionState, <span class="hljs-literal">true</span>);<br>        c.restoreToCount(count);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>调用<code>onChildDraw</code>方法，将所有正在交换位置的<code>ItemView</code>和被选中的<code>ItemView</code>作为参数传递过去。而在<code>onChildDraw</code>方法里面，调用了<code>ItemTouchUIUtil</code>的<code>onDraw</code>方法。我们从<code>ItemTouchUiUtil</code>的实现类<code>BaseImpl</code>找到答案：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onDraw</span><span class="hljs-params">(Canvas c, RecyclerView recyclerView, View view,</span><br><span class="hljs-params">	<span class="hljs-type">float</span> dX, <span class="hljs-type">float</span> dY, <span class="hljs-type">int</span> actionState, <span class="hljs-type">boolean</span> isCurrentlyActive)</span> &#123;<br>    view.setTranslationX(dX);<br>    view.setTranslationY(dY);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在这里改变了每个<code>ItemView</code>的<code>translationX</code>和<code>translationY</code>，从而实现了<code>ItemView</code>随着手指移动的效果。从这里，我们可以看出来，一旦调用<code>RecyclerView</code>的<code>invalidate</code>方法，<code>ItemTouchHelper</code>的<code>onDraw</code>方法和<code>onDrawOver</code>方法都会被执行。</p>
+<h2 id="六、补充"><a href="#六、补充" class="headerlink" title="六、补充"></a>六、补充</h2><p>我找到了一些题外知识，但与RV有关的文章，对于前面有些内容不懂的小伙伴可以参考一下~</p>
+<p>（1）<a target="_blank" rel="noopener" href="https://juejin.cn/post/6926439885742014472#heading-16">MotionEvent详解</a></p>
+<p>（2）<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_46526828/article/details/117296001?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522165771516516782248539532%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fall.%2522%257D&request_id=165771516516782248539532&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_ecpm_v1~rank_v31_ecpm-11-117296001-null-null.142%5Ev32%5Econtrol,185%5Ev2%5Econtrol&utm_term=listview%E5%92%8Crecyclerview%E7%BC%93%E5%AD%98&spm=1018.2226.3001.4187">ListView和RecyclerView缓存对比</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Android/">#Android</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>深入理解RecyclerView</div>
+      <div>http://example.com/2022/09/21/深入理解RecyclerView/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>September 21, 2022</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>Licensed under</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/09/21/Kotlin%E5%8D%8F%E7%A8%8B/" title="Kotlin协程">
+                        <span class="hidden-mobile">Kotlin协程</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
