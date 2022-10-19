@@ -1,0 +1,1203 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Retrofit&amp;RxJava初识Retrofit&amp;RxJava一个App是由UI和数据组成的，没有数据的app只是一个空壳，而数据大部分是从网络上获取的，网络请求也是Android相当重要的部分。我们最开始网络请求用的是HTTPURLConnection，我们需要写很多重复的模板代码，后来改用OkHttp，情况有所好转。而Square公司的Retrofit是目前Android开发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2022/10/19/Retrofit&RxJava/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Retrofit&amp;RxJava初识Retrofit&amp;RxJava一个App是由UI和数据组成的，没有数据的app只是一个空壳，而数据大部分是从网络上获取的，网络请求也是Android相当重要的部分。我们最开始网络请求用的是HTTPURLConnection，我们需要写很多重复的模板代码，后来改用OkHttp，情况有所好转。而Square公司的Retrofit是目前Android开发">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220321112958337.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331101028411.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331101044593.png">
+<meta property="og:image" content="http://example.com/AppData/Roaming/Typora/typora-user-images/image-20220330220006851.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331101623892.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331101729322.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331102920675.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331103139742.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331103324780.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331103718354.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331103950614.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331105519578.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331105846708.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331110233683.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331134414439.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331134636866.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331135240328.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331140126695.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331141742484.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331141918435.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331143427393.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331144954739.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331145415564.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331152212443.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331152305134.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331152521193.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331211146987.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220321112958337.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220329144944789.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/img_convert/f0c20c52f9f3a80368dd629c6abef178.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/uTools_1648554296237.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220329195340818.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/123.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/12312.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/RU1231231.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220329201550871.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/1231231.png">
+<meta property="og:image" content="http://example.com/AppData/Roaming/Typora/typora-user-images/image-20220329202545388.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220330090354732.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220330092533820.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220330093305420.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220330093506692.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220403001609758.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220330105512818.png">
+<meta property="og:image" content="http://example.com/AppData/Roaming/Typora/typora-user-images/image-20220403002950713.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220330110015210.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220330151424771.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220330152142549.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/12371273.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220330152807935.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220330152820549.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220401191555825.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220401190728461.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220401191753621.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220401192118514.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/1da8059c654103264b6f4e2f15b2c891.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220330155332588.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220330155623308.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220330155850351.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220330160428693.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220401142746490.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220401142935263.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220401165144126.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220403105711333.png">
+<meta property="og:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220403105311173.png">
+<meta property="article:published_time" content="2022-10-19T08:54:02.069Z">
+<meta property="article:modified_time" content="2022-10-11T05:41:20.130Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220321112958337.png">
+  
+  
+  
+  <title>Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text=""></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-10-19 16:54" pubdate>
+          October 19, 2022 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          37k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          310 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none"></h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Retrofit-amp-RxJava"><a href="#Retrofit-amp-RxJava" class="headerlink" title="Retrofit&amp;RxJava"></a>Retrofit&amp;RxJava</h1><h2 id="初识Retrofit-amp-RxJava"><a href="#初识Retrofit-amp-RxJava" class="headerlink" title="初识Retrofit&amp;RxJava"></a>初识Retrofit&amp;RxJava</h2><p>一个App是由UI和数据组成的，没有数据的app只是一个空壳，而数据大部分是从网络上获取的，网络请求也是Android相当重要的部分。我们最开始网络请求用的是HTTPURLConnection，我们需要写很多重复的模板代码，后来改用OkHttp，情况有所好转。而Square公司的Retrofit是目前Android开发最流行的网络请求开源库，它基于OkHttp，可能大家之前已经用过了，它使用起来相当方便。但是作为一个合格的Android开发者，我们不能只会调api，要了解其原理，看看这个Retrofit到底好在哪里了，凭什么大家都用它呢？</p>
+<p>而说到网络请求，离不开的就是异步&#x2F;多线程。Android的线程管理和Java不同，它有一个主线程：AndroidMainThread(好像是叫这个)，</p>
+<p>用于处理屏幕刷新等任务，主线程永不退出，内部原理是消息队列Handler</p>
+<p>如果你在主线程中执行了超过一定时间的耗时任务后，就会出现ANR（Application Not Responding程序未响应），大家玩手机肯定都遇到过</p>
+<blockquote>
+<p>在Android里，应用程序的响应性是由Activity Manager和WindowManager系统服务监视的 ，也就是AMS和WMS。当它监测到以下情况中的一个时，Android就会针对特定的应用程序显示ANR：</p>
+<ol>
+<li>在5秒内没有响应输入的事件（例如，按键按下，屏幕触摸）</li>
+<li>BroadcastReceiver在10秒内没有执行完毕</li>
+</ol>
+</blockquote>
+<p>而网络请求是很耗时的，所以我们需要切换线程来执行它，否则就会出现ANR，这是我们所不想看到的。因此对于安卓开发者来说，线程控制也是十分重要的。这也是为什么要把RxJava和Retrofit放到一起讲。Retrofit和RxJava都提供了清晰明了的异步调用api，比如Retrofit的Call.enqueue，RxJava的线程切换操作符，但是其实他们内部实现线程切换的原理都是线程池，只不过是线程池的具体实现有所差异，所以对线程池有一定的理解是必要的，不需要你把Java线程池整个实现出来，但是你要清楚原理。然后还有一个很重要的问题，我开的异步线程任务执行完毕了，主线程该怎么拿到异步线程返回的数据呢？有很多种方法，但是都离不开再切换到主线程，我们可以用Handler来切换，它是回调式的写法，而回调式的写法比较难以阅读，因为它不是同步式的写法，同步简单来说就是代码按书写顺序执行。Retrofit默认使用的方式就是回调。而RxJava和回调不同，它的链式调用采用同步式的写法，写起来简洁优雅，切换线程也只是一个操作符的事，写起来挺爽的。来看一段掌邮的某个ViewModel网络请求的代码：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220321112958337.png" srcset="/img/loading.gif" lazyload alt="image-20220321112958337"></p>
+<p>这种链式的同步写法明显比回调更清晰，看着就爽。但是我们不用做选择题，Retrofit本身支持RxJava，那么我们的网络请求就摆脱了回调地狱。</p>
+<p>（既然聊到掌邮了，就再多说点，相信在座的大多数人都会成为移动开发部的一分子，未来不久掌邮会交到你们手里</p>
+<p>掌邮的代码大家想看可以去拉下来看看，但是里面的代码其实真的挺乱的，比如相同功能的dialog工具类、rv的adapter就有好几个，所以我个人觉得有必要制定一个规范，一些简单常用的功能应该统一规范（比如一些Adapter，toast，dialog，activity&#x2F;fragment的跳转,rxjava的用法），有些工具类其实已经封装的很好了，但是如果没有相关文档或者足够详尽的注释或者没有硬性的要求，大家都不知道有这些个东西，就很容易自己写自己的，这样就会很乱，后续维护就会及其恶心，我之前迭代邮问，看吐了。。不是说写的不好吧，就是杂乱无章。还有就是依赖版本勤升，勤更新，拥抱新技术，要不然很容易年久失修，你长时间不升级它，技术更新的多了，再去动就很难了，可能你一升级依赖版本，跑都跑不动，掌邮现状。。）</p>
+<p>同时这里用到了LiveData，这样我们只需要调用这一个方法就能实现切换线程进行网络请求，返回请求结果，切换到主线程更新UI一条龙操作。虽然RxJava的链式调用确实很简洁，但是不要被它吓到了，其实光链式调用的话，就是简单的建造者模式而已。</p>
+<p>设计模式很重要，设计模式很重要，设计模式很重要，重要的事情说三遍，它是无数代OOP人总结的开发经验，对于代码设计和优化，比如解耦合等等有非常大的帮助，Retrofit,RxJava等第三方库里面也是大规模的用到设计模式。而回归本质，设计模式本身是一种思想，不要去生套某个设计模式的模板，理解其中的思想最重要，这些都是可迁移的，后面的内容也会涉及到Retrofit和RxJava中使用的设计模式</p>
+<h2 id="Retrofit"><a href="#Retrofit" class="headerlink" title="Retrofit"></a>Retrofit</h2><p>首先我们要讲的是：Retrofit是怎么生成接口的对象的呢？</p>
+<p>我们知道，接口是无法直接实例化的，你可能会说匿名内部类，但它的本质也是创建了一个类来继承了接口。</p>
+<p>所以我们明确一点，我们只能创建具体的类的对象，所以Retrofit肯定在执行Retrofit.create(Interface)的时候动态创建了接口的实现类（动态指的就是运行时）</p>
+<p>动态创建接口，抽象类，可继承类的实现类称作动态代理，而JDK内置了接口的动态代理，Retrofit就是通过它来创建接口对象的。但是如果你想动态代理抽象类，可继承类，那JDK就帮不了你了，有一个也很出名的三方库：Cglib实现了这个操作，我没咋用过，感兴趣的可以去了解一下</p>
+<p>接下来的讲解涉及到源码，因为我不可能一行一行给大家解释源码，只能梳理一遍大致的流程，所以会省略一些无关紧要的方法和代码，讲解的过程也会很跳跃并且没那么详尽，其实大家要看源码也不应该要求面面俱到，明白它的工作流程即可，真要把每一行都看了很折磨，也没必要。限于此及我个人能力有限，大家如果跟不上了或者听不懂了是很正常的，下去之后对照源码和课件自己再梳理梳理</p>
+<p>下面接着来讲动态代理</p>
+<h3 id="动态代理"><a href="#动态代理" class="headerlink" title="动态代理"></a>动态代理</h3><p>在讲动态代理之前我们先了解一下什么是静态代理，它是最普通，最常见的的代理模式：</p>
+<p>接着分析一下retrofit.create(Interface)到底干了什么</p>
+<blockquote>
+<p><code>retrofit.create(Interface)</code>:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//实它际上使用了JDK的动态代理，Proxy.newInstance方法就是JDK自带的动态代理方法</span><br><span class="hljs-comment">//参数里面有接口的ClassLoader，所以肯定涉及到类的生成啦</span><br><span class="hljs-keyword">return</span> Proxy.newInstance(Interface.ClassLoader,Class[]&#123;interface&#125; interfaces,<span class="hljs-keyword">new</span> <span class="hljs-title class_">InvocationHandler</span>()):<br><br><span class="hljs-comment">//最终调用ProxyGenerator.generateClassFile()生成并加载接口的代理类</span><br>getProxyConstructor(Interface.classLoader loader,Interface interface)<br>ProxyBuilder().build()<br>defineProxyClass(interfaces)<br>ProxyGenerator.generateProxyClass()<br>ProxyGenerator.generateClassFile()<br><span class="hljs-comment">//我们来看一下这个动态生成的代理类长什么样子，如果想查看动态代理类，首先要设置一个标志：</span><br>    TODO<br></code></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>但是最大的问题还没有解决，接口定义的都是抽象方法啊，又没有具体的实现，你生成了一个接口的动态代理类可以，那里面的方法具体逻辑是什么呀？</p>
+<p>我们注意看Proxy.newInstance还有一个参数：InvocationHandler，先来看看生成的动态代理类里面的方法的逻辑是什么：</p>
+<p>TODO</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java">&gt;<span class="hljs-comment">//代理类中具体的方法逻辑通过反射委托给了InvocationHandler的invoke方法：</span><br>&gt;<span class="hljs-keyword">package</span> java.lang.reflect;<br><br>&gt;<span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">InvocationHandler</span> &#123;<br>     Object <span class="hljs-title function_">invoke</span><span class="hljs-params">(Object var1, Method var2, Object[] var3)</span> <span class="hljs-keyword">throws</span> Throwable;<br>&gt;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>而在动态代理的时候，传入的InvocationHandler是由Retrofit自定义的，这是毋庸置疑的，因为网络请求的逻辑就是由Retrofit实现的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java">&gt;Proxy.newProxyInstance(service.getClassLoader(),<span class="hljs-keyword">new</span> <span class="hljs-title class_">Class</span>&lt;?&gt;[] &#123;service&#125;,<br>   <span class="hljs-keyword">new</span> <span class="hljs-title class_">InvocationHandler</span>() &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Object[] emptyArgs = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Obj</span><br>      <span class="hljs-meta">@Override</span><br>      <span class="hljs-keyword">public</span> <span class="hljs-meta">@Nullable</span> Object <span class="hljs-title function_">invoke</span><span class="hljs-params">(Object proxy, Method method, <span class="hljs-meta">@Nullable</span> Object[] args)</span><br>         <span class="hljs-keyword">throws</span> Throwable &#123;<br>       <span class="hljs-comment">// 如果方法是在Object类实现的，直接invoke，因为我们知道Object类是所有类的父类，我们的动态代理类也不例外</span><br>       <span class="hljs-keyword">if</span> (method.getDeclaringClass() == Object.class) &#123;<br>         <span class="hljs-keyword">return</span> method.invoke(<span class="hljs-built_in">this</span>, args);<br>       &#125;<br>       args = args != <span class="hljs-literal">null</span> ? args : emptyArgs;<br>       <span class="hljs-type">Platform</span> <span class="hljs-variable">platform</span> <span class="hljs-operator">=</span> Platform.get();<br>       <span class="hljs-comment">//如果是平台默认方法，也直接调用，否则调用 loadServiceMethod(method).invoke(args)，</span><br>       <span class="hljs-comment">//也就是说网络请求方法等一般方法都是调用loadServiceMethod(method).invoke(args)，</span><br>       <span class="hljs-comment">//那Retrofit关于网络请求的逻辑肯定逃不开这个方法的范畴了</span><br>       <span class="hljs-keyword">return</span> platform.isDefaultMethod(method)<br>           ? platform.invokeDefaultMethod(method, service, proxy, args)<br>           : loadServiceMethod(method).invoke(args);<br> &#125;<br></code></pre></td></tr></table></figure>
+</blockquote>
+<p>我们现在知道通过动态代理，可以为接口动态生成一个代理类。那么现在来看一下Retrofit对于一个网络请求方法的具体逻辑到底是怎么样的：</p>
+<h3 id="Retrofit网络请求的具体逻辑"><a href="#Retrofit网络请求的具体逻辑" class="headerlink" title="Retrofit网络请求的具体逻辑"></a>Retrofit网络请求的具体逻辑</h3><blockquote>
+<p>因为我们在接口中定义的网络请求方法既不是Object类的方法，也不是平台默认方法，所以InvocationHandler最终会调用loadServiceMethod(method).invoke(args)，先来看看loadServiceMethod(method)到底返回了什么</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java">&gt;ServiceMethod&lt;?&gt; loadServiceMethod(Method method) &#123;<br> result = ServiceMethod.parseAnnotations(<span class="hljs-built_in">this</span>, method);<br> <span class="hljs-keyword">return</span> result;<br></code></pre></td></tr></table></figure>
+
+</blockquote>
+<blockquote>
+<p>调用了ServiceMethod.parseAnnotations(this, method)  看看它干了什么：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java">&gt;<span class="hljs-comment">//省略非核心代码</span><br>&gt;<span class="hljs-type">RequestFactory</span> <span class="hljs-variable">requestFactory</span> <span class="hljs-operator">=</span> RequestFactory.parseAnnotations(retrofit, method);<br>&gt;<span class="hljs-keyword">return</span> HttpServiceMethod.parseAnnotations(retrofit, method, requestFactory);<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>传入retrofit和method，创建RequestFactory对象</li>
+<li>调用HttpServiceMethod.parseAnnotations(retrofit, method, requestFactory)</li>
+</ol>
+</blockquote>
+<blockquote>
+<p>那么看看HttpServiceMethod.parseAnnotations(retrofit, method, requestFactory)做了什么事：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs java">&gt;<span class="hljs-comment">//省略非核心代码</span><br>&gt;<span class="hljs-comment">//获取方法的注解，即&#x27;@GET&#x27;/&#x27;@POST&#x27;等</span><br>&gt;Annotation[] annotations = method.getAnnotations();<br><br>&gt;<span class="hljs-comment">//创建CallAdapter</span><br>&gt;CallAdapter&lt;ResponseT, ReturnT&gt; callAdapter =<br>      createCallAdapter(retrofit, method, adapterType, annotations);<br><br>&gt;<span class="hljs-comment">//创建Converter，用于处理请求结果Response</span><br>&gt;Converter&lt;ResponseBody, ResponseT&gt; responseConverter =<br>      createResponseConverter(retrofit, method, responseType);<br><br>&gt;<span class="hljs-comment">//OkHttpClient</span><br>&gt;okhttp3.Call.<span class="hljs-type">Factory</span> <span class="hljs-variable">callFactory</span> <span class="hljs-operator">=</span> retrofit.callFactory;<br>&gt;<span class="hljs-comment">//创建CallAdapted对象，其中的参数是Retrofit的核心，我们后面重点关注</span><br>&gt;<span class="hljs-comment">//那么就是调用它的invoke方法</span><br>&gt;<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">CallAdapted</span>&lt;&gt;(requestFactory, callFactory, responseConverter, callAdapter);<br></code></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>CallAdapted类是HttpServiceMethod的静态内部类，并且继承了HttpServiceMethod，它覆写了adapt方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java">&gt;<span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CallAdapted</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">HttpServiceMethod</span>&#123;<br>       <span class="hljs-meta">@Override</span><br>       <span class="hljs-keyword">protected</span> ReturnT <span class="hljs-title function_">adapt</span><span class="hljs-params">(Call&lt;ResponseT&gt; call, Object[] args)</span> &#123;<br>            <span class="hljs-keyword">return</span> callAdapter.adapt(call);<br>        &#125;<br>&gt;&#125;    <br></code></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>然而它并没有覆写invoke方法，那么实际调用它父类也就是HttpServiceMethod的invoke方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java">&gt;<span class="hljs-meta">@Override</span><br>&gt;<span class="hljs-keyword">final</span> <span class="hljs-meta">@Nullable</span> ReturnT <span class="hljs-title function_">invoke</span><span class="hljs-params">(Object[] args)</span> &#123;<br>    <span class="hljs-comment">//这里创建OkHttpCall，传入了众多Retrofit重要参数，如果我们接口方法的返回值是Call,返回值就是它</span><br>    Call&lt;ResponseT&gt; call = <span class="hljs-keyword">new</span> <span class="hljs-title class_">OkHttpCall</span>&lt;&gt;(requestFactory, args, callFactory, responseConverter);<br>    <span class="hljs-comment">//那么这里调用的就是CallAdapted的adapt，将Call类型转换为我们想要的类型，</span><br>    <span class="hljs-comment">//比如RxJava的Observable,协程的Flow等等</span><br>    <span class="hljs-keyword">return</span> adapt(call, args);<br>&gt;&#125;<br></code></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>下面重点分析Call&#x2F;OkHttpCall</p>
+<p>执行到这里，我们的网络请求方法返回了OkHttpCall的实例，但是这里并没有执行网络请求，在我们调用Call.execute&#x2F;enqueue之后才会去真正的请求网络，现在来看看OkHttpCall的enqueue方法</p>
+<p>OkHttpCall.enqueue()</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs java">&gt;<span class="hljs-comment">//省略非核心代码</span><br>&gt;<span class="hljs-meta">@Override</span><br>&gt;<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">enqueue</span><span class="hljs-params">(<span class="hljs-keyword">final</span> Callback&lt;T&gt; callback)</span> &#123;<br>   okhttp3.<span class="hljs-type">Call</span> <span class="hljs-variable">call</span> <span class="hljs-operator">=</span> createRawCall();<br>   call.enqueue(<br>      <span class="hljs-keyword">new</span> <span class="hljs-title class_">okhttp3</span>.Callback() &#123;   <br>        <span class="hljs-meta">@Override</span><br>          <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onResponse</span><span class="hljs-params">(okhttp3.Call call, okhttp3.Response rawResponse)</span> &#123;<br>               callback.onResponse(OkHttpCall.<span class="hljs-built_in">this</span>, response);<br>          &#125;<br>        <span class="hljs-meta">@Override</span><br>          <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onFailure</span><span class="hljs-params">(okhttp3.Call call, IOException e)</span> &#123;<br>              callback.onFailure(OkHttpCall.<span class="hljs-built_in">this</span>, e);<br>          &#125;<br>      &#125;)    <br>&gt;&#125;<br></code></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>实际调用了createRawCall方法返回的okhttp3.Call对象的enqueue，来看看createRawCall方法：</p>
+<p>OkHttpCall.createRawCall():</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">&gt;okhttp3.<span class="hljs-type">Call</span> <span class="hljs-variable">call</span> <span class="hljs-operator">=</span> callFactory.newCall(requestFactory.create(args));<br></code></pre></td></tr></table></figure>
+
+<p>这里一下子就涉及到我们刚刚提到过的Retrofit的两个核心部分：CallFactory，RequestFactory，我们逐个讲解，先讲RequestFactory</p>
+</blockquote>
+<h4 id="1-Retrofit的请求构建器：RequestFactory"><a href="#1-Retrofit的请求构建器：RequestFactory" class="headerlink" title="1.Retrofit的请求构建器：RequestFactory"></a>1.Retrofit的请求构建器：RequestFactory</h4><p>见名知意：RequestFactory，那就是用来<strong>构建Http的请求（包括请求头，请求体，请求方法等等）</strong>的</p>
+<blockquote>
+<p>首先来看看RequestFactory的构造</p>
+<p>在ServiceMethod.parseAnnotations(this, method)中，我们创建了RequestFactory：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">RequestFactory</span> <span class="hljs-variable">requestFactory</span> <span class="hljs-operator">=</span> RequestFactory.parseAnnotations(retrofit, method);<br></code></pre></td></tr></table></figure>
+
+<p>最终调用了Refactory.Builder(retrofit, method).build()创建了RequestFactory实例，看看这个方法都干了什么：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//这里获取了方法和方法参数的注解</span><br>Builder(Retrofit retrofit, Method method) &#123;<br>   <span class="hljs-built_in">this</span>.retrofit = retrofit;<br>   <span class="hljs-built_in">this</span>.method = method;<br>   <span class="hljs-built_in">this</span>.methodAnnotations = method.getAnnotations();<br>   <span class="hljs-built_in">this</span>.parameterTypes = method.getGenericParameterTypes();<br>   <span class="hljs-built_in">this</span>.parameterAnnotationsArray = method.getParameterAnnotations();<br>&#125;<br><br>RequestFactory <span class="hljs-title function_">build</span><span class="hljs-params">()</span> &#123;<br>   <span class="hljs-comment">//解析方法注解</span><br>   <span class="hljs-keyword">for</span> (Annotation annotation : methodAnnotations) &#123;<br>     parseMethodAnnotation(annotation);<br>   &#125;<br>&#125;<br><br><span class="hljs-comment">//创建parameterHandler的集合，用于解析参数注解</span><br><span class="hljs-type">int</span> <span class="hljs-variable">parameterCount</span> <span class="hljs-operator">=</span> parameterAnnotationsArray.length;<br>parameterHandlers = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ParameterHandler</span>&lt;?&gt;[parameterCount];<br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">p</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>, lastParameter = parameterCount - <span class="hljs-number">1</span>; p &lt; parameterCount; p++) &#123;<br>   <span class="hljs-comment">//TODO</span><br>   parameterHandlers[p] =<br>    parseParameter(p, parameterTypes[p], parameterAnnotationsArray[p], p == lastParameter);<br>&#125;<br><br><span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RequestFactory</span>(<span class="hljs-built_in">this</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+</blockquote>
+<blockquote>
+<p>ParameterHandler是一个抽象类，它的几个实现类的名字和我们在参数中使用的注解一致，例如：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331101028411.png" srcset="/img/loading.gif" lazyload alt="image-20220331101028411"></p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331101044593.png" srcset="/img/loading.gif" lazyload alt="image-20220331101044593"></p>
+<p>parseParameter方法调用了parseParameterAnnotation：它根据参数注解的类型，创建了对应的ParameterHandler实例</p>
+</blockquote>
+<blockquote>
+<p>来看一下RequestFactory的构造：</p>
+<p><img src="/../AppData/Roaming/Typora/typora-user-images/image-20220330220006851.png" srcset="/img/loading.gif" lazyload alt="image-20220330220006851"></p>
+<p>读取builder中的属性，设置一些与Http请求相关的参数</p>
+<p>我们再回到上面的OkHttpCall.createRawCall()，它调用了requestFactory.create(args)：</p>
+</blockquote>
+<blockquote>
+<p>RequestFactory.create(args)：用于创建Request，代表Http请求</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs java">&gt;okhttp3.Request <span class="hljs-title function_">create</span><span class="hljs-params">(Object[] args)</span> <span class="hljs-keyword">throws</span> IOException &#123;<br>  <span class="hljs-comment">//requestFactory构造时创建的parameterHandlers，用于处理参数注解</span><br>  ParameterHandler&lt;Object&gt;[] handlers = (ParameterHandler&lt;Object&gt;[]) parameterHandlers;<br>   <br>  <span class="hljs-type">int</span> <span class="hljs-variable">argumentCount</span> <span class="hljs-operator">=</span> args.length;<br>      <br>  <span class="hljs-comment">//创建RequestBuilder对象，用于构建Request对象（即Http请求），需要设置一些Http请求相关的参数</span><br>  <span class="hljs-type">RequestBuilder</span> <span class="hljs-variable">requestBuilder</span> <span class="hljs-operator">=</span><br>     <span class="hljs-keyword">new</span> <span class="hljs-title class_">RequestBuilder</span>(<br>       httpMethod,<br>       baseUrl,<br>       relativeUrl,<br>       headers,<br>       contentType,<br>       hasBody,<br>       isFormEncoded,<br>       isMultipart);<br>  <br>  <span class="hljs-comment">//通过ParameterHandler解析参数注解</span><br>  List&lt;Object&gt; argumentList = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;(argumentCount);<br>  <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">p</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; p &lt; argumentCount; p++) &#123;<br>     argumentList.add(args[p]);<br>     handlers[p].apply(requestBuilder, args[p]);<br>  &#125;<br>  <br>  <span class="hljs-keyword">return</span> okhttp3.Request(requestBuilder);<br>&gt;&#125;<br></code></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>ParameterHandler.apply()：ParameterHandler中为抽象方法，来看子类的是现，以Path为例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java">&gt;<span class="hljs-meta">@Override</span><br>&gt;<span class="hljs-keyword">void</span> <span class="hljs-title function_">apply</span><span class="hljs-params">(RequestBuilder builder, <span class="hljs-meta">@Nullable</span> T value)</span> <span class="hljs-keyword">throws</span> IOException &#123;<br> ...<br> <span class="hljs-comment">//调用了builder.addPathParam</span><br> builder.addPathParam(name, valueConverter.convert(value), encoded);<br>&gt;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>RequestBuilder.addPathParam：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331101623892.png" srcset="/img/loading.gif" lazyload alt="image-20220331101623892"></p>
+<p>把我们的url路径括起来的部分<img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331101729322.png" srcset="/img/loading.gif" lazyload alt="image-20220331101729322" style="zoom: 67%;" />替换为我们的参数</p>
+</blockquote>
+<blockquote>
+<p>我们再回到OkHttpCall.createRawCall()，现在Request请求构建好了，接下来是callFactory.newCall(Request):</p>
+</blockquote>
+<h4 id="2-Retrofit的网络请求底层实现：CallFactory"><a href="#2-Retrofit的网络请求底层实现：CallFactory" class="headerlink" title="2.Retrofit的网络请求底层实现：CallFactory"></a>2.Retrofit的网络请求底层实现：CallFactory</h4><p>用于返回一个Call对象，注意和刚才的OkHttpCall区分，OkHttpCall持有一个callFactory，callFactory用于创建一个okHttp3.Call的对象，网络请求的底层逻辑就在它里面</p>
+<blockquote>
+<p>首先来回顾一下OkHttpCall.createRawCall()中的callFactory是从哪来的：</p>
+<p>我们在CallAdapted的invoke中构造OkHttpCall对象时，传入了这个CallFactory：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331102920675.png" srcset="/img/loading.gif" lazyload alt="image-20220331102920675"></p>
+<p>在HttpServiceMethod.parseAnnotations中，创建并返回了CallAdapted对象，callFactory是retrofit的属性：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331103139742.png" srcset="/img/loading.gif" lazyload alt="image-20220331103139742"></p>
+<p>这个属性是在创建Retrofit对象时通过Retrofit.Builder.client方法设置的</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331103324780.png" srcset="/img/loading.gif" lazyload alt="image-20220331103324780"></p>
+<p>OkHttpClient是CallFactory的实现类，我们一般使用的CallFactory就是OkHttpClient，当没有手动添加CallFactory时，Retrofit提供的默认的CallFactory其实就是默认的OkHttpClient，因为Retrofit底层的网络请求就是通过OkHttp实现的。</p>
+<p>当然你也可以尝试写一个CallFactory的实现类替代OkHttp</p>
+</blockquote>
+<blockquote>
+<p>我们回到OkHttpCall.createRawCall()：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331103718354.png" srcset="/img/loading.gif" lazyload alt="image-20220331103718354"></p>
+<p>所以实际调用的是OkHttpClient.newCall(Request)：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331103950614.png" srcset="/img/loading.gif" lazyload alt="image-20220331103950614"></p>
+<p>实际上调用了：<code>RealCall.newRealCall(OkHttpClient, Request, false /* for web socket */)</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java">&gt;<span class="hljs-keyword">static</span> RealCall <span class="hljs-title function_">newRealCall</span><span class="hljs-params">(OkHttpClient client, Request originalRequest, <span class="hljs-type">boolean</span> forWebSocket)</span> &#123;<br>    <span class="hljs-comment">// Safely publish the Call instance to the EventListener.</span><br>    <span class="hljs-type">RealCall</span> <span class="hljs-variable">call</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RealCall</span>(client, originalRequest, forWebSocket);<br>    call.transmitter = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Transmitter</span>(client, call);<br>    <span class="hljs-keyword">return</span> call;<br>&gt;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>至此我们的Call对象就构建好了，enqueue实际上调用的是RealCall.enqueue：</p>
+</blockquote>
+<blockquote>
+<p>现在来分析RealCall.enqueue，到这里就是OkHttp的内容了:</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331105519578.png" srcset="/img/loading.gif" lazyload alt="image-20220331105519578"></p>
+<p>将网络请求任务放到线程池中，（注意一点：AsyncCall是OkHttpClient的非静态内部类，所以它持有OkHttpClient实例的引用），它实现了Runnable接口，所以它的逻辑在run方法中：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331105846708.png" srcset="/img/loading.gif" lazyload alt="image-20220331105846708"></p>
+<p>run()调用了execute()：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331110233683.png" srcset="/img/loading.gif" lazyload alt="image-20220331110233683"></p>
+<ol>
+<li><p>开始计时，我们在使用HTTPURLConnection时也设置了ConnectionTimeOut，因为请求是有时间限制的，OkHttp就是在这里计时的</p>
+</li>
+<li><p>getResponseWithInterceptorChain()：请求的实际逻辑</p>
+</li>
+<li><p>请求成功，回调onResponse()</p>
+</li>
+</ol>
+<p>  请求失败(超时，异常等)，回调onFailure()</p>
+<ol start="5">
+<li>最后通知线程池任务完成</li>
+</ol>
+</blockquote>
+<blockquote>
+<p>我们重点关注OkHttp是怎么发出请求的，也就是getResponseWithInterceptorChain()方法：</p>
+</blockquote>
+<p>在讲这个方法之前，我们先来了解一下一种设计模式：</p>
+<h4 id="责任链模式"><a href="#责任链模式" class="headerlink" title="责任链模式"></a>责任链模式</h4><p>参考：<a target="_blank" rel="noopener" href="https://refactoringguru.cn/design-patterns/chain-of-responsibility">责任链设计模式（职责链模式） (refactoringguru.cn)</a></p>
+<p>（<strong>亦称：</strong> 职责链模式、命令链、CoR、Chain of Command、Chain of Responsibility）</p>
+<ul>
+<li><strong>目的</strong>：<strong>责任链模式</strong>是一种行为设计模式， 允许你将请求沿着处理者链进行发送。 收到请求后， 每个处理者均可对请求进行处理， 或将其传递给链上的下个处理者。</li>
+</ul>
+<p>（我们以一个实例介绍它）</p>
+<ul>
+<li><p><strong>:disappointed:问题：（</strong></p>
+<p>假如你正在开发一个在线订购系统。 你希望对接口的访问进行限制，你希望只有用户登录后才可以创建订单，管理员则可以访问所有订单，所以你在请求发送到前给它做了一些处理：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331134414439.png" srcset="/img/loading.gif" lazyload alt="image-20220331134414439"></p>
+<p>过了一段时间，你觉得网络请求性能太差了，你希望将已经发送的请求进行缓存，再次请求发送已经被缓存的请求时就可以直接返回结果。又有人跟你提议希望你给请求进行加密………经过了一段时间你实现了这些需求：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331134636866.png" srcset="/img/loading.gif" lazyload alt="image-20220331134636866"></p>
+<p>你把所有的检查都放在了一起，本来处理请求的代码就已经混乱不堪， 而每次新增功能都会使其更加臃肿。 修改某个检查步骤有时会影响其他的检查步骤。 最糟糕的是， 当你希望复用这些检查步骤来保护其他系统组件时，你只能复制部分代码，因为这些组件只需部分而非全部的检查步骤。</p>
+<p>系统会变得让人非常费解， 而且其维护成本也会激增。 你在艰难地和这些代码共处一段时间后， 有一天终于决定对整个系统进行重构。</p>
+</li>
+<li><p>:smiley:<strong>解决方案</strong>: )</p>
+<p>我们的思路很简单：将每个检查步骤抽取为单个类。而责任链模式建议我们将这些处理者串联成一条链条：<img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331135240328.png" srcset="/img/loading.gif" lazyload alt="image-20220331135240328"></p>
+<p>每个处理者接收请求之后，对它进行相应的处理，再把处理后的请求传给下一个处理者</p>
+</li>
+</ul>
+<p>不过还有一种稍微不同的方式 （也是更经典一种）， 那就是处理者接收到请求后自行决定是否能够对其进行处理。 如果自己能够处理， 处理者就不再继续传递请求。 因此在这种情况下， 每个请求要么最多有一个处理者对其进行处理， 要么没有任何处理者对其进行处理。</p>
+<p>你发没发现，这和我们Android的View树很像？</p>
+<h4 id="OkHttp中的责任链模式"><a href="#OkHttp中的责任链模式" class="headerlink" title="OkHttp中的责任链模式"></a>OkHttp中的责任链模式</h4><p>我们再通过OkHttp中的责任链模式，来看看责任链的代码实现，来看看OkHttp中责任链模式的各个部分：</p>
+<ol>
+<li><p>OkHttp中的“请求”：<strong>Request</strong></p>
+</li>
+<li><p>OkHttp中的“接受者”：<strong>Inteceptor（拦截器）</strong>：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331140126695.png" srcset="/img/loading.gif" lazyload alt="image-20220331140126695"></p>
+<p>Inteceptor是个接口，唯一定义的方法是intercept，这个方法完美概括了拦截器的职责：</p>
+<ol>
+<li>方法名intercept：拦截</li>
+<li>参数Chain：请求的传递</li>
+<li>返回值Response：获得请求结果,</li>
+</ol>
+<ul>
+<li>一般情况下，一个Interceptor在处理请求之后，传递给下一个拦截器（通过Chain实现），最后一个拦截器负责发送处理后的Request并取得Response，然后Response会反向传递，直到传给第一个Interceptor,所以每一个拦截器不仅可以处理Request，也可以处理Response</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p>现在具体来看看getResponseWithInterceptorChain()方法，看看OkHttp中的责任链到底是怎么实现的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs java">Response <span class="hljs-title function_">getResponseWithInterceptorChain</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> IOException &#123;<br>  <span class="hljs-comment">// 创建一个拦截器List</span><br>  List&lt;Interceptor&gt; interceptors = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>  <span class="hljs-comment">//首先将OkHttpClient中的拦截器添加进来，这是我们自己添加的拦截器，如果我们想添加拦截器，只需要：（演示）</span><br>  interceptors.addAll(client.interceptors());<br>  <span class="hljs-comment">//再添加OkHttp的默认拦截器</span><br>  interceptors.add(<span class="hljs-keyword">new</span> <span class="hljs-title class_">RetryAndFollowUpInterceptor</span>(client));<br>  interceptors.add(<span class="hljs-keyword">new</span> <span class="hljs-title class_">BridgeInterceptor</span>(client.cookieJar()));<br>  interceptors.add(<span class="hljs-keyword">new</span> <span class="hljs-title class_">CacheInterceptor</span>(client.internalCache()));<br>  interceptors.add(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ConnectInterceptor</span>(client));<br>  <span class="hljs-keyword">if</span> (!forWebSocket) &#123;<br>    interceptors.addAll(client.networkInterceptors());<br>  &#125;<br>  interceptors.add(<span class="hljs-keyword">new</span> <span class="hljs-title class_">CallServerInterceptor</span>(forWebSocket));<br><br>  <span class="hljs-comment">//构造Interceptor.Chain，传入interceptors，关注这个0，它代表当前拦截器interceptor在List&lt;Interceptor&gt;中的索引</span><br>  Interceptor.<span class="hljs-type">Chain</span> <span class="hljs-variable">chain</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RealInterceptorChain</span>(interceptors, transmitter, <span class="hljs-literal">null</span>, <span class="hljs-number">0</span>,<br>      originalRequest, <span class="hljs-built_in">this</span>, client.connectTimeoutMillis(),<br>      client.readTimeoutMillis(), client.writeTimeoutMillis());<br><br>  <span class="hljs-type">Response</span> <span class="hljs-variable">response</span> <span class="hljs-operator">=</span> chain.proceed(originalRequest);、<br>  <span class="hljs-keyword">return</span> response;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>1.首先构建了一个Chain实例，实际上是RealInterceptorChain实现类的实例</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331141742484.png" srcset="/img/loading.gif" lazyload alt="image-20220331141742484"></p>
+<p>Chain是Interceptor的内部类：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331141918435.png" srcset="/img/loading.gif" lazyload alt="image-20220331141918435"></p>
+<p>我们接着看getResponseWithInterceptorChain()接下来做了什么，调用了：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">&gt;<span class="hljs-type">Response</span> <span class="hljs-variable">response</span> <span class="hljs-operator">=</span> chain.proceed(originalRequest);<br></code></pre></td></tr></table></figure>
+
+<p>实际调用了RealInterceptorChain.proceed(Request)：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java">&gt;<span class="hljs-comment">// 省略非关键代码</span><br><span class="hljs-keyword">public</span> Response <span class="hljs-title function_">proceed</span><span class="hljs-params">(Request request, Transmitter transmitter, <span class="hljs-meta">@Nullable</span> Exchange exchange)</span><br><span class="hljs-keyword">throws</span> IOException &#123;<br><br><span class="hljs-type">RealInterceptorChain</span> <span class="hljs-variable">next</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RealInterceptorChain</span>(interceptors, transmitter, exchange,<br>   index + <span class="hljs-number">1</span>, request, call, connectTimeout, readTimeout, writeTimeout);<br>   <br><span class="hljs-comment">//此时index是0，那么就是获取第一个拦截器</span><br>  <span class="hljs-type">Interceptor</span> <span class="hljs-variable">interceptor</span> <span class="hljs-operator">=</span> interceptors.get(index);<br>   <span class="hljs-comment">//调用  </span><br>  <span class="hljs-type">Response</span> <span class="hljs-variable">response</span> <span class="hljs-operator">=</span> interceptor.intercept(next);<br>  <br>  <span class="hljs-keyword">return</span> response;<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+<p>  首先重新构建了RealInterceptorChain，区别是index +&#x3D; 1</p>
+<p>随后获取第一个拦截器（index &#x3D; 0），并调用：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331143427393.png" srcset="/img/loading.gif" lazyload alt="image-20220331143427393"></p>
+<p>传入了index+&#x3D;1的Chain。我们以RetryAndFollowUpInterceptor（重试&amp;跟踪重定向拦截器）为例，看看它的intercept方法干了什么：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">&gt;<span class="hljs-comment">//省略非关键代码（这里只关注它作为Interceptor的实现，不关注它对Request或Response做了什么处理）</span><br><span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">intercept</span><span class="hljs-params">(chain: <span class="hljs-type">Interceptor</span>.<span class="hljs-type">Chain</span>)</span></span>: Response &#123;<br>&gt;<span class="hljs-keyword">val</span> realChain = chain <span class="hljs-keyword">as</span> RealInterceptorChain<br><span class="hljs-keyword">var</span> request = chain.request<br><br><span class="hljs-keyword">var</span> response: Response<br>  <br>  response = realChain.proceed(request)<br> <span class="hljs-keyword">return</span> response<br>  &#125;<br>    &#125;<br></code></pre></td></tr></table></figure>
+<p>  调用response &#x3D; realChain.proceed(request)并返回，又回到了Chain.proceed方法，但因为index &#x3D; index+1,它会调用下一个拦截器的intercept，我们的Request就这样沿着拦截器链传递下去了</p>
+<p>最终会返回Response，Response从最后一个拦截器返回至第一个拦截器</p>
+<p>再返回到getResponseWithInterceptorChain()中：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331144954739.png" srcset="/img/loading.gif" lazyload alt="image-20220331144954739"></p>
+<p>Response再返回到getResponseWithInterceptorChain()的调用处：RealCall.execute()：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331145415564.png" srcset="/img/loading.gif" lazyload alt="image-20220331145415564"></p>
+<p>然后Response就会传给我们在Call.enqueue时传入的回调了</p>
+<p>至此Call.enqueue(Callback)分析结束，Retrofit大致流程的分析基本结束</p>
+<p>这里提一点，我并没有讲OkHttp具体的网络请求逻辑，具体的逻辑都在那几个默认拦截器里面，大家感兴趣的自己去看它们的源码⑧，在课上讲它们肯定是讲不完的。</p>
+</blockquote>
+<h4 id="3-Retrofit的适配器：CallAdapter"><a href="#3-Retrofit的适配器：CallAdapter" class="headerlink" title="3.Retrofit的适配器：CallAdapter"></a>3.Retrofit的适配器：CallAdapter</h4><p>我们刚刚分析了Call.enqueue(Callback)的过程，那如果我们的返回值不是Call呢？</p>
+<blockquote>
+<p>我们前面分析过，调用网络请求接口的方法，实际上是调用InvocationHandler.invoke，进而调用CallAdapted.invoke()：</p>
+</blockquote>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331152212443.png" srcset="/img/loading.gif" lazyload alt="image-20220331152212443"></p>
+<blockquote>
+<p>返回值并不是Call，而是adapt(call,args)：</p>
+</blockquote>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331152305134.png" srcset="/img/loading.gif" lazyload alt="image-20220331152305134"></p>
+<blockquote>
+<p>callAdapter是在HttpServiceMethod.parseAnnotations方法中创建的：</p>
+</blockquote>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331152521193.png" srcset="/img/loading.gif" lazyload alt="image-20220331152521193"></p>
+<p>参数解释：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//返回 方法返回值的类型，包括泛型类型</span><br><span class="hljs-type">Type</span> <span class="hljs-variable">adapterType</span> <span class="hljs-operator">=</span> method.getGenericReturnType();<br><span class="hljs-comment">//方法注释，@GET、@POST...</span><br>Annotation[] annotations = method.getAnnotations();<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>createCallAdapter方法：去Retrofit中储存的CallAdapter.Factory数组找到与adapterType对应的CallAdapter.Factory</p>
+<p>（我们通过调用Retrofit.Builder#addCallAdapterFactory(Factory)添加到Retrofit中储存的CallAdapter.Factory数组），并通过它构造一个CallAdapter实例，代码略多，这里就不贴了</p>
+<p>CallAdapter构造完了，我们回到adapt，调用callAdapter.adapt(call)，看看它干了什么：</p>
+<p>先来看看CallAdapter的定义吧，它是个接口：</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * Adapts a &#123;<span class="hljs-doctag">@link</span> Call&#125; with response type &#123;<span class="hljs-doctag">@code</span> R&#125; into the type of &#123;<span class="hljs-doctag">@code</span> T&#125;. Instances are</span><br><span class="hljs-comment"> * created by &#123;<span class="hljs-doctag">@linkplain</span> Factory a factory&#125; which is &#123;<span class="hljs-doctag">@linkplain</span></span><br><span class="hljs-comment"> * Retrofit.Builder#addCallAdapterFactory(Factory) installed&#125; into the &#123;<span class="hljs-doctag">@link</span> Retrofit&#125; instance.</span><br><span class="hljs-comment"> */</span><br><span class="hljs-comment">//CallAdapter用于将Call&lt;R&gt;转换为T（接口方法处声明的返回值，对应上面的adapterType），</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">CallAdapter</span>&lt;R, T&gt; &#123;<br>    <span class="hljs-comment">//返回Call&lt;R&gt;中的R</span><br>  Type <span class="hljs-title function_">responseType</span><span class="hljs-params">()</span>;<br><br>    <span class="hljs-comment">//将Call&lt;R&gt;转换为T</span><br>  T <span class="hljs-title function_">adapt</span><span class="hljs-params">(Call&lt;R&gt; call)</span>;<br><br>    <span class="hljs-comment">//工厂方法，用于构造CallAdapter对象</span><br>  <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Factory</span> &#123;<br>      <span class="hljs-comment">//返回一个CallAdapter实例，如果本Factory不能处理该returnType，则返回null</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-meta">@Nullable</span> CallAdapter&lt;?, ?&gt; get(<br>        Type returnType, Annotation[] annotations, Retrofit retrofit);<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * Extract the upper bound of the generic parameter at &#123;<span class="hljs-doctag">@code</span> index&#125; from &#123;<span class="hljs-doctag">@code</span> type&#125;. For</span><br><span class="hljs-comment">     * example, index 1 of &#123;<span class="hljs-doctag">@code</span> Map&lt;String, ? extends Runnable&gt;&#125; returns &#123;<span class="hljs-doctag">@code</span> Runnable&#125;.</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">static</span> Type <span class="hljs-title function_">getParameterUpperBound</span><span class="hljs-params">(<span class="hljs-type">int</span> index, ParameterizedType type)</span> &#123;<br>      <span class="hljs-keyword">return</span> Utils.getParameterUpperBound(index, type);<br>    &#125;<br><br>    <span class="hljs-comment">//如果Type是泛化类型，返回原始类型</span><br>    <span class="hljs-comment">//example: List&lt;String&gt; --&gt; List</span><br>    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">static</span> Class&lt;?&gt; getRawType(Type type) &#123;<br>      <span class="hljs-keyword">return</span> Utils.getRawType(type);<br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>接下来以RxJava3CallAdapterFactory为例分析：</p>
+<p>使用：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java">&gt;Retrofit.Builder()<br>&gt;.addCallAdapterFactory(RxJava3CallAdapterFactory.createSynchronous())<br></code></pre></td></tr></table></figure>
+
+<p>首先是RxJava3CallAdapterFactory.get：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><code class="hljs java">&gt;<span class="hljs-meta">@Override</span><br>&gt;<span class="hljs-keyword">public</span> <span class="hljs-meta">@Nullable</span> CallAdapter&lt;?, ?&gt; get(<br>&gt;<span class="hljs-comment">//期望返回值类型</span><br>&gt;Type returnType, Annotation[] annotations, Retrofit retrofit) &#123;<br>&gt;<span class="hljs-comment">//获取returnType的原始类型</span><br>&gt;Class&lt;?&gt; rawType = getRawType(returnType);<br><br>&gt;<span class="hljs-comment">//?</span><br>&gt;<span class="hljs-keyword">if</span> (rawType == Completable.class) &#123;<br>&gt;<span class="hljs-comment">// Completable is not parameterized (which is what the rest of this method deals with) so it</span><br>&gt;<span class="hljs-comment">// can only be created with a single configuration.</span><br>&gt;<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RxJava3CallAdapter</span>(<br>  Void.class, scheduler, isAsync, <span class="hljs-literal">false</span>, <span class="hljs-literal">true</span>, <span class="hljs-literal">false</span>, <span class="hljs-literal">false</span>, <span class="hljs-literal">false</span>, <span class="hljs-literal">true</span>);<br>&gt;&#125;<br><br>&gt;<span class="hljs-comment">//判断是否是Flowable/Single/Maybe</span><br>&gt;<span class="hljs-type">boolean</span> <span class="hljs-variable">isFlowable</span> <span class="hljs-operator">=</span> rawType == Flowable.class;<br>&gt;<span class="hljs-type">boolean</span> <span class="hljs-variable">isSingle</span> <span class="hljs-operator">=</span> rawType == Single.class;<br>&gt;<span class="hljs-type">boolean</span> <span class="hljs-variable">isMaybe</span> <span class="hljs-operator">=</span> rawType == Maybe.class;<br>&gt;<span class="hljs-comment">//如果不是Observable/Flowable/Single/Maybe其中之一，那么RxJava3CallAdapterFactory无法处理这个类型，返回null</span><br>&gt;<span class="hljs-keyword">if</span> (rawType != Observable.class &amp;&amp; !isFlowable &amp;&amp; !isSingle &amp;&amp; !isMaybe) &#123;<br>&gt;<span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>&gt;&#125;<br><br>&gt;<span class="hljs-type">boolean</span> <span class="hljs-variable">isResult</span> <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>;<br>   <span class="hljs-comment">//Observable的泛型既不是Response也不是Result</span><br>&gt;<span class="hljs-type">boolean</span> <span class="hljs-variable">isBody</span> <span class="hljs-operator">=</span> <span class="hljs-literal">false</span>;<br>&gt;Type responseType;<br><br>&gt;<span class="hljs-comment">//判断返回值是否有泛型，没有就抛异常</span><br>&gt;<span class="hljs-keyword">if</span> (!(returnType <span class="hljs-keyword">instanceof</span> ParameterizedType)) &#123;<br>&gt;<span class="hljs-type">String</span> <span class="hljs-variable">name</span> <span class="hljs-operator">=</span><br>  isFlowable ? <span class="hljs-string">&quot;Flowable&quot;</span> : isSingle ? <span class="hljs-string">&quot;Single&quot;</span> : isMaybe ? <span class="hljs-string">&quot;Maybe&quot;</span> : <span class="hljs-string">&quot;Observable&quot;</span>;<br>&gt;<span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalStateException</span>(<br>  name<br>          + <span class="hljs-string">&quot; return type must be parameterized&quot;</span><br>          + <span class="hljs-string">&quot; as &quot;</span><br>          + name<br>          + <span class="hljs-string">&quot;&lt;Foo&gt; or &quot;</span><br>          + name<br>          + <span class="hljs-string">&quot;&lt;? extends Foo&gt;&quot;</span>);<br>&#125;<br><br>  <span class="hljs-comment">//获取返回值第一个泛型参数，（即Observable&lt;R&gt;中的R）</span><br><span class="hljs-type">Type</span> <span class="hljs-variable">observableType</span> <span class="hljs-operator">=</span> getParameterUpperBound(<span class="hljs-number">0</span>, (ParameterizedType) returnType);<br>  <span class="hljs-comment">//获取泛型参数的原始类型，因为泛型可以嵌套</span><br>Class&lt;?&gt; rawObservableType = getRawType(observableType);<br>  <span class="hljs-comment">//检查返回值是Observable&lt;Response&lt;T&gt;&gt;的情况，确保Response/Result有泛型,</span><br>  <span class="hljs-comment">//Response有泛型，将返回值类型由Response&lt;T&gt;设置为T；否则抛异常</span><br><span class="hljs-keyword">if</span> (rawObservableType == Response.class) &#123;<br>  <span class="hljs-keyword">if</span> (!(observableType <span class="hljs-keyword">instanceof</span> ParameterizedType)) &#123;<br>    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalStateException</span>(<br>        <span class="hljs-string">&quot;Response must be parameterized&quot;</span> + <span class="hljs-string">&quot; as Response&lt;Foo&gt; or Response&lt;? extends Foo&gt;&quot;</span>);<br>  &#125;<br>  responseType = getParameterUpperBound(<span class="hljs-number">0</span>, (ParameterizedType) observableType);<br>&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (rawObservableType == Result.class) &#123;<br>  <span class="hljs-keyword">if</span> (!(observableType <span class="hljs-keyword">instanceof</span> ParameterizedType)) &#123;<br>    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalStateException</span>(<br>        <span class="hljs-string">&quot;Result must be parameterized&quot;</span> + <span class="hljs-string">&quot; as Result&lt;Foo&gt; or Result&lt;? extends Foo&gt;&quot;</span>);<br>  &#125;<br>  responseType = getParameterUpperBound(<span class="hljs-number">0</span>, (ParameterizedType) observableType);<br>  isResult = <span class="hljs-literal">true</span>;<br>&#125; <span class="hljs-keyword">else</span> &#123;<br>  responseType = observableType;<br>    <span class="hljs-comment">//返回值类型是Observable&lt;R&gt;中的R</span><br>  isBody = <span class="hljs-literal">true</span>;<br>&#125;<br><br><span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RxJava3CallAdapter</span>(<br>    responseType, scheduler, isAsync, isResult, isBody, isFlowable, isSingle, isMaybe, <span class="hljs-literal">false</span>);<br>&gt;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>RxJava3CallAdapter.adapt(call)：将call转换成接口方法返回值，这个转换是通过Observable嵌套实现的，现在先不讲，因为讲了估计也是一头雾水，学完下面要讲的RxJava再来看就很简单了</p>
+<p>但是这里有一个要注意的地方：就是这个isAsync参数。理解它之前，我们首先要明确一点：不管怎么转换，其实都是由Call.enqueue&#x2F;execute来得到请求结果Response的，isAsync决定是异步还是同步，这个值实际上是由我们RxJava3CallAdapterFactory的创建方式决定的，RxJava3CallAdapterFactory有三种创建方式：</p>
+<ul>
+<li>RxJava3CallAdapterFactory.create()：</li>
+</ul>
+<p>异步 isAsync&#x3D;true，使用Call.enqueue获取Response，而enqueue使用OkHttp的线程池，所以就会导致网络请求不在subscribeOn(可以指定网络请求的线程)指定的线程执行（学完RxJava再来理解）</p>
+<ul>
+<li>RxJava3CallAdapterFactory.createSynchronous()：</li>
+</ul>
+<p>同步 isAsync&#x3D;false，使用Call.execute获取Response</p>
+<ul>
+<li>RxJava3CallAdapterFactory.createWithScheduler(Scheduler):</li>
+</ul>
+<p>自己指定线程，相当于给Observable调用一次subscribeOn()（学完RxJava再来理解）</p>
+<p>所以我们在addCallAdapterFactory时也要注意</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs java">&gt;<span class="hljs-comment">//isAsync影响RxJava3CallAdapter的adapt方法（学完RxJava再来理解）</span><br>&gt;<span class="hljs-meta">@Override</span><br>&gt;<span class="hljs-keyword">public</span> Object <span class="hljs-title function_">adapt</span><span class="hljs-params">(Call&lt;R&gt; call)</span> &#123;<br>  <span class="hljs-comment">//首先构造Observable&lt;Response&lt;R&gt;&gt;</span><br>Observable&lt;Response&lt;R&gt;&gt; responseObservable =<br>    isAsync ? <span class="hljs-keyword">new</span> <span class="hljs-title class_">CallEnqueueObservable</span>&lt;&gt;(call) : <span class="hljs-keyword">new</span> <span class="hljs-title class_">CallExecuteObservable</span>&lt;&gt;(call);<br><br>Observable&lt;?&gt; observable;<br><span class="hljs-keyword">if</span> (isResult) &#123;<br>  observable = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ResultObservable</span>&lt;&gt;(responseObservable);<br>&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isBody) &#123;<br>  observable = <span class="hljs-keyword">new</span> <span class="hljs-title class_">BodyObservable</span>&lt;&gt;(responseObservable);<br>&#125; <span class="hljs-keyword">else</span> &#123;<br>  observable = responseObservable;<br>&#125;<br><br><span class="hljs-keyword">if</span> (scheduler != <span class="hljs-literal">null</span>) &#123;<br>  observable = observable.subscribeOn(scheduler);<br>&#125;<br><br><span class="hljs-keyword">if</span> (isFlowable) &#123;<br>  <span class="hljs-keyword">return</span> observable.toFlowable(BackpressureStrategy.LATEST);<br>&#125;<br><span class="hljs-keyword">if</span> (isSingle) &#123;<br>  <span class="hljs-keyword">return</span> observable.singleOrError();<br>&#125;<br><span class="hljs-keyword">if</span> (isMaybe) &#123;<br>  <span class="hljs-keyword">return</span> observable.singleElement();<br>&#125;<br><span class="hljs-keyword">if</span> (isCompletable) &#123;<br>  <span class="hljs-keyword">return</span> observable.ignoreElements();<br>&#125;<br><span class="hljs-keyword">return</span> RxJavaPlugins.onAssembly(observable);<br>&gt;&#125;<br></code></pre></td></tr></table></figure>
+</blockquote>
+<h4 id="4-Retrofit的转换器：Converter"><a href="#4-Retrofit的转换器：Converter" class="headerlink" title="4.Retrofit的转换器：Converter"></a>4.Retrofit的转换器：Converter</h4><blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java">&gt;<span class="hljs-comment">/**</span><br><span class="hljs-comment">&gt;* Convert objects to and from their representation in HTTP. Instances are created by &#123;<span class="hljs-doctag">@linkplain</span></span><br><span class="hljs-comment">&gt;* Factory a factory&#125; which is &#123;<span class="hljs-doctag">@linkplain</span> Retrofit.Builder#addConverterFactory(Factory) installed&#125;</span><br><span class="hljs-comment">&gt;* into the &#123;<span class="hljs-doctag">@link</span> Retrofit&#125; instance.</span><br><span class="hljs-comment">&gt;*/</span><br></code></pre></td></tr></table></figure>
+
+<p>Converter用于处理数据序列化。这个是Converter接口的注释，翻译一下：用于将对象转换至它在HTTP中的形式，或者将HTTP中的数据转换成对象</p>
+<p>我们一般是从JSON转换：</p>
+<p>Gson:     <code>com.squareup.retrofit:converter-gson</code><br>Jackson:<code>com.squareup.retrofit:converter-jackson</code><br>Moshi:    <code>com.squareup.retrofit:converter-moshi</code></p>
+<p>除了上面列出的，当然你自己也可以添加处理其他数据格式的<code>Converter.Factory</code>来转换JSON以外的其他数据格式，或者自己实现<code>Converter.Factory</code>类来定制自己的转换器</p>
+<p>我们解析JSON，一般添加的是GsonConverterFactory，使用如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">&gt;Retrofit.Builder().addConverterFactory(GsonConverterFactory.create())<br></code></pre></td></tr></table></figure>
+
+<p>如果不添加它，在接口返回值是JSON时就会出现这样的转换异常：找不到转换成对应数据类的Converter</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220331211146987.png" srcset="/img/loading.gif" lazyload alt="image-20220331211146987"></p>
+</blockquote>
+<p>至此，我们就大致完整的分析了一遍Retrofit :clap::clap:</p>
+<h2 id="RxJava"><a href="#RxJava" class="headerlink" title="RxJava"></a>RxJava</h2><h3 id="什么是RxJava？"><a href="#什么是RxJava？" class="headerlink" title="什么是RxJava？"></a>什么是RxJava？</h3><p>RxJava在GitHub上的简介：</p>
+<blockquote>
+<p>RxJava：a library for composing asynchronous and event-based programs using observable sequences for the Java VM</p>
+<p>翻译：在JVM平台上运行，通过事件序列组合 异步的基于事件的程序 的库</p>
+</blockquote>
+<p>概念总是抽象的，总结来说Rxjava干了两件事：</p>
+<ul>
+<li><strong>基于事件流的链式调用</strong>，使得RxJava写起来简洁优雅，</li>
+<li><strong>基于功能众多的操作符，</strong>随着程序逐渐复杂，依然能够保持简洁优雅，比如<strong>切换线程</strong></li>
+</ul>
+<p>再来看一下刚才我们看的掌邮的那段代码吧：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220321112958337.png" srcset="/img/loading.gif" lazyload alt="image-20220321112958337"></p>
+<h3 id="基于事件流的链式调用"><a href="#基于事件流的链式调用" class="headerlink" title="基于事件流的链式调用"></a>基于事件流的链式调用</h3><p>在讲解这点之前，我们首先来了解或回顾一下一种设计模式：</p>
+<h4 id="观察者模式"><a href="#观察者模式" class="headerlink" title="观察者模式"></a>观察者模式</h4><blockquote>
+<p>我们还是从问题引入</p>
+<p>:disappointed:问题:（</p>
+<p>假如你有两种类型的对象：  <code>顾客</code>和 <code>商店</code> 。 顾客对某个特定品牌的产品非常感兴趣 （例如最新型号的 iPhone 手机）， 而该产品很快将会在商店里上架。</p>
+<p>一方面，顾客可以每天来商店看看产品是否到货。 但如果商品尚未到货时， 来到商店的顾客都会空手而归。</p>
+<p>另一方面， 每次新产品到货时， 商店可以向所有顾客发送邮件 （可能会被视为垃圾邮件）。 这样， 部分顾客就无需反复前往商店了， 但也可能会惹恼对新产品没有兴趣的其他顾客。</p>
+<p>我们似乎遇到了一个矛盾： 要么让顾客浪费时间检查产品是否到货， 要么让商店浪费资源去通知没有需求的顾客。</p>
+<p>:smiley:解决方案：）订阅机制</p>
+<p>解决方案不难想出：商店保留一个列表，记录所有关注商品上架的顾客，商品到货后再通知列表上的顾客，这就是订阅机制</p>
+<p>订阅机制很常见，比如你在B站关注了一个Up主，</p>
+<ul>
+<li>观察者模式的应用</li>
+</ul>
+<p>观察者模式既简单又常用，当我们在B站关注了一个Up主，那么在ta发布了新视频或开播后，就会给所有的粉丝推送一条通知</p>
+<p>再比如大家熟悉的LiveData，它的实现就是最基本的观察者模式，只不过绑定了生命周期</p>
+<p>订阅机制中有两类成员：</p>
+<ol>
+<li><code>发布者 （publisher）</code>:它会将自身状态的改变发布给关注这个变化的对象</li>
+<li><code>订阅者（subscriber）</code>:所有希望关注发布者状态变化的其他对象被称为订阅者</li>
+</ol>
+<p>实现订阅机制也很简单：</p>
+<ol>
+<li>第一步，发布者需要持有一个订阅者数组<code>subscriber[]</code>，并且在事件发生时，遍历这个数组，通知给每一个订阅者，并且包含添加&#x2F;删除订阅者的方法</li>
+<li>订阅者需要包含响应事件的方法，我们定义<code>subscriber</code>接口，它唯一定义了一个方法<code>update()</code>，由具体的订阅者类实现这个接口，这样发布者在事件产生时才知道如何通知给订阅者</li>
+</ol>
+<img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220329144944789.png" srcset="/img/loading.gif" lazyload alt="image-20220329144944789" style="zoom:80%;" />
+</blockquote>
+<h4 id="RxJava中的观察者模式"><a href="#RxJava中的观察者模式" class="headerlink" title="RxJava中的观察者模式"></a>RxJava中的观察者模式</h4><p>RxJava的核心就是观察者模式，但它在实现上比较特殊，这种特殊性使得它支持简洁的链式调用：</p>
+<p>我们首先来了解一下RxJava的基本使用：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">//RxJava中的发布者称作Observable，如字面意思，可被观察的</span><br><span class="hljs-comment">//创建Observable对象的方式有很多种：</span><br><br><span class="hljs-number">1.</span>Observable.create(ObservableOnSubscribe&lt;<span class="hljs-built_in">Int</span>&gt; &#123; emitter -&gt;<br>  emitter.apply &#123;<br>     <span class="hljs-comment">//发送事件1，2，3</span><br>     onNext(<span class="hljs-number">1</span>)<br>     onNext(<span class="hljs-number">2</span>)<br>     onNext(<span class="hljs-number">3</span>)<br>   &#125;<br>&#125;<br>                    <br><span class="hljs-comment">//ObservableOnSubscribe接口，在它定义的方法中我们需要完成事件的生产和发送，因为它是SAM，所以我们可以用labmda表达式的写法： </span><br><span class="hljs-comment">//emitter负责将事件发送，这个emitter其实就是订阅者,onNext就是订阅者的回调方法</span><br>Observable.create&lt;<span class="hljs-built_in">Int</span>&gt; &#123;<br>    it.onNext(<span class="hljs-number">1</span>)<br>    it.onNext(<span class="hljs-number">1</span>)<br>    it.onNext(<span class="hljs-number">1</span>)<br>&#125;<br><br><span class="hljs-comment">//和第一种写法的效果一样，如果我们不需要生产事件，那么用just更方便，just用于发送现成的事件</span><br><span class="hljs-comment">//如果是网络请求，它就不适用了，因为我们要先请求数据</span><br><span class="hljs-number">2.</span>Observable.just(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">// RxJava中的订阅者称作Observer，它是一个接口，定义了几种回调</span><br><span class="hljs-keyword">val</span> observer = <span class="hljs-keyword">object</span> : Observer&lt;<span class="hljs-built_in">Int</span>&gt;&#123;<br>  <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onSubscribe</span><span class="hljs-params">(d: <span class="hljs-type">Disposable</span>)</span></span> &#123;&#125;<br><br>  <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onNext</span><span class="hljs-params">(t: <span class="hljs-type">Int</span>)</span></span> &#123;&#125;<br><br>  <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onError</span><span class="hljs-params">(e: <span class="hljs-type">Throwable</span>)</span></span> &#123;&#125;<br><br>  <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onComplete</span><span class="hljs-params">()</span></span> &#123;&#125;<br>&#125;<br><br><span class="hljs-comment">// 现在我们看RxJava的Observer是怎么订阅Observable的:</span><br>observable.subscribe(observer)<br><span class="hljs-comment">// 这里看起来有一点奇怪啊：为什么是发布者订阅订阅者呢？按照正常的逻辑不是订阅者订阅发布者吗</span><br><span class="hljs-comment">// 其实不管谁订阅谁，只要订阅后发布者保存了订阅者的引用就没问题，而RxJava之所以这样设计，是为了链式调用的顺畅，不需要管它</span><br><span class="hljs-comment">// 我们需要关注的是：在observable.subscribe(observer)这行代码调用后，即订阅发生后，</span><br><span class="hljs-comment">// Observable会立即调用构造时创建的生产&amp;发送事件的方法，将事件通知给订阅者</span><br></code></pre></td></tr></table></figure>
+
+<p>在<code>observable.subscribe(observer)</code>调用之后，<code>Observable</code>就会开始生产<code>事件</code>，并且事件会沿着我们的<code>链条</code>向下流动，直到交给<code>Observer</code>，事件被消费</p>
+<p>再来看看我们刚刚写的链条，虽然这个链条有点短，只有Observable和Observer：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">//在这简化了一下，将所有的操作合在一起</span><br>Observable.create(ObservableOnSubscribe&lt;<span class="hljs-built_in">Int</span>&gt; &#123; emitter -&gt;<br>    emitter.apply &#123;<br>      onNext(<span class="hljs-number">1</span>)<br>      onNext(<span class="hljs-number">2</span>)<br>      onNext(<span class="hljs-number">3</span>)<br>      onComplete()<br>    &#125; <br>  &#125;)<br>    .subscribe(<span class="hljs-keyword">object</span> : Observer&lt;<span class="hljs-built_in">Int</span>&gt;&#123;<br>      <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onSubscribe</span><span class="hljs-params">(d: <span class="hljs-type">Disposable</span>)</span></span> &#123;&#125;<br>      <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onNext</span><span class="hljs-params">(t: <span class="hljs-type">Int</span>)</span></span> &#123; println(t) &#125;<br>      <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onError</span><span class="hljs-params">(e: <span class="hljs-type">Throwable</span>)</span></span> &#123;&#125;<br>      <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onComplete</span><span class="hljs-params">()</span></span> &#123;&#125;<br>    &#125;)<br></code></pre></td></tr></table></figure>
+
+
+
+<p>执行起来就是如下图这样一个效果：</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/f0c20c52f9f3a80368dd629c6abef178.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h3 id="RxJava中的线程切换"><a href="#RxJava中的线程切换" class="headerlink" title="RxJava中的线程切换"></a>RxJava中的线程切换</h3><p>我们将RxJava中的线程操作符和RxJava的基本流程放在一起讲，我认为这样好理解一点</p>
+<p>RxJava中的线程切换涉及到两个操作符：</p>
+<ul>
+<li><code>subscribeOn(Scheduler)</code>：指定生产事件的线程，<strong>只有第一次调用生效</strong></li>
+<li><code>observeOn(Scheduler)</code>：指定该操作符之后所有针对事件操作的线程，直到下一个<code>observeOn</code>再次切换线程，<strong>每次调用都生效</strong></li>
+</ul>
+<h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">//RxJava的线程切换就是这么简单，想想之前回调式的切换线程的写法，被完爆</span><br>Observable.just(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>)<br>  .subscribeOn(Schedulers.newThread())<br>  .observeOn(Schedulers.newThread())<br>  .subscribe(<span class="hljs-keyword">object</span> : Observer&lt;<span class="hljs-built_in">Int</span>&gt;&#123;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onSubscribe</span><span class="hljs-params">(d: <span class="hljs-type">Disposable</span>)</span></span> &#123;&#125;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onNext</span><span class="hljs-params">(t: <span class="hljs-type">Int</span>)</span></span> &#123;&#125;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onError</span><span class="hljs-params">(e: <span class="hljs-type">Throwable</span>)</span></span> &#123;&#125;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onComplete</span><span class="hljs-params">()</span></span> &#123;&#125;<br>  &#125;)<br><span class="hljs-comment">//现在才有链条的样子</span><br></code></pre></td></tr></table></figure>
+
+<p>那么，为什么<code>observeOn(Scheduler)</code>可以多次使用来切换线程，而<code>subscribeOn(Scheduler)</code>只能切换一次呢？</p>
+<p>我们带着这个问题，从源码角度分析一下RxJava的订阅流程以及操作符的基本原理：</p>
+<h4 id="RxJava的基本订阅机制分析-amp-subscribeOn操作符"><a href="#RxJava的基本订阅机制分析-amp-subscribeOn操作符" class="headerlink" title="RxJava的基本订阅机制分析&amp;subscribeOn操作符"></a>RxJava的基本订阅机制分析&amp;subscribeOn操作符</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">//首先分析Observable的创建:Observable.create()</span><br>Observable.create()(ObservableOnSubscribe&lt;<span class="hljs-built_in">Int</span>&gt; &#123; emitter -&gt;<br>    emitter.apply &#123;<br>      onNext(<span class="hljs-number">1</span>)<br>      onNext(<span class="hljs-number">2</span>)<br>      onNext(<span class="hljs-number">3</span>)<br>      onComplete()<br>    &#125; <br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/uTools_1648554296237.png" srcset="/img/loading.gif" lazyload alt="uTools_1648554296237"></p>
+<p><code>RxJavaPlugins.onAssembly(new ObservableCreate&lt;&gt;(source));</code>RxJavaPlugins.onAssembly将<code>ObservableCreate</code>对象原封不动的返回，不进一步分析</p>
+<p>那么我们现在来看一下<code>ObservableCreate</code>的构造，它继承了Observable抽象类：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220329195340818.png" srcset="/img/loading.gif" lazyload alt="image-20220329195340818"></p>
+<p>并传入了一个<code>ObservableOnSubscribe</code>对象，还记得它吗：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">//它就是在create()时，我们自己定义的生产&amp;发送事件的方法</span><br>Observable.create()(ObservableOnSubscribe&lt;<span class="hljs-built_in">Int</span>&gt; &#123; emitter -&gt;<br>    emitter.apply &#123;<br>      onNext(<span class="hljs-number">1</span>)<br>      onNext(<span class="hljs-number">2</span>)<br>      onNext(<span class="hljs-number">3</span>)<br>      onComplete()<br>    &#125; <br>  &#125;)<br></code></pre></td></tr></table></figure>
+
+<p>create()返回了一个<code>ObservableCreate</code>对象，并将<code>ObservableOnSubscribe</code>传给了它</p>
+<p>所以实际调用的subscribe方法是ObservableCreate定义的，那么接下来分析<code>ObservableCreate.subscribe(Observer)</code>：</p>
+<p>subscribe是Observable抽象类 里面的方法，在ObservableCreate中没有覆写，我们看一下它做了什么：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/123.png" srcset="/img/loading.gif" lazyload alt="123"></p>
+<ul>
+<li><p>**1.**和之前一样，把observer原封不动的返回，不分析</p>
+</li>
+<li><p>**2.**实际上只调用了subscribeActual，那么subscribe的具体逻辑在subscribeActual中，它是Observable定义的抽象方法，ObservableCreate覆写了它：</p>
+</li>
+</ul>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/12312.png" srcset="/img/loading.gif" lazyload alt="12312"></p>
+<p>里面做了两件事：</p>
+<ul>
+<li><p>**1.**回调observer的onSubscribe方法</p>
+</li>
+<li><p>**2.**source.subscribe(parent)：即调用create()时我们传入的生产&#x2F;发送事件的方法，所以onSubscribe回调在事件流产生之前</p>
+<p>   从第一行代码我们也能猜出，这个Emitter发射器其实就是Observer</p>
+</li>
+</ul>
+<p>RxJava的基本订阅机制分析结束 </p>
+<p>接下来看看<code>subscribeOn(Scheduler)</code>做了些什么：</p>
+<p>它定义在Observable中：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/RU1231231.png" srcset="/img/loading.gif" lazyload alt="RU1231231"></p>
+<p>构造了一个ObservableSubscribeOn对象，它也继承了Observable。并将当前Observable（this）（注意这里的说法：当前Observable，为什么这么说呢，我们看这个方法，它将this包装成了一个新的Observable返回，而RxJava几乎所有的操作符都会这么做：将this包装成一个新的Observable，所以Observable会被一层一层包装，最后调用subscibe的Observable是<code>包装的最多的Observable</code>）和Scheduler作为参数传入它的构造方法，那么我们来看看这个ObservableSubscribeOn类的构造：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220329201550871.png" srcset="/img/loading.gif" lazyload alt="image-20220329201550871"></p>
+<p>他继承了AbstractObservableWithUpstream抽象类，构造时调用了父类的构造：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/1231231.png" srcset="/img/loading.gif" lazyload alt="1231231"></p>
+<p>父类的构造，保存了我们当前的Observable（this）</p>
+<p>如果subscribeOn之后直接subcribe，那么调用的就是ObservableSubscribeOn的subscribe方法，而我们知道subscribe方法的逻辑实际上在subscribeActual中，来看看ObservableSubscribeOn的subscribeActual方法干了什么：</p>
+<p><img src="/../AppData/Roaming/Typora/typora-user-images/image-20220329202545388.png" srcset="/img/loading.gif" lazyload alt="image-20220329202545388"></p>
+<p>前两行暂且不讨论，不代表它们不重要，后面会讲到，</p>
+<p>关键在最后一行，scheduler类似线程池，SubscribeTask实现了Runnable，那么看一下这个SubscribeTask的run方法：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220330090354732.png" srcset="/img/loading.gif" lazyload alt="image-20220330090354732"></p>
+<p>其实就是先切换线程，再调用source.subscribe(observer)，而source是在subscribeOn调用之前创建的Observable，我们叫它上层Observable</p>
+<p>那么总结一下，subscribeOn操作符干了几件事：</p>
+<ol>
+<li>新建了一个Observable，并保存上一层Observable（如果你多次调用subscribeOn，那么就会一层一层创建很多Observable，而每一层都保存了上一层的引用。其实绝大部分操作符都会这样做），这就像给上层Observable（本例中是ObservableCreate）套了一个壳一样，</li>
+</ol>
+<p>如果连续调用两次subscribeOn：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">observable<br>  .subscribeOn(Schedulers.trampoline())<br>  .subscribeOn(Schedulers.newThread())<br>  .subscribe &#123;<br><span class="hljs-comment">//    println(&quot;ObserverOn: &quot; + Thread.currentThread().name)</span><br>  &#125;<br>Thread.sleep(<span class="hljs-number">1000000</span>)<br></code></pre></td></tr></table></figure>
+
+<p>执行情况如图所示：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220330092533820.png" srcset="/img/loading.gif" lazyload alt="image-20220330092533820"></p>
+<p>而最后subscribe(Observer)时，调用的是完全包装的Observable的subscribe，而下层Observable的subscribe会调用上层Observable的subscribe，直到调用顶层Observable比如ObservableCreate的subscribe，之后开始生产&amp;发送事件。我们刚刚分析过，subscribeOn创建的Observable会在调用上层Observable的subscribe之前切换线程，而如果多次切换线程，最后切换到的线程才是执行线程。而按照subscribe的执行顺序，在多次subscribeOn的情况下，最后的线程切换是由第一次subscribeOn创建的Observable执行，所以最上层ObservableCreate的subscribe方法的线程是第一次调用的subscribeOn切换的线程</p>
+<p>到这里，我们分析完RxJava的基本订阅机制和subscribeOn操作符，以及为什么subscribeOn只有第一次生效</p>
+<p>接下来分析observeOn操作符：</p>
+<h4 id="observeOn操作符"><a href="#observeOn操作符" class="headerlink" title="observeOn操作符"></a>observeOn操作符</h4><p>和subscribeOn一样，它是Observable抽象类定义的方法：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220330093305420.png" srcset="/img/loading.gif" lazyload alt="image-20220330093305420"></p>
+<p>和subscribeOn返回了一个ObservableSubscribeOn对象类似，observeOn返回了一个ObservableObserveOn对象，和subscribeOn同理，也是对上层Observable的包装，看看ObservableObserveOnsubscribeActual方法都做了什么吧：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220330093506692.png" srcset="/img/loading.gif" lazyload alt="image-20220330093506692"></p>
+<p>先做了一个判断scheduler是不是TrampolineScheduler，TrampolineScheduler表示在当前线程执行，代表不需要切换线程，直接调用上层Observable的subscribe，否则，将Observer包装成ObserveOnObserver再向上传递。</p>
+<p>回顾subscribeOn的subscribeActual方法的第一行：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220403001609758.png" srcset="/img/loading.gif" lazyload alt="image-20220403001609758"></p>
+<p>其实它也包装了Observer，<strong>我们可以认为，在每个操作符中，都会包装Observable和Observer</strong></p>
+<p>如果我们连续调用两次observeOn:</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">val</span> observable = Observable.create&lt;<span class="hljs-built_in">Int</span>&gt; &#123; emitter -&gt;<br>  emitter.onNext(<span class="hljs-number">1</span>)<br>&#125;<br>observable<br>  .observeOn(Schedulers.trampoline())<br>  .observeOn(Schedulers.newThread())<br>  .subscribe &#123;<br>    println(<span class="hljs-string">&quot;ObserverOn: &quot;</span> + Thread.currentThread().name)<br>  &#125;<br></code></pre></td></tr></table></figure>
+
+<p>执行流程如图：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220330105512818.png" srcset="/img/loading.gif" lazyload alt="image-20220330105512818"></p>
+<p>在我们调用subscribe后，每向上传递到一个ObservableObserveOn，Observer就被包装一层，直到传递到顶层ObservableCreate，完全包装的Observer用于构造CreateEmitter</p>
+<p>紧接着顶层Observable的subscribe就是事件的发送和消费，我们接着分析：</p>
+<p>回顾ObservableCreate的subscribeActual：</p>
+<p><img src="/../AppData/Roaming/Typora/typora-user-images/image-20220403002950713.png" srcset="/img/loading.gif" lazyload alt="image-20220403002950713"></p>
+<ol>
+<li>将完全包装的Observer用于构造CreateEmitter</li>
+<li>调用我们在代码中创建Observable时传入的生产&amp;发送事件的方法：</li>
+</ol>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">val</span> observable = Observable.create&lt;<span class="hljs-built_in">Int</span>&gt; &#123; emitter -&gt;<br>  emitter.onNext(<span class="hljs-number">1</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>来看一下Emitter.onNext：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220330110015210.png" srcset="/img/loading.gif" lazyload alt="image-20220330110015210"></p>
+<p>实际上调用了obsever的onNext，它就是构造传进的obsever，在本例中是ObserveOnObserver，所以实际调用的是它的onNext：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220330151424771.png" srcset="/img/loading.gif" lazyload alt="image-20220330151424771"></p>
+<p>将事件入事件队列：queue.offer(t)，调用schedule():</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220330152142549.png" srcset="/img/loading.gif" lazyload alt="image-20220330152142549"></p>
+<p>启动线程池，且只调用一次</p>
+<p>ObserveOnObserver实现了Runnable接口，来看看它的run方法：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/12371273.png" srcset="/img/loading.gif" lazyload alt="12371273"></p>
+<p>会走到drainNormal中：</p>
+<img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220330152807935.png" srcset="/img/loading.gif" lazyload alt="image-20220330152807935" style="zoom:80%;" />
+
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220330152820549.png" srcset="/img/loading.gif" lazyload alt="image-20220330152820549"></p>
+<p>只需要关注红框内的代码：从队列中取出事件，并发送给downStream（下层Observer，命名很合理）</p>
+<p>总结一下，ObserveOnObserver消费事件时，会开启一个线程池，切换线程后，开启一个死循环不断从事件队列queue中取出事件，交给downStream，即下游（内层）的Obsever</p>
+<p>为什么observeOn每次调用都会生效呢，是因为后调用的observeOn切换线程的顺序和代码中observeOn操作符的顺序一致，前面分析完，这里应该不难理解，如果还是理解不了，就再去理解一下前面那张连续调用两次observeOn的执行流程图</p>
+<p>至此，RxJava的线程切换我们就分析完了</p>
+<p><strong>onSubscribe和Disposable</strong>：</p>
+<p><strong>onSubscribe的执行流程</strong></p>
+<p>我们先分析onSubscribe的执行流程，先猜测它的流向和事件一样自上而下</p>
+<p>以这段代码为例：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">Observable.just(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>)<br>    .subscribeOn(Schedulers.newThread())<br>    .observeOn(Schedulers.newThread())<br>    .subscribe(<span class="hljs-keyword">object</span> : Observer&lt;<span class="hljs-built_in">Int</span>&gt;&#123;<br>      <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onSubscribe</span><span class="hljs-params">(d: <span class="hljs-type">Disposable</span>)</span></span> &#123;&#125;<br>      <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onNext</span><span class="hljs-params">(t: <span class="hljs-type">Int</span>)</span></span> &#123;&#125;<br>      <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onError</span><span class="hljs-params">(e: <span class="hljs-type">Throwable</span>)</span></span> &#123;&#125;<br>      <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onComplete</span><span class="hljs-params">()</span></span> &#123;&#125;<br>    &#125;)<br></code></pre></td></tr></table></figure>
+
+<p>首先在我们subscribe之后，subscribe中传入的obsever，也就是第一个Obsever，我们记做O1，因为subsribe由下向上传递，每经过一个操作符Obsever就会被包一层，最终Obsever就是这样：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220401191555825.png" srcset="/img/loading.gif" lazyload alt="image-20220401191555825"></p>
+<p>onSubscribe是在顶层Observable的subscribe与事件发送之间执行的，来看顶层Observable的subscribeActual：</p>
+<p>这里的顶层Observable是由just创建的，和create有所不同，但是对于onSubscribe没区别：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220401190728461.png" srcset="/img/loading.gif" lazyload alt="image-20220401190728461"></p>
+<p>首先调用了SubscribeOnObserver.onSubscribe：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220401191753621.png" srcset="/img/loading.gif" lazyload alt="image-20220401191753621"></p>
+<p>它并没有调用内层Observer的onSubscribe，难道传到这里就断了？我们再回顾一下之前落下的ObservableSubscribeOn.subscribeActual的第二行：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220401192118514.png" srcset="/img/loading.gif" lazyload alt="image-20220401192118514"></p>
+<p>其实是在subscribe向上传递到subscribeOn操作符时，就回调了onSubscribe，相当于subscribeOn把onSubscribe切成两段。它在这里调用下一层Observer的onSubscribe，即observeOn创建的ObserveOnObserver，<strong>并把自己作为参数</strong>，ObserveOnObserver的onSubscribe方法：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">public</span> void onSubscribe(Disposable d) &#123;<br>        downstream.onSubscribe(<span class="hljs-keyword">this</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>调用了内层Observer的onSubscribe，<strong>也是把自己传当作参数</strong></p>
+<p>所以我们知道两点</p>
+<ul>
+<li>onSubscribe的传递和onNext，onComplete等事件不一样</li>
+<li>onSubscribe传入的Disposable参数是上一层Observer对象</li>
+</ul>
+<p><strong>事件的中断：</strong></p>
+<p>RxJava中的事件流可以包含很多事件，那事件在发送的过程中能不能中断呢？答案是肯定的</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-comment">//以以下代码为例</span><br>Observable.just(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>,<span class="hljs-number">4</span>)<br>  .subscribeOn(Schedulers.newThread())<br>  .observeOn(Schedulers.newThread())<br>  .subscribe(<span class="hljs-keyword">object</span> : Observer&lt;<span class="hljs-built_in">Int</span>&gt;&#123;<br>    <span class="hljs-keyword">lateinit</span> <span class="hljs-keyword">var</span> disposable : Disposable<br>      <span class="hljs-comment">//我们在onSubscribe时可以保存这个Disposable对象</span><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onSubscribe</span><span class="hljs-params">(d: <span class="hljs-type">Disposable</span>)</span></span> &#123;<br>      disposable = d<br>    &#125;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onNext</span><span class="hljs-params">(t: <span class="hljs-type">Int</span>)</span></span> &#123;<br>        <span class="hljs-comment">//调用disposable.dispose()，之后的onNext事件就不会被消费，原理是：</span><br>        <span class="hljs-comment">//上层Observer在向下传递事件前，会判断一个标志位，disposable.dispose()改变这个标志位会</span><br>        <br>        <span class="hljs-comment">//但是这并不影响事件的正常发送，</span><br>        <span class="hljs-comment">//由于onSubscribe中传入的Disposable对象是上层Observer，所以事件还是会正常传递到上层Observer，</span><br>        <span class="hljs-comment">//只不过最终不会传递到原始Observer</span><br>      <span class="hljs-keyword">if</span> (t == <span class="hljs-number">2</span>) disposable.dispose()<br>    &#125;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onError</span><span class="hljs-params">(e: <span class="hljs-type">Throwable</span>)</span></span> &#123;&#125;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onComplete</span><span class="hljs-params">()</span></span> &#123;&#125;<br>  &#125;)<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="RxJava常用操作符"><a href="#RxJava常用操作符" class="headerlink" title="RxJava常用操作符"></a>RxJava常用操作符</h3><h4 id="变换："><a href="#变换：" class="headerlink" title="变换："></a>变换：</h4><h5 id="map"><a href="#map" class="headerlink" title="map:"></a>map:</h5><p>作用：对 被观察者发送的每1个事件都通过 <strong>指定的函数</strong> 处理，从而变换成另外一种事件</p>
+<p>使用：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">Observable.just(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>)<br>  .map &#123; <br>    it.toString()<br>  &#125;<br>  .subscribe(<span class="hljs-keyword">object</span> : Observer&lt;String&gt;&#123;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onSubscribe</span><span class="hljs-params">(d: <span class="hljs-type">Disposable</span>)</span></span> &#123;<br>      println(<span class="hljs-string">&quot;subOn:<span class="hljs-subst">$&#123;Thread.currentThread().name&#125;</span>&quot;</span>)<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onNext</span><span class="hljs-params">(t: <span class="hljs-type">String</span>)</span></span> &#123;<br>      println(<span class="hljs-string">&quot;int to str: <span class="hljs-variable">$t</span>&quot;</span>)<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onError</span><span class="hljs-params">(e: <span class="hljs-type">Throwable</span>)</span></span> &#123;<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onComplete</span><span class="hljs-params">()</span></span> &#123;<br>    &#125;<br><br>  &#125;)<br></code></pre></td></tr></table></figure>
+
+<p>原理：先看张图片了解一下它的原理</p>
+<img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/1da8059c654103264b6f4e2f15b2c891.png" srcset="/img/loading.gif" lazyload alt="1da8059c654103264b6f4e2f15b2c891" style="zoom:150%;" />
+
+<p>我之前说过，几乎所有的操作符都是通过包装Obseverable和Obsever实现功能，map也不例外，来看看它到底干了什么：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220330155332588.png" srcset="/img/loading.gif" lazyload alt="image-20220330155332588"></p>
+<p>Function是个单一抽象方法接口，所以我们可以用lamda的写法使用map，它定义了一个将T转换为R的方法，T是原来事件的类型，即原始事件类型，R在我们使用map时根据返回值确定：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220330155623308.png" srcset="/img/loading.gif" lazyload alt="image-20220330155623308"></p>
+<p>将Function的实例mapper作为参数，创建并返回了一个ObservableMap对象，我们来看看ObservableMap的subscribeActual方法：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220330155850351.png" srcset="/img/loading.gif" lazyload alt="image-20220330155850351"></p>
+<p>给Observer包装了一层MapObserver&lt;T,U&gt;，那么来看看MapObserver是怎么消费事件的吧，这是它的onNext方法：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220330160428693.png" srcset="/img/loading.gif" lazyload alt="image-20220330160428693"></p>
+<p>就是调用Function.apply(T)，将T类型的事件转为类型为U的事件，再交给下游Observer</p>
+<h5 id="flatMap"><a href="#flatMap" class="headerlink" title="flatMap:"></a>flatMap:</h5><p>作用：</p>
+<ol>
+<li>为事件序列中每个事件都创建一个 <code>Observable</code> 对象；</li>
+<li>将新建的每个<code>Observable</code> 都合并到一个 新建的、总的<code>Observable</code> 对象</li>
+<li>新建的、总的<code>Observable</code> 对象 将 新合并的事件序列 发送给观察者（<code>Observer</code>）</li>
+</ol>
+<p>使用：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">Observable.create&lt;<span class="hljs-built_in">Int</span>&gt; &#123;<br>  it.onNext(<span class="hljs-number">1</span>)<br>  it.onNext(<span class="hljs-number">12</span>)<br>  it.onNext(<span class="hljs-number">123</span>)<br>&#125;<br>  .flatMap &#123;<br>    Observable.just(it,it,it)<br><span class="hljs-comment">//      .subscribeOn(Schedulers.newThread())</span><br>  &#125;<br>  .safeSubscribe(<span class="hljs-keyword">object</span> : Observer&lt;<span class="hljs-built_in">Int</span>&gt;&#123;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onSubscribe</span><span class="hljs-params">(d: <span class="hljs-type">Disposable</span>)</span></span> &#123;<br>    &#125;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onNext</span><span class="hljs-params">(t: <span class="hljs-type">Int</span>)</span></span> &#123;<br>      println(t)<br>    &#125;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onError</span><span class="hljs-params">(e: <span class="hljs-type">Throwable</span>)</span></span> &#123;<br>      e.printStackTrace()<br>    &#125;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onComplete</span><span class="hljs-params">()</span></span> &#123;<br>    &#125;<br>  &#125;)<br></code></pre></td></tr></table></figure>
+
+<p>我们来看看flatMap做了什么：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220401142746490.png" srcset="/img/loading.gif" lazyload alt="image-20220401142746490"></p>
+<p>最终调用四个参数的flatMap方法，和其他操作符类似，flatMap也创建了一个新的Observable，叫做ObservableFlatMap</p>
+<p>来看看它的subscribeActual方法：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220401142935263.png" srcset="/img/loading.gif" lazyload alt="image-20220401142935263"></p>
+<p>将下层Observer包装成MergeObserver，并传入了用于类型切换的mapper，那么我们看看，当事件流向MergeObserver时发生了什么，以MergeObserver的onNext为例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//省略无关代码</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onNext</span><span class="hljs-params">(T t)</span> &#123;<br>    ObservableSource&lt;? <span class="hljs-keyword">extends</span> <span class="hljs-title class_">U</span>&gt; p = mapper.apply(t);<br>    subscribeInner(p);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>调用mapper将事件转化为Observable，接着调用了subscribeInner：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">//为了方便理解，对源码进行了一些删减和改动</span><br><span class="hljs-keyword">void</span> <span class="hljs-title function_">subscribeInner</span><span class="hljs-params">(ObservableSource&lt;? extends U&gt; p)</span> &#123;<br>    <span class="hljs-comment">//如果我们刚刚创建的Observable只有一个事件，可能判断成功</span><br>      <span class="hljs-keyword">if</span> (p insatnceOf Supplier)&#123;<br>          tryEmitScalar(p)<br>      &#125;<span class="hljs-keyword">else</span>&#123;<br>          <span class="hljs-comment">//否则就会走这里，上面其实是是针对单一事件做的优化，这个是一般情况，单一事件在这里执行也是对的</span><br>          InnerObserver&lt;T, U&gt; inner = <span class="hljs-keyword">new</span> <span class="hljs-title class_">InnerObserver</span>&lt;&gt;(<span class="hljs-built_in">this</span>, uniqueId++);<br>          <span class="hljs-keyword">if</span> (addInner(inner)) &#123;<br>              p.subscribe(inner);<br>          &#125;<br>      &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如果判断成功，tryEmitScalar会直接将Observable中的事件发送给下游，这是针对单一事件做的优化。为什么我说可能会走这里，</p>
+<p>因为如果我们在mapper创建Observable时，使用了操作符比如subscribeOn(Schedulers.newThread())，</p>
+<p>而ObservableSubscribeOn没有实现Supplier，所以尽管顶层Observable的确是只有一个事件，p insatnceOf Supplier返回的还是false</p>
+<p>else里面是更一般的情况，首先创建了一个InnerObserver对象，将this（MergeObserver）传入</p>
+<p>接着调用this.addInner(inner)，MergeObserver持有一个InnerObserver数组，这个方法将inner添加至这个数组，添加成功就返回true，</p>
+<p>然后调用p.subscribe(inner)将我们p中的事件发送给我们的InnerObserver来消费事件</p>
+<p>InnerObserver消费事件的几个方法和普通的Observer不同，首先来看一下InnerObserver的onSubscribe：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Override</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onSubscribe</span><span class="hljs-params">(Disposable d)</span> &#123;<br>    <span class="hljs-keyword">if</span> (DisposableHelper.setOnce(<span class="hljs-built_in">this</span>, d)) &#123;<br>        <span class="hljs-comment">//注意这里，按照onSubscribe的流程，参数d是InnerObserver上一层的Observer，</span><br>        <span class="hljs-comment">//顶层Obsever，即完全包装的Observer是由just创建的，如果just传入的参数&gt;1</span><br>        <span class="hljs-comment">//那么它创建的顶层Obsever，类型是FromArrayDisposable，</span><br>        <span class="hljs-comment">//它实现了QueueDisposable，然而按照onSubscribe的流程，</span><br>        <span class="hljs-comment">//参数d是直接包装InnerObserver的Observer，所以如果使用了subscribeOn，d就是SubscribeOnObsever，</span><br>        <span class="hljs-comment">//它并没有实现QueueDisposable，所以这里返回false，这个要注意一下，猜测QueueDisposable和Supplier互斥</span><br>        <span class="hljs-comment">//我们讨论没有subscribeOn的情况</span><br>        <span class="hljs-keyword">if</span> (d <span class="hljs-keyword">instanceof</span> QueueDisposable) &#123;<br>            <span class="hljs-meta">@SuppressWarnings(&quot;unchecked&quot;)</span><br>            QueueDisposable&lt;U&gt; qd = (QueueDisposable&lt;U&gt;) d;<br><br>            <span class="hljs-comment">//这里返回QueueDisposable.ASYNC</span><br>            <span class="hljs-type">int</span> <span class="hljs-variable">m</span> <span class="hljs-operator">=</span> qd.requestFusion(QueueDisposable.ANY | QueueDisposable.BOUNDARY);<br>            <span class="hljs-keyword">if</span> (m == QueueDisposable.SYNC) &#123;<br>                fusionMode = m;<br>                queue = qd;<br>                done = <span class="hljs-literal">true</span>;<br>                parent.drain();<br>                <span class="hljs-keyword">return</span>;<br>            &#125;<br>            <span class="hljs-comment">//所以会走到这里</span><br>            <span class="hljs-keyword">if</span> (m == QueueDisposable.ASYNC) &#123;<br>                fusionMode = m;<br>                queue = qd;<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>本例中，d是just创建的Observer，这里将它赋值给InnerObserver的queue属性，就相当于把要发送的事件交给InnerObserver，然后调用parent.drain()，parent是MergeObsever：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220401165144126.png" srcset="/img/loading.gif" lazyload alt="image-20220401165144126"></p>
+<p>调用且只调用一次drainLoop()：它会<strong>按照添加顺序</strong>遍历MergeObserver的InnerObserver数组，将发送InnerObserver需要发送的事件，当一个InnerObserver的事件全部发送完成后，会从数组中删除它，这个方法<strong>能够保证事件按照Observable中事件的顺序</strong>。</p>
+<p>如果在本例中我们使用了subscribeOn，也就是d instanceof QueueDisposable返回false，会直接发送Observable中的事件，但是不能保证发送顺序和添加顺序一致，详见InnerObserver.onNext</p>
+<p>总结一下上述流程：flapMap操作符包装了一个新的Observable：ObservableFlatMap，它在subscribeActual的时候会将Observer包装成MergeObserver，MergeObsever对于接收到的每一个事件，都会调用我们使用flapMap操作符传入的高阶函数来新创建一个Observable，并创建一个InnerObserver与之对应并储存Observable中的事件，并将它添加到MergeObsever的一个InnerObserver数组中</p>
+<p>MergeObsever会按照Observable的添加顺序遍历InnerObserver数组，发送它们需要发送的事件，保证了事件发送顺序和生产顺序的一致；但是如果mapper创建的Observable使用了其他操作符，可能会导致Observable instanceof QueueDisposable返回false，InnerObserver创建后立即发送事件，不能保证发送顺序和生产顺序一致</p>
+<h5 id="concatMap："><a href="#concatMap：" class="headerlink" title="concatMap："></a>concatMap：</h5><p>相比于flatMap只有一点不同，就是无论如何，concatMap的事件都是按Observable创建顺序发送的</p>
+<h4 id="生命周期回调："><a href="#生命周期回调：" class="headerlink" title="生命周期回调："></a>生命周期回调：</h4><h5 id="doOn…："><a href="#doOn…：" class="headerlink" title="doOn…："></a>doOn…：</h5><p>分为以下几种：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220403105711333.png" srcset="/img/loading.gif" lazyload alt="image-20220403105711333"></p>
+<p>并且我们可以获取到对应的事件：</p>
+<p><img src="https://gitee.com/zhu-yuchong/blog-picture/raw/master/img/image-20220403105311173.png" srcset="/img/loading.gif" lazyload alt="image-20220403105311173"></p>
+<h4 id="延迟发送："><a href="#延迟发送：" class="headerlink" title="延迟发送："></a>延迟发送：</h4><h5 id="delay："><a href="#delay：" class="headerlink" title="delay："></a>delay：</h5><p>作用：延迟subscibe发送事件</p>
+<p>使用：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 1. 指定延迟时间</span><br><span class="hljs-comment">// 参数1 = 时间；参数2 = 时间单位</span><br>delay(<span class="hljs-type">long</span> delay,TimeUnit unit)<br><br><span class="hljs-comment">// 2. 指定延迟时间 &amp; 调度器</span><br><span class="hljs-comment">// 参数1 = 时间；参数2 = 时间单位；参数3 = 线程调度器</span><br>delay(<span class="hljs-type">long</span> delay,TimeUnit unit,mScheduler scheduler)<br><br><span class="hljs-comment">// 3. 指定延迟时间  &amp; 错误延迟</span><br><span class="hljs-comment">// 错误延迟，即：若存在Error事件，则如常执行，执行后再抛出错误异常</span><br><span class="hljs-comment">// 参数1 = 时间；参数2 = 时间单位；参数3 = 错误延迟参数</span><br>delay(<span class="hljs-type">long</span> delay,TimeUnit unit,<span class="hljs-type">boolean</span> delayError)<br><br><span class="hljs-comment">// 4. 指定延迟时间 &amp; 调度器 &amp; 错误延迟</span><br><span class="hljs-comment">// 参数1 = 时间；参数2 = 时间单位；参数3 = 线程调度器；参数4 = 错误延迟参数</span><br>delay(<span class="hljs-type">long</span> delay,TimeUnit unit,mScheduler scheduler,<span class="hljs-type">boolean</span> delayError): 指定延迟多长时间并添加调度器，错误通知可以设置是否延迟<br></code></pre></td></tr></table></figure>
+
+<h4 id="重复发送："><a href="#重复发送：" class="headerlink" title="重复发送："></a>重复发送：</h4><h5 id="repeat："><a href="#repeat：" class="headerlink" title="repeat："></a>repeat：</h5><p>作用：无条件重复发送</p>
+<p>使用：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">Observable.just(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>)<br>  .repeat(<span class="hljs-number">3</span>)<br><span class="hljs-comment">//重复发送三次事件</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="过滤"><a href="#过滤" class="headerlink" title="过滤"></a>过滤</h4><h5 id="filter："><a href="#filter：" class="headerlink" title="filter："></a>filter：</h5><p>作用：根据指定条件过滤</p>
+<p>使用：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">Observable.just(<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>)<br>  .filter &#123;<br>    it&gt;=<span class="hljs-number">2</span><br>  &#125;<br></code></pre></td></tr></table></figure>
+
+<p>RxJava的操作符太多了，全讲的话根本讲不完，这里只是挑几个简单常用的介绍一下原理和使用，了解更多操作符可以看这个文章：</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/carson_ho/article/details/79191327">Carson带你学Android：RxJava操作符教程</a></p>
+<p>至此，RxJava我们就算过了一遍，本课结束:clap::clap:</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div></div>
+      <div>http://example.com/2022/10/19/Retrofit&amp;RxJava/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>October 19, 2022</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>Licensed under</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/10/19/Handler/" title="">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile"></span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/10/19/%E8%87%AA%E5%AE%9A%E4%B9%89View/" title="">
+                        <span class="hidden-mobile"></span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

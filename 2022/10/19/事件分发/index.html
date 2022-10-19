@@ -1,0 +1,1122 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="事件分发由于时间原因，再加上事件分发的难度，本节课不会深入讲解底层实现，我会把整个事件的传递抽离出来，用更形象的东西来表示 但在学习前，我们先了解一下关于事件分发的基础知识 基础这里先展示 ViewGroup 与 View 在事件分发上的区别 三个方法ViewGroup12345678910111213141516171819202122class MyViewGroup1 @JvmOverloa">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2022/10/19/%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="事件分发由于时间原因，再加上事件分发的难度，本节课不会深入讲解底层实现，我会把整个事件的传递抽离出来，用更形象的东西来表示 但在学习前，我们先了解一下关于事件分发的基础知识 基础这里先展示 ViewGroup 与 View 在事件分发上的区别 三个方法ViewGroup12345678910111213141516171819202122class MyViewGroup1 @JvmOverloa">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://processon.com/chart_image/60955dcfe0b34d254ce7de8d.png">
+<meta property="article:published_time" content="2022-10-19T08:50:23.600Z">
+<meta property="article:modified_time" content="2022-10-11T05:41:07.751Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://processon.com/chart_image/60955dcfe0b34d254ce7de8d.png">
+  
+  
+  
+  <title>Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text=""></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-10-19 16:50" pubdate>
+          October 19, 2022 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          25k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          205 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none"></h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="事件分发"><a href="#事件分发" class="headerlink" title="事件分发"></a>事件分发</h1><p>由于时间原因，再加上事件分发的难度，本节课不会深入讲解底层实现，我会把整个事件的传递抽离出来，用更形象的东西来表示</p>
+<p>但在学习前，我们先了解一下关于事件分发的基础知识</p>
+<h2 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h2><p>这里先展示 <code>ViewGroup</code> 与 <code>View</code> 在事件分发上的区别</p>
+<h3 id="三个方法"><a href="#三个方法" class="headerlink" title="三个方法"></a>三个方法</h3><h4 id="ViewGroup"><a href="#ViewGroup" class="headerlink" title="ViewGroup"></a>ViewGroup</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyViewGroup1</span> <span class="hljs-meta">@JvmOverloads</span> <span class="hljs-keyword">constructor</span>(<br>    context: Context,<br>    attrs: AttributeSet? = <span class="hljs-literal">null</span>,<br>    defStyleAttr: <span class="hljs-built_in">Int</span> = <span class="hljs-number">0</span>,<br>    defStyleRes: <span class="hljs-built_in">Int</span> = <span class="hljs-number">0</span><br>) : FrameLayout(context, attrs, defStyleAttr, defStyleRes) &#123;<br>    <br>    <span class="hljs-comment">// dispatch 有分发的意思，所以这个函数作用是分发事件，为一个 View 事件的起点</span><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">dispatchTouchEvent</span><span class="hljs-params">(ev: <span class="hljs-type">MotionEvent</span>)</span></span>: <span class="hljs-built_in">Boolean</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">super</span>.dispatchTouchEvent(ev)<br>    &#125;<br>    <br>    <span class="hljs-comment">// intercept 有拦截的意思，所以这个函数作用是拦截事件，为一次 View 事件的决定点</span><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onInterceptTouchEvent</span><span class="hljs-params">(ev: <span class="hljs-type">MotionEvent</span>)</span></span>: <span class="hljs-built_in">Boolean</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">super</span>.onInterceptTouchEvent(ev)<br>    &#125;<br><br>    <span class="hljs-comment">// 这里就是处理事件的地方</span><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onTouchEvent</span><span class="hljs-params">(event: <span class="hljs-type">MotionEvent</span>)</span></span>: <span class="hljs-built_in">Boolean</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">super</span>.onTouchEvent(event)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="View"><a href="#View" class="headerlink" title="View"></a>View</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyView1</span> <span class="hljs-meta">@JvmOverloads</span> <span class="hljs-keyword">constructor</span>(<br>    context: Context,<br>    attrs: AttributeSet? = <span class="hljs-literal">null</span>,<br>    defStyleAttr: <span class="hljs-built_in">Int</span> = <span class="hljs-number">0</span>,<br>    defStyleRes: <span class="hljs-built_in">Int</span> = <span class="hljs-number">0</span><br>) : View(context, attrs, defStyleAttr, defStyleRes) &#123;<br><br>    <span class="hljs-comment">// 与 ViewGroup 一样</span><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">dispatchTouchEvent</span><span class="hljs-params">(event: <span class="hljs-type">MotionEvent</span>)</span></span>: <span class="hljs-built_in">Boolean</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">super</span>.dispatchTouchEvent(event)<br>    &#125;<br><br>    <span class="hljs-comment">// 与 ViewGroup 一样</span><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onTouchEvent</span><span class="hljs-params">(event: <span class="hljs-type">MotionEvent</span>)</span></span>: <span class="hljs-built_in">Boolean</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">super</span>.onTouchEvent(event)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>可以发现，<code>VieGroup</code> 比 <code>View</code> 多了一个 <code>onInterceptTouchEvent()</code> 方法，另外两个方法基本上时一样的</p>
+<h4 id="Activity"><a href="#Activity" class="headerlink" title="Activity"></a>Activity</h4><p>其实 activity 也有这几个方法，但与 <code>View</code> 相同，没有 <code>onInterceptTouchEvent()</code></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MainActivity</span> : <span class="hljs-type">AppCompatActivity</span>() &#123;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">dispatchTouchEvent</span><span class="hljs-params">(ev: <span class="hljs-type">MotionEvent</span>)</span></span>: <span class="hljs-built_in">Boolean</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">super</span>.dispatchTouchEvent(ev)<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onTouchEvent</span><span class="hljs-params">(event: <span class="hljs-type">MotionEvent</span>)</span></span>: <span class="hljs-built_in">Boolean</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">super</span>.onTouchEvent(event)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="Down事件的流程图"><a href="#Down事件的流程图" class="headerlink" title="Down事件的流程图"></a>Down事件的流程图</h4><p>这三个方法的执行顺序<strong>在 <code>Down</code> 事件</strong>下为<strong>（一定要注意，下面这张图只表示 <code>Down</code> 事件，即手指刚触摸时）</strong></p>
+<pre><code class=" mermaid">flowchart TB
+
+subgraph activity
+id000(&quot;dispatchTouchEvent&quot;)
+id999(&quot;onTouchEvent&quot;)
+end
+
+id000(&quot;dispatchTouchEvent&quot;)--&gt;id1
+
+subgraph ViewGroup1
+id1[&quot;dispatchTouchEvent&quot;]--&gt;id2
+id2&#123;&quot;onIntercept&quot;&#125;--拦截--&gt;id3
+id3[&quot;onTouchEvent&quot;]--&gt;over0((over))
+end
+
+id2&#123;&quot;onIntercept&quot;&#125;--不拦截--&gt;id4
+
+subgraph ViewGroup2
+id4(&quot;dispatchTouchEvent&quot;)--&gt;id5
+id5&#123;&quot;onIntercept&quot;&#125;--拦截--&gt;id6
+id6[&quot;onTouchEvent&quot;]--&gt;over1((over))
+end
+
+id5&#123;&quot;onIntercept&quot;&#125;--不拦截--&gt;id7
+
+subgraph View
+id7(&quot;dispatchTouchEvent&quot;)--&gt;id8
+id8&#123;&quot;onTouchEvent&quot;&#125;
+id8--true--&gt;over2((over))
+end
+
+subgraph ViewGroup2
+id8--false--&gt;id9
+id9&#123;&quot;onTouchEvent&quot;&#125;--true--&gt;over3((over))
+end
+
+subgraph ViewGroup1
+id9--false--&gt;id10
+id10&#123;&quot;onTouchEvent&quot;&#125;--true--&gt;over4((over))
+end
+
+id10--false--&gt;id999
+</code></pre>
+
+<p>上面这张图反映了事件分发的一般规律<strong>（记住这里是 <code>Down</code> 事件的事件传递）</strong></p>
+<p>可能你会发现我对于 <code>onTouchEvent</code> 写了两遍，即使用了方括号又使用了菱形表示，其实这个是故意这样设计的，在<code>onInterceptTouchEvent()</code> 拦截后调用 <code>onTouchEvent()</code> 就直接结束了，而如果不存在 <code>onInterceptTouchEvent()</code> 拦截，就会从下面层层向上回调 <code>onTouchEvent()</code></p>
+<p>这样设计看起来就像一个 U字形 一样</p>
+<h3 id="四种事件"><a href="#四种事件" class="headerlink" title="四种事件"></a>四种事件</h3><p>事件分发中常用的有四个事件（这里暂时只讨论单指触摸）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java">MotionEvent.ACTION_DOWN    <span class="hljs-comment">// 手指刚触摸</span><br>MotionEvent.ACTION_MOVE    <span class="hljs-comment">// 手指移动</span><br>MotionEvent.ACTION_UP      <span class="hljs-comment">// 手指抬起</span><br>MotionEvent.ACTION_CANCEL  <span class="hljs-comment">// 事件被提前拦截，只会收到一次</span><br></code></pre></td></tr></table></figure>
+
+<p>使用的话很简单，固定写法如下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onTouchEvent</span><span class="hljs-params">(event: <span class="hljs-type">MotionEvent</span>)</span></span>: <span class="hljs-built_in">Boolean</span> &#123;<br>    <span class="hljs-comment">// 这个 action 就是得到当前回调时的事件</span><br>    <span class="hljs-keyword">when</span> (event.action) &#123;<br>        MotionEvent.ACTION_DOWN -&gt; &#123;&#125;<br>        MotionEvent.ACTION_MOVE -&gt; &#123;&#125;<br>        MotionEvent.ACTION_UP -&gt; &#123;&#125;<br>        MotionEvent.ACTION_CANCEL -&gt; &#123;&#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">super</span>.onTouchEvent(event)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<blockquote>
+<p>多指触摸的话也就多了几个事件</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java">MotionEvent.ACTION_DOWN            <span class="hljs-comment">// 第一根手指触摸</span><br>MotionEvent.ACTION_POINTER_DOWN    <span class="hljs-comment">// 其他手指触摸</span><br>MotionEvent.ACTION_MOVE            <span class="hljs-comment">// 手指移动（任意一个手指的移动）</span><br>MotionEvent.ACTION_POINTER_UP      <span class="hljs-comment">// 某一根手指抬起</span><br>MotionEvent.ACTION_UP              <span class="hljs-comment">// 最后一根手指抬起</span><br>MotionEvent.ACTION_CANCEL          <span class="hljs-comment">// 事件被前面的拦截</span><br></code></pre></td></tr></table></figure>
+
+<p>使用与单指触摸大同小异</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onTouchEvent</span><span class="hljs-params">(event: <span class="hljs-type">MotionEvent</span>)</span></span>: <span class="hljs-built_in">Boolean</span> &#123;<br> <span class="hljs-comment">// 这个要换成 actionMasked 才能得到多指触摸事件</span><br> <span class="hljs-keyword">when</span> (event.actionMasked) &#123;<br>     MotionEvent.ACTION_DOWN -&gt; &#123;&#125;<br>     MotionEvent.ACTION_POINTER_DOWN -&gt; &#123;&#125;<br>     MotionEvent.ACTION_MOVE -&gt; &#123;&#125;<br>     MotionEvent.ACTION_POINTER_UP -&gt; &#123;&#125;<br>     MotionEvent.ACTION_UP -&gt; &#123;&#125;<br>     MotionEvent.ACTION_CANCEL -&gt; &#123;&#125;<br> &#125;<br> <span class="hljs-keyword">return</span> <span class="hljs-keyword">super</span>.onTouchEvent(event)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+</blockquote>
+<h3 id="一些规律"><a href="#一些规律" class="headerlink" title="一些规律"></a>一些规律</h3><ul>
+<li><code>Down</code> 事件用于寻找谁来处理这次事件，然后之后的所有事件都会直接传递给它（期间仍会经过它的父 View），而不会再走 U字形</li>
+<li><code>onInterceptTouchEvent()</code> 只有一次返回 true 的机会，返回 true 后就不会再被调用</li>
+<li>父 View 通过 <code>onInterceptTouchEvent()</code> 返回 true 后，子 View 除了收到一次 <code>Cancel</code> 外，就再也不会收到任何事件</li>
+</ul>
+<p>光听规律你可能会听不懂，接下来我把整个事件分发装换成与生活相关的东西</p>
+<h2 id="事件分发-gt-公司"><a href="#事件分发-gt-公司" class="headerlink" title="事件分发 -&gt; 公司"></a>事件分发 -&gt; 公司</h2><h3 id="层级"><a href="#层级" class="headerlink" title="层级"></a>层级</h3><ul>
+<li>Activity：公司老总</li>
+<li>外层布局：资深程序员 A</li>
+<li>里层布局：中级程序员 B</li>
+<li>底层布局：入门程序员 C</li>
+</ul>
+<h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><ul>
+<li><code>dispatchTouchEvent</code>：接受到上级需求</li>
+<li><code>onInterceptTouchEvent</code>：是否自己想接手需求</li>
+<li><code>onTouchEvent</code>：自己处理需求</li>
+<li><code>requestDisallowInterceptTouchEvent</code>：签订了合同，防止被公司突然辞退</li>
+</ul>
+<p>对于这个 <code>requestDisallowInterceptTouchEvent</code> 方法可以阻止上层布局调用 <code>onInterceptTouchEvent</code> 方法来拦截事件，看完下面整个流程你就能理解它的作用了</p>
+<h3 id="事件"><a href="#事件" class="headerlink" title="事件"></a>事件</h3><ul>
+<li><code>Down</code>：衡量需求难度，如果合适就可以接手（决定了需求谁来处理）</li>
+<li><code>Move</code>：上级询问进度（如果进度太慢，可以召回需求自己做）</li>
+<li><code>Up</code>：上级验收成果（这个时候你不一定就做完了需求，因为可能还有动画的执行）</li>
+<li><code>Cancel</code>：辞退事件（因为太菜而被公司辞退）</li>
+</ul>
+<p>因为 Up 事件的调用栈与 Move事件的调用栈基本一致，所以后面不会单独写 Up 事件</p>
+<h3 id="示例1"><a href="#示例1" class="headerlink" title="示例1"></a>示例1</h3><blockquote>
+<p>为了方便展示，图中 <code>dispatch</code> 表示 <code>dispatchTouchEvent</code>，<code>onIntercept</code> 表示 <code>onInterceptTouchEvent</code>，<code>onTouch</code> 表示 <code>onToushEvent</code></p>
+</blockquote>
+<p>某公司接到一个外包，公司决定让程序员 A 来做这个需求</p>
+<h4 id="先衡量这个这个需求（对应-Down）"><a href="#先衡量这个这个需求（对应-Down）" class="headerlink" title="先衡量这个这个需求（对应 Down）"></a>先衡量这个这个需求（对应 <code>Down</code>）</h4><pre><code class=" mermaid">flowchart TB
+
+subgraph 公司老总
+id000(&quot;接到一个外包（dispatch）&quot;)
+id999(&quot;没人做，公司摆烂（onTouch）&quot;)
+end
+
+id000--&gt;id1
+
+subgraph 程序员 A
+id1(&quot;接受到上级需求（dispatch）&quot;)--&gt;id2
+id2[&quot;因为太忙不能接手（onIntercept）&quot;]
+id10[&quot;都没人做，还是直接跑路吧（onTouch）&quot;]
+end
+
+id2--false--&gt;id3
+
+subgraph 程序员 B
+id3[&quot;接受到上级(程序员 A)需求（dispatch）&quot;]--&gt;id4
+id4[&quot;因为太麻烦不想接手（onIntercept）&quot;]
+id8[&quot;我靠，太难了，我做不了（onTouch）&quot;]
+end
+
+id4--false--&gt;id5
+
+subgraph 程序员 C
+id5[&quot;接受到上级(程序员 B)需求（dispatch）&quot;]--&gt;id6
+id6[&quot;后面没人了，只能自己硬着头皮做（对应 View 没有 onIntercept 方法）&quot;]--&gt;id7
+id7[&quot;我没空，别来找我（onTouch）&quot;]
+end
+
+id7--false--&gt;id8
+id8--false--&gt;id10
+id10--false--&gt;id999
+
+</code></pre>
+
+<blockquote>
+<p>该图与之前给的 <code>Down</code> 事件的流程图基本一致</p>
+</blockquote>
+<h4 id="上级询问进度（对应-Move）"><a href="#上级询问进度（对应-Move）" class="headerlink" title="上级询问进度（对应 Move）"></a>上级询问进度（对应 <code>Move</code>）</h4><p>上级公司询问接外包的公司，因为没人做需求，所以直接摆烂</p>
+<pre><code class=" mermaid">flowchart TB
+
+subgraph 公司老总
+id000(&quot;上级询问进度（dispatch）&quot;)--&gt;id999
+id999(&quot;回复的正在做，但公司在摆烂（onTouch）&quot;)
+end
+</code></pre>
+
+<h4 id="上级验收成果（对应-Up）"><a href="#上级验收成果（对应-Up）" class="headerlink" title="上级验收成果（对应 Up）"></a>上级验收成果（对应 <code>Up</code>）</h4><p>ddl 到了，上级验收成果，调用栈与 <code>Move</code> 事件基本一致</p>
+<pre><code class=" mermaid">flowchart TB
+
+subgraph 公司老总
+id000(&quot;上级验收成果（dispatch）&quot;)--&gt;id999
+id999(&quot;外包公司已卷钱跑路（onTouch）&quot;)
+end
+</code></pre>
+
+
+
+<h3 id="示例2-Down中拦截"><a href="#示例2-Down中拦截" class="headerlink" title="示例2-Down中拦截"></a>示例2-Down中拦截</h3><p>这次找了一个好一点的公司</p>
+<h4 id="先衡量这个这个需求（对应-Down）-1"><a href="#先衡量这个这个需求（对应-Down）-1" class="headerlink" title="先衡量这个这个需求（对应 Down）"></a>先衡量这个这个需求（对应 <code>Down</code>）</h4><pre><code class=" mermaid">flowchart TB
+
+subgraph 公司老总
+id000(&quot;接到一个外包（dispatch）&quot;)
+end
+
+id000--&gt;id1
+
+subgraph 程序员 A
+id1(&quot;接受到上级需求（dispatch）&quot;)--&gt;id2
+id2[&quot;因为太忙不能接手（onIntercept）&quot;]
+end
+
+id2--false--&gt;id3
+
+subgraph 程序员 B
+id3[&quot;接受到上级(程序员 A)需求（dispatch）&quot;]--&gt;id4
+id4[&quot;需求还行，我接手了（onIntercept 拦截）&quot;]--true 开做--&gt;
+id5[&quot;CV代码中（onTouch）&quot;]
+end
+
+id4-.-xid6
+
+subgraph 程序员 C
+id6[&quot;没收到需求可做，摆烂中&quot;]
+end
+</code></pre>
+
+<blockquote>
+<p>这一次程序员 B 接手了任务，相当于直接在 <code>onInterceptTouchEvent</code> 中返回 true，代表拦截这个需求，所以 程序员 C 就不能得到这个需求了</p>
+<p>这里符合之前说的一个规律：<code>Down</code> 事件用于寻找谁来处理这次事件</p>
+</blockquote>
+<h4 id="上级询问进度（对应-Move）-1"><a href="#上级询问进度（对应-Move）-1" class="headerlink" title="上级询问进度（对应 Move）"></a>上级询问进度（对应 <code>Move</code>）</h4><p>上级又来询问外包公司进度</p>
+<pre><code class=" mermaid">flowchart TB
+
+subgraph 公司老总
+id000(&quot;询问进度（dispatch）&quot;)
+end
+
+id000--&gt;id1
+
+subgraph 程序员 A
+id1[&quot;被询问进度（dispatch）&quot;]--&gt;id2
+id2[&quot;评审程序员 B 进度（onIntercept）&quot;]
+end
+
+id2--false--&gt;id3
+
+subgraph 程序员 B
+id3[&quot;被询问进度（dispatch）&quot;]--&gt;id5
+id5[&quot;还在继续CV代码中（onTouch）&quot;]
+end
+
+subgraph 程序员 C
+id6[&quot;仍在摆烂中&quot;]
+end
+</code></pre>
+
+<blockquote>
+<p><strong>注意:</strong> 程序员 B 只有两步，与之前少了一步 <code>onIntercept</code> 拦截，就符合刚开始讲的那个规律：<code>onInterceptTouchEvent() 只有一次返回 true 的机会，返回 true 后就不会再被调用</code></p>
+<p>而程序员 C 因为开始时就因为被 B 提前抢了需求，所以就收不到任何信息，只能一直摆烂</p>
+</blockquote>
+<h4 id="总结与思考"><a href="#总结与思考" class="headerlink" title="总结与思考"></a>总结与思考</h4><p><code>Down</code> 事件决定了之后所有的事件由谁来处理</p>
+<p>但如果我让父布局中途拦截事件该怎们办？这个需求只能在 <code>Move</code> 事件中才能实现了</p>
+<h3 id="示例3-Move中拦截"><a href="#示例3-Move中拦截" class="headerlink" title="示例3-Move中拦截"></a>示例3-Move中拦截</h3><p>我们在示例2上加一些突发情况，比如在询问进度时，程序员 A 发现 程序员 B 做得太拉，把他辞退了，自己来做。</p>
+<p>如果用代码表示的话就是在 <code>Move</code> 事件中，程序员 A 的 <code>onIntercept</code> 方法返回了 true，此时整个事件树就会变为：</p>
+<pre><code class=" mermaid">flowchart TB
+
+subgraph 公司老总
+id000(&quot;询问进度（dispatch）&quot;)
+end
+
+id000--&gt;id1
+
+subgraph 程序员 A
+id1[&quot;被询问进度（dispatch）&quot;]--&gt;id2
+id2[&quot;评审程序员 B 进度（onIntercept）&quot;]--发现做得太烂--&gt;id3
+id3[&quot;召回需求，自己来做（onTouch）&quot;]
+end
+
+id2--触发辞退Cancel事件--&gt;idb
+
+subgraph 程序员 B
+idb[&quot;做辞退前的工作（onTouch）&quot;]
+
+end
+
+subgraph 程序员 C
+idc[&quot;仍在摆烂中&quot;]
+end
+</code></pre>
+
+<p>之后的事件就只有程序员 A 在做了，并且因为程序员 B 被辞退，所以程序员 A 就不会再次查看程序员 B 的进度，这里也满足 <code>onIntercept</code> 只有一次返回 true 的机会</p>
+<pre><code class=" mermaid">flowchart TB
+
+subgraph 公司老总
+id000(&quot;询问进度（dispatch）&quot;)
+end
+
+id000--&gt;id1
+
+subgraph 程序员 A
+id1[&quot;被询问进度（dispatch）&quot;]--&gt;id3
+id3[&quot;重构程序员 B 代码中（onTouch）&quot;]
+end
+
+subgraph 程序员 B
+idb[&quot;无业游民&quot;]
+
+end
+
+subgraph 程序员 C
+idc[&quot;仍在摆烂中&quot;]
+end
+</code></pre>
+
+<p>在 <code>Move</code> 中父布局想拦截子布局事件，就直接在 <code>onIntercept</code> 中返回 true 就可以了</p>
+<p>其实这种突发事件在很多控件源码中都有实现，只是如果你没有深入探究的话可能不会发现</p>
+<blockquote>
+<p>比如：<code>ScrollView</code> 中有一个 <code>Button</code></p>
+<p>之前我们谈到 <code>Down</code> 事件决定了谁来处理，那么我的 <code>Down</code> 只能交给 <code>Button</code> 去拦截，<code>ScrollView</code> 不能在 <code>Down</code> 中拦截事件（即 <code>onIntercept</code> 返回 true）</p>
+<p>而如果你在按住的短时间内上下滑动一定的距离，<code>ScrollView</code> 就会在 <code>Move</code> 中拦截 <code>Button</code> 的事件</p>
+<p>至于短时间有好短，一定距离有好一定，我们后面从源码中再进行解析</p>
+</blockquote>
+<h3 id="示例4-防止被辞退"><a href="#示例4-防止被辞退" class="headerlink" title="示例4-防止被辞退"></a>示例4-防止被辞退</h3><p>上面我们讲了在 <code>Move</code> 中辞退他人的情况（在 <code>Move</code> 中拦截子布局事件），这种情况很常见，但如何实现不让父布局拦截呢？其实官方提供了一个方法专门用于这种情况：<code>requestDisallowInterceptTouchEvent</code>，在例子中，你可以把它想象成签订了合同</p>
+<pre><code class=" mermaid">flowchart TB
+
+subgraph 公司老总
+id000(&quot;接到一个外包（dispatch）&quot;)
+end
+
+id000--&gt;id1
+
+subgraph 程序员 A
+id1(&quot;接受到上级需求（dispatch）&quot;)--&gt;id2
+id2[&quot;因为太忙不能接手（onIntercept）&quot;]
+end
+
+id2--false--&gt;id3
+
+subgraph 程序员 B
+id3[&quot;接受到上级(程序员 A)需求（dispatch）&quot;]--&gt;id4
+id4[&quot;太麻烦不想接手（onIntercept 拦截）&quot;]
+end
+
+id4--false--&gt;id6
+
+subgraph 程序员 C
+id6[&quot;接受到上级(程序员 B)需求（dispatch）&quot;]--true--&gt;id7
+id7[&quot;接手这个需求（onTouch）&quot;]--&gt;id[&quot;签订针对于该次需求的合同（requestDisallow）&quot;]
+end
+</code></pre>
+
+<p>上面的图是在 <code>Down</code> 事件中签订的（也可以在 <code>Move</code> 中签订），签订过后，之后询问进度时（<code>Move</code> 事件）都会变化</p>
+<pre><code class=" mermaid">flowchart TB
+
+subgraph 公司老总
+id000(&quot;询问进度（dispatch）&quot;)
+end
+
+id000--&gt;id1
+
+subgraph 程序员 A
+id1[&quot;被询问进度（dispatch）&quot;]
+end
+
+id1--&gt;id4
+
+subgraph 程序员 B
+id4[&quot;被询问进度（dispatch）&quot;]
+end
+
+id4--&gt;id6
+
+subgraph 程序员 C
+id6[&quot;被询问进度（dispatch）&quot;]--&gt;id7
+id7[&quot;还在CV代码中（onTouch）&quot;]
+end
+</code></pre>
+
+<p>可以发现程序员 A 和程序员 B 都直接少了评审的步骤，这样 程序员 C 就可以安心 CV 代码了</p>
+<blockquote>
+<p><code>requestDisallowInterceptTouchEvent</code> 方法的注意事项</p>
+<ul>
+<li>这个方法虽然是签的合同，但不是终身合同，合同最长有效期只有这次需求结束，即下一次需求需要重新签订（下一次 <code>Down</code> 事件需要重新调用该方法）</li>
+<li>可以随时撕毁该合同，然后回归到程序员 A 每次都评审代码</li>
+<li>签订合同后是所有上级都不能评审代码了</li>
+<li>只能在签订人 <code>dispatchTouchEvent</code> 调用后才能签订，因为 <code>dispatchTouchEvent</code> 的 <strong><code>Down</code> 事件</strong>会强制清空所有合同</li>
+</ul>
+<p>灵活运用这个方法，你就可以解决一些常见的滑动冲突了</p>
+<p>比如：之前我们提到 <code>ScrollView</code> 中有一个 <code>Button</code>，如果我们想实现只要手指触摸 <code>Button</code> 就不允许 <code>ScrollView</code> 滚动。直接在 <code>Button</code> 收到的 <code>Down</code> 事件调用 <code>requestDisallowInterceptTouchEvent </code>即可</p>
+</blockquote>
+<h3 id="普通滑动小结"><a href="#普通滑动小结" class="headerlink" title="普通滑动小结"></a>普通滑动小结</h3><p>详细的滑动事件分发图可以去看我当时画的整个流程图：<a target="_blank" rel="noopener" href="https://www.processon.com/view/link/6191f797079129330ada2bd7">https://www.processon.com/view/link/6191f797079129330ada2bd7</a></p>
+<p>这里因为图片太大看不清楚</p>
+<p><img src="http://processon.com/chart_image/60955dcfe0b34d254ce7de8d.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="嵌套滑动"><a href="#嵌套滑动" class="headerlink" title="嵌套滑动"></a>嵌套滑动</h2><p>前面简单讲解了普通滑动的流程，如果你仔细思考会发现一个普通滑动有一个较严重的缺点：一旦父布局拦截了事件，子布局就再也不能收到事件（对应被辞退后总不能再召回来吧）</p>
+<p>官方也意识到了这个问题，所以推出了嵌套滑动的解决方案</p>
+<p>为了更好的兼容以前的 Android 版本，嵌套滑动最开始是以扩展包发布的，原理就是从底层 View 往上寻找需要嵌套滑动的 View，然后把事件传递给它</p>
+<h3 id="NestedScrollingChild2"><a href="#NestedScrollingChild2" class="headerlink" title="NestedScrollingChild2"></a>NestedScrollingChild2</h3><p>嵌套滑动的事件发送者</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyView1</span> <span class="hljs-meta">@JvmOverloads</span> <span class="hljs-keyword">constructor</span>(<br>    context: Context,<br>    attrs: AttributeSet? = <span class="hljs-literal">null</span>,<br>    defStyleAttr: <span class="hljs-built_in">Int</span> = <span class="hljs-number">0</span>,<br>    defStyleRes: <span class="hljs-built_in">Int</span> = <span class="hljs-number">0</span><br>) : View(context, attrs, defStyleAttr, defStyleRes), NestedScrollingChild2 &#123;<br>    <span class="hljs-comment">// 开始嵌套滑动，不是回调，是你在合适的位置自己调用</span><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">startNestedScroll</span><span class="hljs-params">(axes: <span class="hljs-type">Int</span>, type: <span class="hljs-type">Int</span>)</span></span>: <span class="hljs-built_in">Boolean</span> &#123;<br>        TODO(<span class="hljs-string">&quot;Not yet implemented&quot;</span>)<br>    &#125;<br>    <span class="hljs-comment">// 结束嵌套滑动，也不是回调，自己调用</span><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">stopNestedScroll</span><span class="hljs-params">(type: <span class="hljs-type">Int</span>)</span></span> &#123;<br>        TODO(<span class="hljs-string">&quot;Not yet implemented&quot;</span>)<br>    &#125;<br>    <span class="hljs-comment">// 是否有嵌套的接收者</span><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">hasNestedScrollingParent</span><span class="hljs-params">(type: <span class="hljs-type">Int</span>)</span></span>: <span class="hljs-built_in">Boolean</span> &#123;<br>        TODO(<span class="hljs-string">&quot;Not yet implemented&quot;</span>)<br>    &#125;<br>    <span class="hljs-comment">// 分发自己处理后的事件</span><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">dispatchNestedScroll</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">        dxConsumed: <span class="hljs-type">Int</span>,</span></span><br><span class="hljs-params"><span class="hljs-function">        dyConsumed: <span class="hljs-type">Int</span>,</span></span><br><span class="hljs-params"><span class="hljs-function">        dxUnconsumed: <span class="hljs-type">Int</span>,</span></span><br><span class="hljs-params"><span class="hljs-function">        dyUnconsumed: <span class="hljs-type">Int</span>,</span></span><br><span class="hljs-params"><span class="hljs-function">        offsetInWindow: <span class="hljs-type">IntArray</span>?,</span></span><br><span class="hljs-params"><span class="hljs-function">        type: <span class="hljs-type">Int</span></span></span><br><span class="hljs-params"><span class="hljs-function">    )</span></span>: <span class="hljs-built_in">Boolean</span> &#123;<br>        TODO(<span class="hljs-string">&quot;Not yet implemented&quot;</span>)<br>    &#125;<br>    <span class="hljs-comment">// 分发自己处理前的事件</span><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">dispatchNestedPreScroll</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">        dx: <span class="hljs-type">Int</span>,</span></span><br><span class="hljs-params"><span class="hljs-function">        dy: <span class="hljs-type">Int</span>,</span></span><br><span class="hljs-params"><span class="hljs-function">        consumed: <span class="hljs-type">IntArray</span>?,</span></span><br><span class="hljs-params"><span class="hljs-function">        offsetInWindow: <span class="hljs-type">IntArray</span>?,</span></span><br><span class="hljs-params"><span class="hljs-function">        type: <span class="hljs-type">Int</span></span></span><br><span class="hljs-params"><span class="hljs-function">    )</span></span>: <span class="hljs-built_in">Boolean</span> &#123;<br>        TODO(<span class="hljs-string">&quot;Not yet implemented&quot;</span>)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>虽然看着要实现的方法有很多，但其实官方专门写了一个帮助类 <code>NestedScrollingChildHelper</code>，你只需要在合适的位置调用上面的几个方法就可以了，具体怎么实现需要你们自己去看官方的源码了，因为一般情况下不会自己去写嵌套滑动的事件发送者，所以我就不讲了</p>
+<p>这里给出一些文章：<a target="_blank" rel="noopener" href="https://blog.csdn.net/ListerCi/article/details/103849417?spm=1001.2101.3001.6650.9&utm_medium=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~Rate-9.pc_relevant_paycolumn_v3&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2~default~CTRLIST~Rate-9.pc_relevant_paycolumn_v3&utm_relevant_index=11">Android - 有趣的嵌套滑动</a></p>
+<h3 id="NestedScrollingParent2"><a href="#NestedScrollingParent2" class="headerlink" title="NestedScrollingParent2"></a>NestedScrollingParent2</h3><p>嵌套滑动的事件接收者</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyViewGroup1</span> <span class="hljs-meta">@JvmOverloads</span> <span class="hljs-keyword">constructor</span>(<br>    context: Context,<br>    attrs: AttributeSet? = <span class="hljs-literal">null</span>,<br>    defStyleAttr: <span class="hljs-built_in">Int</span> = <span class="hljs-number">0</span>,<br>    defStyleRes: <span class="hljs-built_in">Int</span> = <span class="hljs-number">0</span><br>) : FrameLayout(context, attrs, defStyleAttr, defStyleRes), NestedScrollingParent2 &#123;<br>    <span class="hljs-comment">// 嵌套滑动开始，用于返回是否关联此次触摸事件（需求）</span><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onStartNestedScroll</span><span class="hljs-params">(child: <span class="hljs-type">View</span>, target: <span class="hljs-type">View</span>, axes: <span class="hljs-type">Int</span>, type: <span class="hljs-type">Int</span>)</span></span>: <span class="hljs-built_in">Boolean</span> &#123;<br>        TODO(<span class="hljs-string">&quot;Not yet implemented&quot;</span>)<br>    &#125;<br>    <span class="hljs-comment">// 上一个返回 true 后就会被回调</span><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onNestedScrollAccepted</span><span class="hljs-params">(child: <span class="hljs-type">View</span>, target: <span class="hljs-type">View</span>, axes: <span class="hljs-type">Int</span>, type: <span class="hljs-type">Int</span>)</span></span> &#123;<br>        TODO(<span class="hljs-string">&quot;Not yet implemented&quot;</span>)<br>    &#125;<br>    <span class="hljs-comment">// 嵌套滑动结束</span><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onStopNestedScroll</span><span class="hljs-params">(target: <span class="hljs-type">View</span>, type: <span class="hljs-type">Int</span>)</span></span> &#123;<br>        TODO(<span class="hljs-string">&quot;Not yet implemented&quot;</span>)<br>    &#125;<br>    <span class="hljs-comment">// 嵌套滑动处理事件，在发送者处理后再处理</span><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onNestedScroll</span><span class="hljs-params">(</span></span><br><span class="hljs-params"><span class="hljs-function">        target: <span class="hljs-type">View</span>,</span></span><br><span class="hljs-params"><span class="hljs-function">        dxConsumed: <span class="hljs-type">Int</span>,</span></span><br><span class="hljs-params"><span class="hljs-function">        dyConsumed: <span class="hljs-type">Int</span>,</span></span><br><span class="hljs-params"><span class="hljs-function">        dxUnconsumed: <span class="hljs-type">Int</span>,</span></span><br><span class="hljs-params"><span class="hljs-function">        dyUnconsumed: <span class="hljs-type">Int</span>,</span></span><br><span class="hljs-params"><span class="hljs-function">        type: <span class="hljs-type">Int</span></span></span><br><span class="hljs-params"><span class="hljs-function">    )</span></span> &#123;<br>        TODO(<span class="hljs-string">&quot;Not yet implemented&quot;</span>)<br>    &#125;<br>    <span class="hljs-comment">// 嵌套滑动处理事件，在发送者处理前处理</span><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onNestedPreScroll</span><span class="hljs-params">(target: <span class="hljs-type">View</span>, dx: <span class="hljs-type">Int</span>, dy: <span class="hljs-type">Int</span>, consumed: <span class="hljs-type">IntArray</span>, type: <span class="hljs-type">Int</span>)</span></span> &#123;<br>        TODO(<span class="hljs-string">&quot;Not yet implemented&quot;</span>)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>与 <code>NestedScrollingChild2</code> 一样，官方也有一个帮助类 <code>NestedScrollingParentHelper</code></p>
+<p><code>NestedScrollingParent2</code> 是嵌套滑动中用得最多的，理解了它每个方法的回调时机，你就能很快学会嵌套滑动了</p>
+<pre><code class=" mermaid">sequenceDiagram
+alt Down
+	Child-&gt;&gt;Child:onInterceptTouch()
+	Child-&gt;&gt;Parent:startNestedScroll(TYPE_TOUCH)
+	Parent-&gt;&gt;Parent:onStartNestedScroll()
+	Parent-&gt;&gt;Parent:onNestedScrollAccepted()
+else Move
+	Child-&gt;&gt;Child:onTouchEvent()
+	Child-&gt;&gt;Parent:自身消费前 dispatchNestedPreScroll(IntArray)
+	Parent-&gt;&gt;Parent:IntArray[0] = 100, IntArray[1] = 100 消费一些距离
+	Child-&gt;&gt;Child:先减去 IntArray，再自身消费
+	Child-&gt;&gt;Parent:还剩一些距离 dispatchNestedScroll()
+else 惯性滑动
+	Child-&gt;&gt;Parent:startNestedScroll(TYPE_NON_TOUCH)
+else Up
+	Child-&gt;&gt;Parent:stopNestedScroll(TYPE_TOUCH)
+else 惯性滑动
+	Child-&gt;&gt;Parent:自身消费前 dispatchNestedPreScroll(IntArray)
+	Parent-&gt;&gt;Parent:IntArray[0] = 100, IntArray[1] = 100 消费一些距离
+	Child-&gt;&gt;Child:先减去 IntArray，再自身消费
+	Child-&gt;&gt;Parent:还剩一些距离 dispatchNestedScroll()
+	Child-&gt;&gt;Parent:stopNestedScroll(TYPE_NON_TOUCH)
+end
+
+	
+</code></pre>
+
+<p>这里面要注意以下几点：</p>
+<ul>
+<li>1版本的 <code>NestedScrollingChild</code> 和 <code>NestedScrollingParent</code> 因为设计的原因，只会收到非惯性事件，不能得到惯性事件</li>
+<li>2版本的嵌套滑动包含了惯性滑动，所以 <code>onStartNestedScroll</code> 会回调两次，并且惯性滑动的开始会在非惯性滑动的 <code>onStopNestedScroll</code> 前调用</li>
+</ul>
+<h2 id="NestedScrollView-源码简单分析"><a href="#NestedScrollView-源码简单分析" class="headerlink" title="NestedScrollView 源码简单分析"></a>NestedScrollView 源码简单分析</h2><h3 id="onInterceptTouchEvent"><a href="#onInterceptTouchEvent" class="headerlink" title="onInterceptTouchEvent"></a>onInterceptTouchEvent</h3><p>之前我们讲到这里是是否拦截事件的地方，我们先从 <code>Down</code> 事件开始看起</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">case</span> MotionEvent.ACTION_DOWN: &#123;<br>    <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">y</span> <span class="hljs-operator">=</span> (<span class="hljs-type">int</span>) ev.getY();<br>    <span class="hljs-keyword">if</span> (!inChild((<span class="hljs-type">int</span>) ev.getX(), y)) &#123; <span class="hljs-comment">// 如果触摸点不在子 View 范围内</span><br>        mIsBeingDragged = stopGlowAnimations(ev) || !mScroller.isFinished();<br>        recycleVelocityTracker();<br>        <span class="hljs-keyword">break</span>;<br>    &#125;<br>    <br>    <span class="hljs-comment">// 记录触摸的 y 值</span><br>    mLastMotionY = y;<br>    <span class="hljs-comment">// 记录触摸手指的 id</span><br>    mActivePointerId = ev.getPointerId(<span class="hljs-number">0</span>);<br>    <span class="hljs-comment">// 初始化速率追踪器</span><br>    initOrResetVelocityTracker();<br>    <span class="hljs-comment">// 给速度追踪器添加事件</span><br>    mVelocityTracker.addMovement(ev);<br>    <br>    <span class="hljs-comment">// 让 OverScroller 计算一次值</span><br>    mScroller.computeScrollOffset();<br>    <span class="hljs-comment">// 是否还处于上次抬手后的惯性滑动中，在下面 Move 中会用到</span><br>    mIsBeingDragged = stopGlowAnimations(ev) || !mScroller.isFinished();<br>    <span class="hljs-comment">// 开启嵌套滑动</span><br>    startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL, ViewCompat.TYPE_TOUCH);<br>    <span class="hljs-keyword">break</span>;<br>&#125;<br><span class="hljs-comment">// Down 中并没有直接 return true，意思是 ScrollView 并没有在 Down 时直接拦截事件</span><br></code></pre></td></tr></table></figure>
+
+
+
+<p><code>Move</code> 是最重要的一部分，里面的逻辑实现了之前我们讲到的 <code>Button</code> 与 <code>ScrollView</code> 的问题</p>
+<p><strong>在分析 onIntercept 的 Move 前我们必须要提出两个前提条件：</strong></p>
+<ul>
+<li><strong>1、子 View 没有在 <code>Down</code> 中调用 <code>requestDisallow</code> 去禁止父布局拦截事件</strong></li>
+<li><strong>2、子 View 一定会在 <code>Down</code> 是拦截或处理事件，即子 View 的 <code>onIntercept</code> 或者 <code>onTouchEvent</code> 返回 true</strong></li>
+<li>至于原因我们在后面进行分析</li>
+<li>这里补充说明：<code>Button</code> 这类控件就符合上面这两个条件</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// Move 事件一共分为两种情况</span><br><br><span class="hljs-comment">// 第一种：mIsBeingDragged = true</span><br><span class="hljs-comment">// 这个时候说明处于上次抬手后的惯性滑动中</span><br><span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">action</span> <span class="hljs-operator">=</span> ev.getAction();<br><span class="hljs-keyword">if</span> ((action == MotionEvent.ACTION_MOVE) &amp;&amp; mIsBeingDragged) &#123;<br>    <span class="hljs-comment">// 于是就直接返回 true，意思就是直接交给 ScrollView 拦截处理事件</span><br>    <span class="hljs-comment">// 别忘了之前我们讲过 onIntercept 只有一次返回 true 的机会，之后就不会再调用 onIntercept</span><br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br><br><span class="hljs-comment">// 第二种：常见的情况</span><br><span class="hljs-keyword">switch</span> (action &amp; MotionEvent.ACTION_MASK) &#123;<br>    <span class="hljs-keyword">case</span> MotionEvent.ACTION_MOVE: &#123;<br>        <br>        <span class="hljs-comment">// 这里是检测之前 Down 事件触摸的手指是否是稳定的 id，一般不会遇到这种情况</span><br>        <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">activePointerId</span> <span class="hljs-operator">=</span> mActivePointerId;<br>        <span class="hljs-keyword">if</span> (activePointerId == INVALID_POINTER) &#123;<br>            <span class="hljs-keyword">break</span>;<br>        &#125;<br>        <span class="hljs-comment">// 这里与上面的意义一样</span><br>        <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">pointerIndex</span> <span class="hljs-operator">=</span> ev.findPointerIndex(activePointerId);<br>        <span class="hljs-keyword">if</span> (pointerIndex == -<span class="hljs-number">1</span>) &#123;<br>            Log.e(TAG, <span class="hljs-string">&quot;Invalid pointerId=&quot;</span> + activePointerId<br>                    + <span class="hljs-string">&quot; in onInterceptTouchEvent&quot;</span>);<br>            <span class="hljs-keyword">break</span>;<br>        &#125;<br>        <br>        <span class="hljs-comment">// 记录 y 值</span><br>        <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">y</span> <span class="hljs-operator">=</span> (<span class="hljs-type">int</span>) ev.getY(pointerIndex);<br>        <span class="hljs-comment">// 记录移动的距离</span><br>        <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">yDiff</span> <span class="hljs-operator">=</span> Math.abs(y - mLastMotionY);<br>        <br>        <span class="hljs-comment">// 这个判断很重要</span><br>        <span class="hljs-comment">// 这里整块的作用如下：</span><br>        <span class="hljs-comment">// 如果移动的距离超过了 mTouchSlop，就直接拦截事件，并调用 requestDisallow 禁止父布局拦截事件</span><br>        <span class="hljs-keyword">if</span> (yDiff &gt; mTouchSlop<br>                &amp;&amp; (getNestedScrollAxes() &amp; ViewCompat.SCROLL_AXIS_VERTICAL) == <span class="hljs-number">0</span>) &#123;<br>            mIsBeingDragged = <span class="hljs-literal">true</span>; <span class="hljs-comment">// 设置返回值为 true，即代表拦截事件</span><br>            mLastMotionY = y;<br>            initVelocityTrackerIfNotExists();<br>            mVelocityTracker.addMovement(ev);<br>            mNestedYOffset = <span class="hljs-number">0</span>;<br>            <span class="hljs-keyword">final</span> <span class="hljs-type">ViewParent</span> <span class="hljs-variable">parent</span> <span class="hljs-operator">=</span> getParent();<br>            <span class="hljs-keyword">if</span> (parent != <span class="hljs-literal">null</span>) &#123;<br>                <span class="hljs-comment">// 禁止父布局拦截事件</span><br>                parent.requestDisallowInterceptTouchEvent(<span class="hljs-literal">true</span>);<br>            &#125;<br>        &#125;<br>        <span class="hljs-comment">// 就是这个 if 实现了之前我们提到的触摸 Button 在上下移动却能使 ScrollView 滚动的原因</span><br>        <span class="hljs-keyword">break</span>;<br>    &#125;<br>    <span class="hljs-comment">// 后面是其他事件的判断</span><br> <span class="hljs-keyword">return</span> mIsBeingDragged; <span class="hljs-comment">// 最后是返回的 mIsBeingDragged，如果为 true，就会直接进入 onTouchEvent</span><br> <span class="hljs-comment">// 上面拦截过后，子 View 会收到一次 Cancel 事件</span><br></code></pre></td></tr></table></figure>
+
+<p>上面提到了这个 <code>mTouchSlop</code>，这是官方定义的“认为是滚动的最小移动距离”，除了 <code>ScrollView</code> 以外，<code>RecyclerView</code> 等一系列可以滚动的 <code>View</code> 都使用了它，它是一个常量（虽然是个常量，但它是根据不同的手机去调整的）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 这个 ViewConfiguration 里面包含了很多 View 相关的常量，</span><br><span class="hljs-comment">// 如：长按的等待时间、打开侧边栏锁需要的边距值、惯性滑动的最小速度、惯性滑动的最大速度等</span><br><span class="hljs-keyword">final</span> <span class="hljs-type">ViewConfiguration</span> <span class="hljs-variable">configuration</span> <span class="hljs-operator">=</span> ViewConfiguration.get(getContext());<br>mTouchSlop = configuration.getScaledTouchSlop();<br></code></pre></td></tr></table></figure>
+
+<p>在 <code>Move</code> 的代码很简单，主要就是判断是否拦截，这里一定要记住 <code>onIntercept</code> 只有一次拦截的机会，拦截后就不会再被调用，所以后面的 <code>Up</code> 时间就没有必要继续看了</p>
+<h3 id="onTouchEvent"><a href="#onTouchEvent" class="headerlink" title="onTouchEvent"></a>onTouchEvent</h3><p>如果按照正常的思维，我们应该直接从 <code>Down</code> 事件开始分析，但之前我们提出了一个前提条件，所以 <code>onTouchEvent </code> 的 <code>Down</code> 事件是不会被调用的。</p>
+<p>然后根据前面的前提条件，在 <code>ScrollView</code> 的移动距离超过了 <code>mTouchSlop</code>，<code>onTouchEvent</code> 就被调用，而因为前面是在 <code>Move</code> 中才拦截，则 <code>onTouchEvent</code> 只会收到 <code>Move</code> 后的事件</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 代码很长，我们只分析重要的几部分</span><br><br><span class="hljs-keyword">case</span> MotionEvent.ACTION_MOVE:<br>    <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">activePointerIndex</span> <span class="hljs-operator">=</span> ev.findPointerIndex(mActivePointerId);<br>    <span class="hljs-keyword">if</span> (activePointerIndex == -<span class="hljs-number">1</span>) &#123;<br>        Log.e(TAG, <span class="hljs-string">&quot;Invalid pointerId=&quot;</span> + mActivePointerId + <span class="hljs-string">&quot; in onTouchEvent&quot;</span>);<br>        <span class="hljs-keyword">break</span>;<br>    &#125;<br>    <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">y</span> <span class="hljs-operator">=</span> (<span class="hljs-type">int</span>) ev.getY(activePointerIndex);<br>    <span class="hljs-type">int</span> <span class="hljs-variable">deltaY</span> <span class="hljs-operator">=</span> mLastMotionY - y;<br>    deltaY -= releaseVerticalGlow(deltaY, ev.getX(activePointerIndex));<br><br>	<span class="hljs-comment">// 你会发现这里有判断了 mIsBeingDragged，并且后面又调用了 requestDisallow</span><br>	<span class="hljs-comment">// 其实这就与之前我给出的前提条件相关，如果给出的前提条件，这里是不会进入 if 分支的</span><br>	<span class="hljs-comment">// 这个分支我们之后会再次提到</span><br>    <span class="hljs-keyword">if</span> (!mIsBeingDragged &amp;&amp; Math.abs(deltaY) &gt; mTouchSlop) &#123;<br>        <span class="hljs-keyword">final</span> <span class="hljs-type">ViewParent</span> <span class="hljs-variable">parent</span> <span class="hljs-operator">=</span> getParent();<br>        <span class="hljs-keyword">if</span> (parent != <span class="hljs-literal">null</span>) &#123;<br>            parent.requestDisallowInterceptTouchEvent(<span class="hljs-literal">true</span>);<br>        &#125;<br>        mIsBeingDragged = <span class="hljs-literal">true</span>;<br>        <span class="hljs-keyword">if</span> (deltaY &gt; <span class="hljs-number">0</span>) &#123;<br>            deltaY -= mTouchSlop;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            deltaY += mTouchSlop;<br>        &#125;<br>    &#125;<br>	<span class="hljs-comment">// 如果处于拖动的状态</span><br>    <span class="hljs-keyword">if</span> (mIsBeingDragged) &#123;<br>        <span class="hljs-comment">// 分发嵌套滑动，这里是在自身处理前分发的</span><br>        <span class="hljs-keyword">if</span> (dispatchNestedPreScroll(<span class="hljs-number">0</span>, deltaY, mScrollConsumed, mScrollOffset,<br>                ViewCompat.TYPE_TOUCH)) &#123;<br>            <span class="hljs-comment">// 减去接收者消耗的距离</span><br>            deltaY -= mScrollConsumed[<span class="hljs-number">1</span>];<br>            mNestedYOffset += mScrollOffset[<span class="hljs-number">1</span>];<br>        &#125;<br>        mLastMotionY = y - mScrollOffset[<span class="hljs-number">1</span>];<br>        <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">oldY</span> <span class="hljs-operator">=</span> getScrollY();<br>        <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">range</span> <span class="hljs-operator">=</span> getScrollRange();<br>        <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">overscrollMode</span> <span class="hljs-operator">=</span> getOverScrollMode();<br>        <span class="hljs-type">boolean</span> <span class="hljs-variable">canOverscroll</span> <span class="hljs-operator">=</span> overscrollMode == View.OVER_SCROLL_ALWAYS<br>                || (overscrollMode == View.OVER_SCROLL_IF_CONTENT_SCROLLS &amp;&amp; range &gt; <span class="hljs-number">0</span>);<br>        <br>        <span class="hljs-comment">// 这里是处理滚动的核心方法</span><br>        <span class="hljs-type">boolean</span> <span class="hljs-variable">clearVelocityTracker</span> <span class="hljs-operator">=</span><br>                overScrollByCompat(<span class="hljs-number">0</span>, deltaY, <span class="hljs-number">0</span>, getScrollY(), <span class="hljs-number">0</span>, range, <span class="hljs-number">0</span>,<br>                        <span class="hljs-number">0</span>, <span class="hljs-literal">true</span>) &amp;&amp; !hasNestedScrollingParent(ViewCompat.TYPE_TOUCH);<br>        <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">scrolledDeltaY</span> <span class="hljs-operator">=</span> getScrollY() - oldY;<br>        <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">unconsumedY</span> <span class="hljs-operator">=</span> deltaY - scrolledDeltaY;<br>        mScrollConsumed[<span class="hljs-number">1</span>] = <span class="hljs-number">0</span>;<br>        <br>        <span class="hljs-comment">// 再次分发嵌套滑动，这里是在自身处理后分发的</span><br>        dispatchNestedScroll(<span class="hljs-number">0</span>, scrolledDeltaY, <span class="hljs-number">0</span>, unconsumedY, mScrollOffset,<br>                ViewCompat.TYPE_TOUCH, mScrollConsumed);<br>        mLastMotionY -= mScrollOffset[<span class="hljs-number">1</span>];<br>        mNestedYOffset += mScrollOffset[<span class="hljs-number">1</span>];<br>        <br>        <span class="hljs-comment">// 这下面是一些不重要的代码</span><br>        <span class="hljs-keyword">if</span> (canOverscroll) &#123;<br>            deltaY -= mScrollConsumed[<span class="hljs-number">1</span>];<br>            <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">pulledToY</span> <span class="hljs-operator">=</span> oldY + deltaY;<br>            <span class="hljs-keyword">if</span> (pulledToY &lt; <span class="hljs-number">0</span>) &#123;<br>                <span class="hljs-comment">// ScrollView 的滑到边界时有个影子，就是它绘制出来的</span><br>                EdgeEffectCompat.onPullDistance(mEdgeGlowTop,<br>                        (<span class="hljs-type">float</span>) -deltaY / getHeight(),<br>                        ev.getX(activePointerIndex) / getWidth());<br>                <span class="hljs-keyword">if</span> (!mEdgeGlowBottom.isFinished()) &#123;<br>                    mEdgeGlowBottom.onRelease();<br>                &#125;<br>            &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (pulledToY &gt; range) &#123;<br>                EdgeEffectCompat.onPullDistance(mEdgeGlowBottom,<br>                        (<span class="hljs-type">float</span>) deltaY / getHeight(),<br>                        <span class="hljs-number">1.f</span> - ev.getX(activePointerIndex) / getWidth());<br>                <span class="hljs-keyword">if</span> (!mEdgeGlowTop.isFinished()) &#123;<br>                    mEdgeGlowTop.onRelease();<br>                &#125;<br>            &#125;<br>            <span class="hljs-keyword">if</span> (!mEdgeGlowTop.isFinished() || !mEdgeGlowBottom.isFinished()) &#123;<br>                <br>                ViewCompat.postInvalidateOnAnimation(<span class="hljs-built_in">this</span>);<br>                clearVelocityTracker = <span class="hljs-literal">false</span>;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">if</span> (clearVelocityTracker) &#123;<br>            mVelocityTracker.clear();<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">break</span>;<br></code></pre></td></tr></table></figure>
+
+<p><code>onTouchEvent</code> 的 <code>Move</code> 就分析完了，后面就是 <code>Up</code> 事件</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">case</span> MotionEvent.ACTION_UP:<br>    <span class="hljs-keyword">final</span> <span class="hljs-type">VelocityTracker</span> <span class="hljs-variable">velocityTracker</span> <span class="hljs-operator">=</span> mVelocityTracker;<br>	<span class="hljs-comment">// 计算速度</span><br>    velocityTracker.computeCurrentVelocity(<span class="hljs-number">1000</span>, mMaximumVelocity);<br>    <span class="hljs-type">int</span> <span class="hljs-variable">initialVelocity</span> <span class="hljs-operator">=</span> (<span class="hljs-type">int</span>) velocityTracker.getYVelocity(mActivePointerId);<br>	<span class="hljs-comment">// 如果抬手时的速度大于惯性滑动的最小速度</span><br>    <span class="hljs-keyword">if</span> ((Math.abs(initialVelocity) &gt;= mMinimumVelocity)) &#123;<br>        <span class="hljs-keyword">if</span> (!edgeEffectFling(initialVelocity)<br>                &amp;&amp; !dispatchNestedPreFling(<span class="hljs-number">0</span>, -initialVelocity)) &#123;<br>            <span class="hljs-comment">// 分发嵌套的惯性滑动，上面 dispatchNestedPreFling 也是一样</span><br>            dispatchNestedFling(<span class="hljs-number">0</span>, -initialVelocity, <span class="hljs-literal">true</span>);<br>            <span class="hljs-comment">// 惯性滑动的核心方法</span><br>            fling(-initialVelocity);<br>        &#125;<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (mScroller.springBack(getScrollX(), getScrollY(), <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>,<br>            getScrollRange())) &#123;<br>        <span class="hljs-comment">// 这里是判断能否直接滑到顶部或底部，如果能的话，即直接滚过去</span><br>        ViewCompat.postInvalidateOnAnimation(<span class="hljs-built_in">this</span>);<br>    &#125;<br>    mActivePointerId = INVALID_POINTER;<br>	<span class="hljs-comment">// 结束滚动，这里面调用了惯性滑动的 stopNestedScroll</span><br>	<span class="hljs-comment">// 上面是先调用的惯性滑动，再结束非惯性滑动，所以符合我们最开始提到的</span><br>    <span class="hljs-comment">// 惯性滑动的开始会在非惯性滑动的 onStopNestedScroll 前调用</span><br>    endDrag();<br>    <span class="hljs-keyword">break</span>;<br></code></pre></td></tr></table></figure>
+
+<p>这就是 <code>Button</code> 在 <code>ScrollView</code> 中嵌套时的事件处理，我们再来看一下前提条件：</p>
+<ul>
+<li>1、子 View 没有在 <code>Down</code> 中调用 <code>requestDisallow</code> 去禁止父布局拦截事件</li>
+<li>2、子 View 一定会在 <code>Down</code> 是拦截或处理事件，即子 View 的 <code>onIntercept</code> 或者 <code>onTouchEvent</code> 返回 true</li>
+</ul>
+<p>首先看第一个，这个得原因很简单，因为调用了 <code>requestDisallow </code> 后，父 View 的 <code>onIntercept</code> 就不会被调用</p>
+<p>如果是第二个，这个就得看之前我们画的流程图</p>
+<pre><code class=" mermaid">flowchart TB
+
+subgraph activity
+id000(&quot;dispatchTouchEvent&quot;)
+id999(&quot;onTouchEvent&quot;)
+end
+
+id000(&quot;dispatchTouchEvent&quot;)--&gt;id1
+
+subgraph ViewGroup1
+id1[&quot;dispatchTouchEvent&quot;]--&gt;id2
+id2&#123;&quot;onIntercept&quot;&#125;--拦截--&gt;id3
+id3[&quot;onTouchEvent&quot;]--&gt;over0((over))
+end
+
+id2&#123;&quot;onIntercept&quot;&#125;--不拦截--&gt;id4
+
+subgraph ViewGroup2
+id4(&quot;dispatchTouchEvent&quot;)--&gt;id5
+id5&#123;&quot;onIntercept&quot;&#125;--拦截--&gt;id6
+id6[&quot;onTouchEvent&quot;]--&gt;over1((over))
+end
+
+id5&#123;&quot;onIntercept&quot;&#125;--不拦截--&gt;id7
+
+subgraph View
+id7(&quot;dispatchTouchEvent&quot;)--&gt;id8
+id8&#123;&quot;onTouchEvent&quot;&#125;
+id8--true--&gt;over2((over))
+end
+
+subgraph ViewGroup2
+id8--false--&gt;id9
+id9&#123;&quot;onTouchEvent&quot;&#125;--true--&gt;over3((over))
+end
+
+subgraph ViewGroup1
+id9--false--&gt;id10
+id10&#123;&quot;onTouchEvent&quot;&#125;--true--&gt;over4((over))
+end
+
+id10--false--&gt;id999
+</code></pre>
+
+<p>如图，如果子 View 的 <code>onIntercept</code> 或者 <code>onTouchEvent</code> 没有返回 true，那么 <code>Down</code> 事件会重新回到 <code>ScrollView</code> 的 <code>onTouchEvent</code> 中，我们分析一下 <code>onTouchEvent</code> 的 <code>Down</code> 事件，记住，此时 mIsBeingDragged &#x3D; false</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">case</span> MotionEvent.ACTION_DOWN: &#123;<br>    <span class="hljs-keyword">if</span> (getChildCount() == <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    &#125;<br>    <span class="hljs-comment">// 不会走这分支</span><br>    <span class="hljs-keyword">if</span> (mIsBeingDragged) &#123;<br>        <span class="hljs-keyword">final</span> <span class="hljs-type">ViewParent</span> <span class="hljs-variable">parent</span> <span class="hljs-operator">=</span> getParent();<br>        <span class="hljs-keyword">if</span> (parent != <span class="hljs-literal">null</span>) &#123;<br>            parent.requestDisallowInterceptTouchEvent(<span class="hljs-literal">true</span>);<br>        &#125;<br>    &#125;<br>    <br>    <span class="hljs-comment">// 如果处于上次抬手后的惯性滑动中</span><br>    <span class="hljs-keyword">if</span> (!mScroller.isFinished()) &#123;<br>        <span class="hljs-comment">// 禁止惯性滑动，并且里面调用了 stopNestedScroll，通知嵌套滑动的惯性滑动结束</span><br>        abortAnimatedScroll();<br>    &#125;<br>    mLastMotionY = (<span class="hljs-type">int</span>) ev.getY();<br>    mActivePointerId = ev.getPointerId(<span class="hljs-number">0</span>);<br>    <span class="hljs-comment">// 开启嵌套滑动</span><br>    startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL, ViewCompat.TYPE_TOUCH);<br>    <span class="hljs-keyword">break</span>;<br>&#125;<br><span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>; <span class="hljs-comment">// 最后你会发现 onTouchEvent 直接返回 true，即代表拦截事件，不把事件继续向上传递</span><br><span class="hljs-comment">// 竟然这里返回 true 后，那么之后的 Move 事件会怎么走呢？</span><br><span class="hljs-comment">// 这里因为是从下往上传递，在这里返回 true，就相当于你在 onIntercept 中返回 true，</span><br><span class="hljs-comment">// 之后也不会再调用 onIntercept，事件从 activity -&gt; 父父View -&gt; 父View -&gt; ScrollView，</span><br><span class="hljs-comment">// 与你在 onIntercept 中返回 true 保持一致</span><br></code></pre></td></tr></table></figure>
+
+<p>然后我们在看一下之前留下的 <code>onTouchEvent</code> 中 <code>Move</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">case</span> MotionEvent.ACTION_MOVE:<br>    <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">activePointerIndex</span> <span class="hljs-operator">=</span> ev.findPointerIndex(mActivePointerId);<br>    <span class="hljs-keyword">if</span> (activePointerIndex == -<span class="hljs-number">1</span>) &#123;<br>        Log.e(TAG, <span class="hljs-string">&quot;Invalid pointerId=&quot;</span> + mActivePointerId + <span class="hljs-string">&quot; in onTouchEvent&quot;</span>);<br>        <span class="hljs-keyword">break</span>;<br>    &#125;<br>    <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">y</span> <span class="hljs-operator">=</span> (<span class="hljs-type">int</span>) ev.getY(activePointerIndex);<br>    <span class="hljs-type">int</span> <span class="hljs-variable">deltaY</span> <span class="hljs-operator">=</span> mLastMotionY - y;<br>    deltaY -= releaseVerticalGlow(deltaY, ev.getX(activePointerIndex));<br><br>	<span class="hljs-comment">// 这里就是之前留下的，此时才会走进这个分支</span><br>    <span class="hljs-comment">// 此时 mIsBeingDragged = false，如果在滑动距离大于 mTouchSlop 时</span><br>    <span class="hljs-keyword">if</span> (!mIsBeingDragged &amp;&amp; Math.abs(deltaY) &gt; mTouchSlop) &#123;<br>        <span class="hljs-keyword">final</span> <span class="hljs-type">ViewParent</span> <span class="hljs-variable">parent</span> <span class="hljs-operator">=</span> getParent();<br>        <span class="hljs-keyword">if</span> (parent != <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-comment">// 禁止父布局拦截事件</span><br>            parent.requestDisallowInterceptTouchEvent(<span class="hljs-literal">true</span>);<br>        &#125;<br>        <span class="hljs-comment">// 设置 mIsBeingDragged = true</span><br>        mIsBeingDragged = <span class="hljs-literal">true</span>;<br>        <span class="hljs-keyword">if</span> (deltaY &gt; <span class="hljs-number">0</span>) &#123;<br>            deltaY -= mTouchSlop;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            deltaY += mTouchSlop;<br>        &#125;<br>    &#125;<br>	<span class="hljs-comment">// 如果处于拖动的状态</span><br>    <span class="hljs-keyword">if</span> (mIsBeingDragged) &#123;<br>        <span class="hljs-comment">// 这里跟之前分析的一样了</span><br>    &#125;<br></code></pre></td></tr></table></figure>
+
+<p>OK，<code>ScrollView</code> 的源码分析就到此了，除了 <code>ScrollView</code> 外还有 <code>RecyclerView</code> 这些基本思路都是一样的，先把事件分发给子 View，然后在 <code>Move</code> 超过了 <code>mTouchSlop</code> 后拦截事件，期间子 View 可以通过 <code>requestDisallow</code> 来禁止他们的拦截</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="onTouchEvent方法报黄"><a href="#onTouchEvent方法报黄" class="headerlink" title="onTouchEvent方法报黄"></a>onTouchEvent方法报黄</h3><blockquote>
+<p>在重写 <code>onTouchEvent</code> 方法的时候会报黄，提示原因：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">Custom</span> view MyView1 overrides <span class="hljs-literal">on</span>TouchEvent but not performClick<br></code></pre></td></tr></table></figure>
+
+<p>意思就是你重写了这个方法却没有重写和调用 <code>performClick</code>，为什么要重写和调用呢？</p>
+<p>重写时可以不需要的，但如果不调用的话，你的 View 在 <code>setOnClickListener</code> 时会无效，查看 View 源码你就会知道，点击事件是在 <code>onTouchEvent</code> 的 <code>Up</code> 事件时调用，你重写了，如果不调用 super，设置的点击监听就失效了</p>
+<p>但一般都自定义 View 了，还要什么官方的点击事件（一般都自己写方法向外提供），我的建议是直接加上注解取消报黄即可</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-meta">@SuppressLint(<span class="hljs-string">&quot;ClickableViewAccessibility&quot;</span>)</span><br><span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onTouchEvent</span><span class="hljs-params">(event: <span class="hljs-type">MotionEvent</span>)</span></span>: <span class="hljs-built_in">Boolean</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">super</span>.onTouchEvent(event)<br>&#125;<br></code></pre></td></tr></table></figure>
+</blockquote>
+<h3 id="VelocityTracker"><a href="#VelocityTracker" class="headerlink" title="VelocityTracker"></a>VelocityTracker</h3><blockquote>
+<p>速率追踪器，一个计算滑动速度的帮助类，官方源码中出现的很多</p>
+</blockquote>
+<h3 id="GestureDetector"><a href="#GestureDetector" class="headerlink" title="GestureDetector"></a>GestureDetector</h3><blockquote>
+<p>手势识别器，整合了一系列的长按、滑动等操作，自定义黑书上有讲解</p>
+<p>但这个一般是用于 <code>View</code> 中单独使用，算是一个处理滑动的工具，一般不用来解决滑动冲突</p>
+</blockquote>
+<h3 id="OverScroller"><a href="#OverScroller" class="headerlink" title="OverScroller"></a>OverScroller</h3><blockquote>
+<p>专门处理滑动距离和速度的一个工具类，如果你想实现惯性滑动等效果，可以试试它</p>
+<p><code>ScrollView</code> 和 <code>RecyclerView</code> 中的滑动距离都是依靠它来计算的</p>
+</blockquote>
+<h3 id="setOnTouchListener"><a href="#setOnTouchListener" class="headerlink" title="setOnTouchListener"></a>setOnTouchListener</h3><blockquote>
+<p>设置触摸监听</p>
+<p>作用于 View 中自带的 <code>onTouchEvent</code> 方法基本一致</p>
+<p>但要注意的是他会先调用 <code>OnTouchListener</code>，如果你返回 true，就不会回调 <code>onTouchEvent</code> 了</p>
+</blockquote>
+<h3 id="自定义-Behavior"><a href="#自定义-Behavior" class="headerlink" title="自定义 Behavior"></a>自定义 Behavior</h3><blockquote>
+<p>其实这个只要你理解了嵌套滑动，就能很快学会它</p>
+<p>嵌套滑动一般需要自己去重写 <code>View</code> 才能使用，但使用 <code>Behavior</code> 就可以省去这个过程，协调者布局直接管理整个滑动事件分发，将你的 <code>View</code> 与 <code>Behavior</code> 进行绑定，间接实现了嵌套滑动的处理，达到解耦的效果</p>
+<p>之前廖老师想实现 BottomSheetBehavior + Vp2 + Rv 的效果，但官方的 <code>BottomSheetBehavior</code> 有点坑，它只能跟第一个子布局进行嵌套滑动，导致官方的无法实现理想的效果</p>
+<p>然后我写了一个自定义 <code>BottomSheetBehavior</code>：<a target="_blank" rel="noopener" href="https://github.com/985892345/BottomSheetTest">https://github.com/985892345/BottomSheetTest</a></p>
+</blockquote>
+<h3 id="拖放"><a href="#拖放" class="headerlink" title="拖放"></a>拖放</h3><p>一般我们会实现一些长按移动整个 View 的操作，官方提供了两个东西</p>
+<p>推荐文章地址：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_31339141/article/details/107597055">https://blog.csdn.net/qq_31339141/article/details/107597055</a></p>
+<h4 id="OnDragListener"><a href="#OnDragListener" class="headerlink" title="OnDragListener"></a>OnDragListener</h4><blockquote>
+<p>拖放的监听</p>
+<p>文章地址：<a target="_blank" rel="noopener" href="https://juejin.cn/post/7062961027578757156?share_token=df84e073-fe9b-4ee4-a240-02373939c9ec">https://juejin.cn/post/7062961027578757156?share_token=df84e073-fe9b-4ee4-a240-02373939c9ec</a></p>
+<p>有个还在测试的 jetpack 的库：<a target="_blank" rel="noopener" href="https://developer.android.google.cn/jetpack/androidx/releases/draganddrop">draganddrop</a></p>
+</blockquote>
+<h4 id="ViewDragHelper"><a href="#ViewDragHelper" class="headerlink" title="ViewDragHelper"></a>ViewDragHelper</h4><blockquote>
+<p>你可以把这个认为是 <code>OnDragListener</code> 的升级版，但使用方式是完全不同的</p>
+<p>自定义红书上有讲解</p>
+</blockquote>
+<h4 id="掌邮新课表"><a href="#掌邮新课表" class="headerlink" title="掌邮新课表"></a>掌邮新课表</h4><blockquote>
+<p>我接手的掌邮新课表也加入了拖放的效果，但并没有用到上面这两个东西，采用的思路与 <code>RecyclerView</code> 的 <code>ItemTouchHelper</code> 一致，自定义了滑动事件分发来实现的，原因在于存在一些复杂的事件交互，只能自己去实现</p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div></div>
+      <div>http://example.com/2022/10/19/事件分发/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>October 19, 2022</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>Licensed under</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/10/19/%E5%8A%A8%E7%94%BB%E7%9B%B8%E5%85%B3/" title="">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile"></span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/09/21/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3RecyclerView/" title="深入理解RecyclerView">
+                        <span class="hidden-mobile">深入理解RecyclerView</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

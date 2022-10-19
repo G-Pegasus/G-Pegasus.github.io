@@ -1,0 +1,852 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Activity生命周期生命周期一词常被用在产品中，来形容一个产品从诞生，到成熟，最终衰退这一系列事件的过程。 在Android中，大多数应用组件都存在生命周期，以表明该组件在应用（App）运行过程中的状态，体现在代码层面就是诸如onCreate()，onStop()等回调方法。开发者可以通过重写组件生命周期的回调方法，在组件处于创建，停止、销毁或者恢复等状态时执行相应的操作。 生命周期回调简要介">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2022/10/19/Android%E5%9B%9B%E5%A4%A7%E7%BB%84%E4%BB%B6/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Activity生命周期生命周期一词常被用在产品中，来形容一个产品从诞生，到成熟，最终衰退这一系列事件的过程。 在Android中，大多数应用组件都存在生命周期，以表明该组件在应用（App）运行过程中的状态，体现在代码层面就是诸如onCreate()，onStop()等回调方法。开发者可以通过重写组件生命周期的回调方法，在组件处于创建，停止、销毁或者恢复等状态时执行相应的操作。 生命周期回调简要介">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://developer.android.com/guide/components/images/activity_lifecycle.png">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/4625401-a37a7c32683ecda6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/340/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/4625401-756d89b600d55081.png">
+<meta property="og:image" content="https://developer.android.com/images/ui/notifications/notification-callouts_2x.png">
+<meta property="article:published_time" content="2022-10-19T08:55:06.188Z">
+<meta property="article:modified_time" content="2022-10-11T05:41:19.374Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://developer.android.com/guide/components/images/activity_lifecycle.png">
+  
+  
+  
+  <title>Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                Home
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                Archives
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                Categories
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                Tags
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                About
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text=""></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-10-19 16:55" pubdate>
+          October 19, 2022 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          14k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          121 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none"></h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Activity"><a href="#Activity" class="headerlink" title="Activity"></a>Activity</h1><h2 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h2><p><em>生命周期</em>一词常被用在产品中，来形容一个产品从诞生，到成熟，最终衰退这一系列事件的过程。</p>
+<p>在Android中，大多数应用组件都存在生命周期，以表明该组件在应用（App）运行过程中的状态，体现在代码层面就是诸如<code>onCreate()</code>，<code>onStop()</code>等回调方法。开发者可以通过重写组件生命周期的回调方法，在组件处于创建，停止、销毁或者恢复等状态时执行相应的操作。</p>
+<h3 id="生命周期回调简要介绍"><a href="#生命周期回调简要介绍" class="headerlink" title="生命周期回调简要介绍"></a>生命周期回调简要介绍</h3><p>让我们跟着下面这张图先来了解一下Activity生命周期的回调方法：</p>
+<p><img src="https://developer.android.com/guide/components/images/activity_lifecycle.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h4 id="onCreate"><a href="#onCreate" class="headerlink" title="onCreate()"></a>onCreate()</h4><p>Activity首次创建时执行，且只执行一次。</p>
+<p><em>[需要注意的地方]</em></p>
+<ol>
+<li>执行onCreate()时Activity不可见，其内的View没有完成测量绘制（此时获取View的宽高皆为0）。</li>
+<li>建议在onCreate()方法中对只需初始化一次的对象进行初始化操作（如初始化ViewModel，将数据绑定到列表等），不建议在其中进行耗时的操作。</li>
+<li>onCreate()方法接收名为<code>savedInstanceState</code>的Bundle对象，该对象将存储Activity被暂时销毁时所保存的状态。您可以通过onCreate()或者onRestoreInstanceState()方法中的savedInstanceState参数来恢复界面状态。</li>
+</ol>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">private</span> <span class="hljs-keyword">const</span> <span class="hljs-keyword">val</span> EDIT_TEXT_CONTENT = <span class="hljs-string">&quot;edit_text_content&quot;</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MainActivity</span> : <span class="hljs-type">AppCompatActivity</span>() &#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">lateinit</span> <span class="hljs-keyword">var</span> editText: EditText<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onCreate</span><span class="hljs-params">(savedInstanceState: <span class="hljs-type">Bundle</span>?)</span></span> &#123;<br>        <span class="hljs-keyword">super</span>.onCreate(savedInstanceState)<br>        setContentView(R.layout.activity_main)<br>        editText = findViewById(R.id.edit_text)<br>        <span class="hljs-comment">// 获取Activity销毁前保存的数据</span><br>        savedInstanceState?.let &#123; <br>            editText.setText(it.getString(EDIT_TEXT_CONTENT)) &#125;<br>    &#125;<br><br>    <span class="hljs-comment">// Activity重建时恢复状态</span><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onRestoreInstanceState</span><span class="hljs-params">(savedInstanceState: <span class="hljs-type">Bundle</span>)</span></span> &#123;<br>        editText.setText(savedInstanceState.getString(EDIT_TEXT_CONTENT))<br>    &#125;<br><br>    <span class="hljs-comment">// Activity异常销毁前执行该方法，保存界面状态</span><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onSaveInstanceState</span><span class="hljs-params">(outState: <span class="hljs-type">Bundle</span>)</span></span> &#123;<br>        outState.putString(EDIT_TEXT_CONTENT, editText.text.toString())<br>        <span class="hljs-keyword">super</span>.onSaveInstanceState(outState)<br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="onStart"><a href="#onStart" class="headerlink" title="onStart()"></a>onStart()</h4><p>Activity对用户可见时调用，可被onRestart()方法重复调用。</p>
+<p>*[需要注意的地方]*：</p>
+<ol>
+<li>执行onStart()时Activity内的view没有获得焦点，与用户不可交互。</li>
+<li>建议在onStart()中执行动画的初始化和开启操作，以及需要重新恢复的对象初始化（如操作View的Handler的重新初始化，视频播放和相机拍照等功能的重新初始化）。</li>
+<li>不建议在onStart()中进行耗时操作。</li>
+</ol>
+<h4 id="onResume"><a href="#onResume" class="headerlink" title="onResume()"></a>onResume()</h4><p>Activity来到前台，准备与用户交互时调用。</p>
+<p>*[需要注意的地方]*：</p>
+<ol>
+<li>Activity会一直保持这种状态，直到某些像接到来电、跳转到另一Activity等事件发生，让焦点远离当前Activity。</li>
+<li>建议在onResume()方法中执行耗时操作，以及重新恢复视频播放等操作。</li>
+</ol>
+<blockquote>
+<p>穿插一个<strong>前台</strong>和<strong>后台</strong>概念的解释：</p>
+<p>前台（Foreground）指App可见，可与用户交互。即我们打开一个App，正常与其交互的过程。</p>
+<p>后台（Background）指App不可见，不可交互。如我们打开网易云音乐播放一首音乐，这时QQ来了一条消息，于时我们暂时退出网易云音乐，打开QQ查看消息。此时的网易云音乐App就处于后台播放音乐，不可见也不可交互，但仍然可以播放音乐。</p>
+</blockquote>
+<h4 id="onPause"><a href="#onPause" class="headerlink" title="onPause()"></a>onPause()</h4><p>Activity从前台切换到后台时调用。</p>
+<p>*[需要注意的地方]*：</p>
+<ol>
+<li>执行onPause()时Activity可见，但不可交互。</li>
+<li>onPause()执行非常简单，建议进行只与当前Activity有关的对象的资源释放（如动画的暂停）。</li>
+<li>不建议在onPause()中进行保存应用数据或网络请求等耗时操作。</li>
+</ol>
+<h4 id="onStop"><a href="#onStop" class="headerlink" title="onStop()"></a>onStop()</h4><p>Activity对用户不可见时调用。</p>
+<p>*[需要注意的地方]*：</p>
+<ol>
+<li>执行onStop()时，Activity与用户不可交互。</li>
+<li>建议在onStart()中释放可能在其他Activity中使用到的对象资源（如Camera2，VideoView等），或执行CPU相对密集的关闭操作（如将数据保存到数据库中）。</li>
+</ol>
+<h4 id="onDestroy"><a href="#onDestroy" class="headerlink" title="onDestroy()"></a>onDestroy()</h4><p>Activity被销毁前调用。</p>
+<p>*[需要注意的地方]*：</p>
+<ol>
+<li>onDestroy()被调用的原因主要有有两个：一是<em>用户彻底关闭该Activity</em>或者<em>系统由于内存不足释放Activity所在的进程，从而销毁Activity</em>；二是<em>由于屏幕旋转或多窗口模式等配置变更的情况发生，导致系统暂时销毁Activity</em>。</li>
+<li>在onDestroy()中应释放Activity剩余的所有资源，以防止内存泄漏的情况发生。</li>
+<li>当配置变更导致Activity被暂时销毁时，实际上是包裹Activity的外部容器宽高发生了变化，其内的子View也需要重新进行测量和布局。此时可以在<code>AndroidManifest.xml</code>文件中配置Activity的<code>android:configChanges=&quot;orientation|screenSize&quot;</code>属性，旋转屏幕时不会重新调用各个生命周期（以及<code>onSaveInstanceState()</code>和<code>onRestoreInstanceState()</code>），只会执行Activity内的<code>onConfigurationChanged()</code>方法。</li>
+</ol>
+<h3 id="常用生命周期执行顺序"><a href="#常用生命周期执行顺序" class="headerlink" title="常用生命周期执行顺序"></a>常用生命周期执行顺序</h3><table>
+<thead>
+<tr>
+<th>事件</th>
+<th>生命周期</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第一次启动</td>
+<td>onCreate() -&gt; onStart() -&gt; onResume()</td>
+</tr>
+<tr>
+<td>从 A 跳转到 B</td>
+<td>A_onPause() -&gt; B_onCreate() -&gt; B_onStart() -&gt; B_onResume() -&gt; A_onStop()</td>
+</tr>
+<tr>
+<td>从 B 再次回到 A</td>
+<td>B_onPause() -&gt; A_onRestart() -&gt; A_onStart() -&gt; A_onResume() -&gt; B_onStop()</td>
+</tr>
+<tr>
+<td>用户按 home 键&#x2F;锁屏</td>
+<td>onPause() -&gt; onStop()</td>
+</tr>
+<tr>
+<td>按 home 键后回到应用&#x2F;亮屏</td>
+<td>onRestart() -&gt; onStart() -&gt; onResume()</td>
+</tr>
+<tr>
+<td>用户按 back 键回退</td>
+<td>onPause() -&gt; onStop() -&gt; onDestroy()</td>
+</tr>
+</tbody></table>
+<h2 id="Fragment"><a href="#Fragment" class="headerlink" title="Fragment"></a>Fragment</h2><p><code>Fragment</code>表示应用界面中可重复使用的一部分。它依赖于其他Activity或Fragment存活，<strong>具有属于自己的生命周期</strong>，可以定义、管理自己的布局，处理自己的输入事件等。</p>
+<p>Fragment被定义为<strong>一个轻量级Activity</strong>而进行设计。一个Activity中可包含多个Fragment，实现界面的<strong>解耦</strong>和<strong>模块化</strong>；一个Fragment可以被使用在多个Activity里，提高界面的<strong>可重用性</strong>。</p>
+<h3 id="生命周期回调简要介绍-1"><a href="#生命周期回调简要介绍-1" class="headerlink" title="生命周期回调简要介绍"></a>生命周期回调简要介绍</h3><p>Fragment的生命周期和Activity十分相似，如下图所示：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/4625401-a37a7c32683ecda6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/340/format/webp" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>可以发现Fragment只比Activity多了几个方法。这里对Fragment生命周期回调方法进行一个简单的介绍：</p>
+<ol>
+<li>**onAttach()**：Fragment与Activity发生关联时调用。</li>
+<li>**onCreate()**：Fragment被创建时调用。</li>
+<li>**onCreateView()**：创建、绘制Fragment内部的View组件时调用，该方法返回创建成功的View组件。</li>
+<li>**onActivityCreated()**：当Fragment所在的Activity启动完成时调用。</li>
+<li>**onStart()**：Fragment启动时调用，此时Fragment可见。</li>
+<li>**onResume()**：Fragment恢复时调用，此时获取焦点，可与用户交互。</li>
+<li>**onPause()**：Fragment暂停时调用，此时失去焦点，但仍然可见。</li>
+<li>**onStop()**：Fragment停止时调用，此时Fragment不可见。</li>
+<li>**onDestroyView()**：销毁与Fragment有关的视图，但未与Activity解除绑定。</li>
+<li>**onDestroy()**：Fragment销毁时调用。</li>
+<li>**onDetach()**：Fragment与Activity取消关联时调用。</li>
+</ol>
+<h3 id="常用生命周期执行顺序-1"><a href="#常用生命周期执行顺序-1" class="headerlink" title="常用生命周期执行顺序"></a>常用生命周期执行顺序</h3><table>
+<thead>
+<tr>
+<th>事件</th>
+<th>生命周期</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>第一次创建</td>
+<td>onAttach() -&gt; onCreate() -&gt; onCreateView() -&gt; onActivityCreated() -&gt; onStart() -&gt; onResume()</td>
+</tr>
+<tr>
+<td>切换到其他Fragment</td>
+<td>onPause() -&gt; onStop() -&gt; onDestroyView()</td>
+</tr>
+<tr>
+<td>切换回本身的Fragment</td>
+<td>onCreateView() -&gt; onActivityCreated() -&gt; onStart() -&gt; onResume()</td>
+</tr>
+<tr>
+<td>用户按 home 键&#x2F;锁屏</td>
+<td>onPause() -&gt; onStop()</td>
+</tr>
+<tr>
+<td>按 home 键后回到应用&#x2F;亮屏</td>
+<td>onStart() -&gt; onResume()</td>
+</tr>
+<tr>
+<td>用户按 back 键回退</td>
+<td>onPause() -&gt; onStop() -&gt; onDestroyView() -&gt; onDestroy() -&gt; onDetach()</td>
+</tr>
+</tbody></table>
+<h1 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h1><p><code>Service</code>是一种<strong>可在后台执行</strong>长时间运行操作而<strong>不提供界面</strong>的应用组件。</p>
+<h2 id="生命周期-1"><a href="#生命周期-1" class="headerlink" title="生命周期"></a>生命周期</h2><p>Service的启动有两种方式：<strong>startService</strong>和<strong>bindService</strong>。Service的生命周期也因为启动方式的不同分为两种，如下图所示：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/4625401-756d89b600d55081.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h3 id="startService"><a href="#startService" class="headerlink" title="startService()"></a>startService()</h3><ol>
+<li><p>**onCreate()**：首次创建服务时调用，且只执行一次。</p>
+</li>
+<li><p>**onStartCommand()**：当组件通过<code>startService()</code>方法启动服务调用，多次启动服务时<code>onStartCommand()</code>调用多次。</p>
+<blockquote>
+<p>事实上<code>onStartCommand()</code>的返回值有四种：<em>START_STICKY_COMPATIBILITY</em>（不保证服务被杀死后onStartCommand()方法会被重新调用）、<em>START_STICKY</em>（Service被杀死后保持服务为started状态，但不会获取到Intent信息）、<em>START_NOT_STICKY</em>（当Service运行的进程被Android系统强制杀掉之后不会重新创建该Service）、<em>START_REDELIVER_INTENT</em>（服务进程在执行完onStartCommand()之后被杀死，将会被安排重启，且传递最近的intent）。这些参数在原生安卓机上没问题，但国内安卓设备厂商会为了提高系统安全性修改源码，导致上面这些参数都不会真正起到作用。</p>
+</blockquote>
+</li>
+<li><p>**onDestroy()**：当组件使用<code>stopService()</code>方法或者服务自身执行<code>stopSelf()</code>方法时调用，多次停止服务时<code>onDestroy()</code>只会执行一次。</p>
+<blockquote>
+<p>stopSelf()方法接收一个int参数，同<code>onStartCommand()</code>方法传递进来的startId对应。</p>
+<p>需要注意的是，如果在<code>onStartCommand()</code>方法中执行stopSelf()时Service不会立刻停止，只有**当<code>onStartCommand()</code>全部执行完后才会调用<code>onDestroy()</code>**。</p>
+<p>同样地，如果在Activity的<code>onCreate()</code>方法里调用<code>finish()</code>方法也不会立刻销毁Activity，而是**等<code>onCreate()</code>方法全部执行完才进入<code>onDestroy()</code>**。</p>
+<p>这是因为在调用<code>finish()</code>时系统只是将当前的Activity移出了栈，并没有及时地调用<code>onDestroy()</code>方法，其占用的资源也没有别及时释放。</p>
+</blockquote>
+</li>
+</ol>
+<p>*[需要注意的地方]*：通过startService()方式启动的服务<strong>独立于</strong>启动它的组件，也就是说即使启动该服务的组件销毁了，Service仍然可以继续运行。但是这也导致了Service与组件的通信较为困难（可使用BroadcastReceiver进行通信）。</p>
+<h3 id="bindService"><a href="#bindService" class="headerlink" title="bindService()"></a>bindService()</h3><ol>
+<li>**onCreate()**：同<code>startService()</code>。</li>
+<li>**onBind()**：当组件通过<code>bindService()</code>方法与服务绑定时调用。同时这也是Service类里唯一的抽象方法，开发者必须实现该方法，并返回一个IBinder对象，供客户端（组件）与服务端（Service）的进行通信。</li>
+<li>**onUnbind()**：当所有与该服务绑定的组件都解除绑定时调用。</li>
+</ol>
+<p>*[需要注意的地方]*：</p>
+<ol>
+<li>一个服务可以被多个组件绑定，当绑定到该服务上的所有组件<strong>都被销毁</strong>时，服务才会停止。</li>
+<li>先<code>startService()</code>再<code>bindService()</code>的生命周期：onCreate()  -&gt; onStartCommand() -&gt; onBind() -&gt; onUnbind() -&gt; onDestroy()。</li>
+<li>先<code>bindService()</code>再<code>startService()</code>的生命周期：onCreate() -&gt; onBind() -&gt; onStartCommand() -&gt; onUnbind() -&gt; onDestroy()。</li>
+</ol>
+<h2 id="Service使用"><a href="#Service使用" class="headerlink" title="Service使用"></a>Service使用</h2><p>Service的使用分为三步：创建Service，注册Service，启动Service。</p>
+<h3 id="创建Service"><a href="#创建Service" class="headerlink" title="创建Service"></a>创建Service</h3><p>这里以一个播放音乐的服务为例说明，创建<code>MusicService</code>类，使其继承Service，并重写其中的onBind()方法：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MusicService</span>: <span class="hljs-type">Service</span>() &#123;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onBind</span><span class="hljs-params">(intent: <span class="hljs-type">Intent</span>?)</span></span>: IBinder? &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>可以看到，<code>onBind()</code>方法返回一个IBinder的实现对象。IBinder是Android提供的进程间和跨进程调用机制的接口，在Service里，它是组件与Service通信的重要桥梁。</p>
+<p>因此如果我们选择使用<code>bindService()</code>启动服务，则需要在MusiceService里创建一个继承自Binder（而不是IBinder）的内部类，将其作为<code>onBind()</code>方法的返回值：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MusicService</span>: <span class="hljs-type">Service</span>() &#123;<br>    <br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onBind</span><span class="hljs-params">(intent: <span class="hljs-type">Intent</span>?)</span></span>: IBinder &#123;<br>        <span class="hljs-keyword">return</span> MyBinder()<br>    &#125;<br><br>    <span class="hljs-keyword">inner</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyBinder</span>: <span class="hljs-type">Binder</span>() &#123;<br>        <span class="hljs-keyword">val</span> service: MusicService <span class="hljs-keyword">get</span>() = <span class="hljs-keyword">this</span><span class="hljs-symbol">@MusicService</span><br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="注册Service"><a href="#注册Service" class="headerlink" title="注册Service"></a>注册Service</h3><p>Android四大组件在使用时都需要在<code>AndroidManifest.xml</code>中对其进行注册，这里我们对刚创建的MusicService进行注册：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">application</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">service</span> <span class="hljs-attr">android:name</span>=<span class="hljs-string">&quot;.service.MusicService&quot;</span> /&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">application</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="启动Service"><a href="#启动Service" class="headerlink" title="启动Service"></a>启动Service</h3><p>在生命周期中我们已经提到过Service的两种启动方式，现在来看一看它们的代码实现：</p>
+<h4 id="通过startService-启动"><a href="#通过startService-启动" class="headerlink" title="通过startService()启动"></a>通过startService()启动</h4><p>由于通过<code>startService()</code>启动的Service与组件是相互独立的，因此这里不需要过多的配置：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">startService(Intent(<span class="hljs-keyword">this</span>, MusicService::<span class="hljs-keyword">class</span>.java)) <span class="hljs-comment">// 启动服务</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">stopService(Intent(<span class="hljs-keyword">this</span>, MusicService::<span class="hljs-keyword">class</span>.java))  <span class="hljs-comment">// 停止服务</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="通过bindService-启动"><a href="#通过bindService-启动" class="headerlink" title="通过bindService()启动"></a>通过bindService()启动</h4><p><code>bindService()</code>方法接收三个参数：Intent、ServiceConnection和flag。</p>
+<ol>
+<li><p>第一个参数Intent同<code>startService()</code>一样，为当前组件到目标Service的Intent。</p>
+</li>
+<li><p>第二个参数为ServiceConnection接口的具体实现类，在其中有<code>onServiceConnected()</code>和<code>onServiceDisconnected()</code>两个方法可以<strong>异步监听服务的连接与断开事件</strong>，可以充当组件与Service连接的桥梁。我们通常在其中拿到对应的Binder实例，进而通过Binder拿到Service内的实例或调用其内的方法，并判断当前Service是否已绑定：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">private</span> <span class="hljs-keyword">lateinit</span> <span class="hljs-keyword">var</span> mMusicService: MusicService <span class="hljs-comment">// Service实例</span><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> mBound: <span class="hljs-built_in">Boolean</span> = <span class="hljs-literal">false</span> <span class="hljs-comment">// 服务是否已绑定</span><br><br><span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> connection = <span class="hljs-keyword">object</span> : ServiceConnection &#123;<br>    <br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onServiceConnected</span><span class="hljs-params">(className: <span class="hljs-type">ComponentName</span>, service: <span class="hljs-type">IBinder</span>)</span></span> &#123;<br>        <span class="hljs-keyword">val</span> binder = service <span class="hljs-keyword">as</span> MusicService.MyBinder<br>        mMusicService = binder.service<br>        mBound = <span class="hljs-literal">true</span><br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onServiceDisconnected</span><span class="hljs-params">(className: <span class="hljs-type">ComponentName</span>)</span></span> &#123;<br>        mBound = <span class="hljs-literal">false</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>第三个参数为该方法的标志位，通常我们选择<code>Context.BIND_AUTO_CREATE</code>作为该参数的值，表示若绑定服务未启动则自动启动服务。</p>
+</li>
+</ol>
+<h2 id="Service与应用组件通信"><a href="#Service与应用组件通信" class="headerlink" title="Service与应用组件通信"></a>Service与应用组件通信</h2><p>通过startService()方法启动服务时，服务于组件独立，因此需要全局广播来实现服务与组件的通信，我们稍后在BroadcastReceiver的知识里继续讲解。</p>
+<p>这里我们继续以MusicService为例讲解通过bindService()方式启动Service时如何与组件进行通信。</p>
+<p>首先在MusicService里定义一个MediaPlayer对象，用来操作音频对象。在onCreate()里初始化MediaPlayer，在onDestroy()里释放。同时在MusicService里对外开放play()和pause()两个方法来控制音乐的播放和暂停，以及isPlaying()判断音乐是否正在播放。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MusicService</span> : <span class="hljs-type">Service</span>() &#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">lateinit</span> <span class="hljs-keyword">var</span> player: MediaPlayer<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> binder = MyBinder()<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onCreate</span><span class="hljs-params">()</span></span> &#123;<br>        <span class="hljs-keyword">super</span>.onCreate()<br>        player = MediaPlayer.create(<span class="hljs-keyword">this</span>, R.raw.music)<br>    &#125;<br>    <br>    <span class="hljs-keyword">inner</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyBinder</span> : <span class="hljs-type">Binder</span>() &#123;<br>        <span class="hljs-keyword">val</span> service: MusicService <span class="hljs-keyword">get</span>() = <span class="hljs-keyword">this</span><span class="hljs-symbol">@MusicService</span><br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onBind</span><span class="hljs-params">(intent: <span class="hljs-type">Intent</span>?)</span></span> = binder<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onDestroy</span><span class="hljs-params">()</span></span> &#123;<br>        <span class="hljs-keyword">super</span>.onDestroy()<br>        player.let &#123;<br>            it.stop()<br>            it.release() &#125;<br>    &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">play</span><span class="hljs-params">()</span></span> &#123; player.start() &#125;<br><br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">pause</span><span class="hljs-params">()</span></span> &#123; player.pause() &#125;<br>    <br>    <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">isPlaying</span><span class="hljs-params">()</span></span> = player.isPlaying<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>在Activity内获取到Service，并绑定相应的点击事件：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">private</span> <span class="hljs-keyword">const</span> <span class="hljs-keyword">val</span> KEY_IS_PLAYING = <span class="hljs-string">&quot;is_playing&quot;</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MainActivity</span> : <span class="hljs-type">LogActivity</span>() &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">lateinit</span> <span class="hljs-keyword">var</span> playMusic: ImageView<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">lateinit</span> <span class="hljs-keyword">var</span> mMusicService: MusicService <span class="hljs-comment">// Service实例</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">var</span> mBound: <span class="hljs-built_in">Boolean</span> = <span class="hljs-literal">false</span> <span class="hljs-comment">// 服务是否已绑定</span><br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">val</span> connection = <span class="hljs-keyword">object</span> : ServiceConnection &#123;<br><br>        <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onServiceConnected</span><span class="hljs-params">(className: <span class="hljs-type">ComponentName</span>, service: <span class="hljs-type">IBinder</span>)</span></span> &#123;<br>            <span class="hljs-keyword">val</span> binder = service <span class="hljs-keyword">as</span> MusicService.MyBinder<br>            mMusicService = binder.service <span class="hljs-comment">// 获取Service实例</span><br>            mBound = <span class="hljs-literal">true</span><br>        &#125;<br><br>        <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onServiceDisconnected</span><span class="hljs-params">(className: <span class="hljs-type">ComponentName</span>)</span></span> &#123;<br>            mBound = <span class="hljs-literal">false</span><br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onCreate</span><span class="hljs-params">(savedInstanceState: <span class="hljs-type">Bundle</span>?)</span></span> &#123;<br>        <span class="hljs-keyword">super</span>.onCreate(savedInstanceState)<br>        setContentView(R.layout.activity_main)<br>        findViewById(R.id.ib_play_music).setOnClickListener &#123;<br>            <span class="hljs-keyword">if</span> (!mBound) <span class="hljs-keyword">return</span><span class="hljs-symbol">@setOnClickListener</span><br>            <span class="hljs-keyword">if</span> (mMusicService.isPlaying()) &#123;<br>                <span class="hljs-comment">// 暂停播放</span><br>                mMusicService.pause()<br>                playMusic.setImageResource(R.drawable.ic_play)<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-comment">// 开始播放</span><br>                mMusicService.play()<br>                playMusic.setImageResource(R.drawable.ic_pause)<br>            &#125;<br>        &#125;<br>        <span class="hljs-comment">// 两种方式同时启动服务</span><br>        startService(Intent(<span class="hljs-keyword">this</span>, MusicService::<span class="hljs-keyword">class</span>.java))<br>        Intent(<span class="hljs-keyword">this</span>, MusicService::<span class="hljs-keyword">class</span>.java).also &#123; intent -&gt;<br>            bindService(intent, connection, BIND_AUTO_CREATE)<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onDestroy</span><span class="hljs-params">()</span></span> &#123;<br>        Log.e(TAG, <span class="hljs-string">&quot;===onDestroy===&quot;</span>)<br>        <span class="hljs-keyword">super</span>.onDestroy()<br>        unbindService(connection)<br>        mBound = <span class="hljs-literal">false</span><br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onRestoreInstanceState</span><span class="hljs-params">(savedInstanceState: <span class="hljs-type">Bundle</span>)</span></span> &#123;<br>        Log.e(TAG, <span class="hljs-string">&quot;===onRestoreInstanceState===&quot;</span>)<br>        <span class="hljs-keyword">if</span> (savedInstanceState.getBoolean(KEY_IS_PLAYING)) &#123;<br>            playMusic.setImageResource(R.drawable.ic_pause)<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onSaveInstanceState</span><span class="hljs-params">(outState: <span class="hljs-type">Bundle</span>)</span></span> &#123;<br>        Log.e(TAG, <span class="hljs-string">&quot;===onSaveInstanceState===&quot;</span>)<br>        <span class="hljs-keyword">super</span>.onSaveInstanceState(outState)<br>        outState.putBoolean(KEY_IS_PLAYING, mMusicService.isPlaying())<br>    &#125;<br><br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onConfigurationChanged</span><span class="hljs-params">(newConfig: <span class="hljs-type">Configuration</span>)</span></span> &#123;<br>        Log.e(TAG, <span class="hljs-string">&quot;===onConfigurationChanged===&quot;</span>)<br>        <span class="hljs-keyword">super</span>.onConfigurationChanged(newConfig)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>最后需要注意的是，Service是运行在主线程中的，因此不能执行耗时的或者密集型的任务，需要在服务中额外开启线程执行，或者使用官方提供的IntentService。</p>
+<h2 id="Notification"><a href="#Notification" class="headerlink" title="Notification"></a>Notification</h2><p>Notification能够在App界面之外向用户显示消息。</p>
+<h3 id="Notification介绍"><a href="#Notification介绍" class="headerlink" title="Notification介绍"></a>Notification介绍</h3><h4 id="Notification组成"><a href="#Notification组成" class="headerlink" title="Notification组成"></a>Notification组成</h4><p>关于通知在设备上的外观有很多种，如状态栏通知图标、抽屉式通知栏和锁屏时的通知等，具体可直接前往<a target="_blank" rel="noopener" href="https://developer.android.com/guide/topics/ui/notifiers/notifications">Android官网</a>查询。</p>
+<p>这里我们主要介绍一下通知的组成，如下图所示：</p>
+<p><img src="https://developer.android.com/images/ui/notifications/notification-callouts_2x.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<ol>
+<li>小图标：必须提供，通过 <code>setSmallIcon()</code> 进行设置。</li>
+<li>应用名称：由系统提供。</li>
+<li>时间戳：由系统提供，但您可以使用 <code>setWhen()</code> 替换它或者使用 <code>setShowWhen(false)</code> 隐藏它。</li>
+<li>大图标：可选内容（通常仅用于联系人照片，请勿将其用于应用图标），通过 <code>setLargeIcon()</code> 进行设置。</li>
+<li>标题：可选内容，通过 <code>setContentTitle()</code> 进行设置。</li>
+<li>文本：可选内容，通过 <code>setContentText()</code> 进行设置。</li>
+</ol>
+<h4 id="不同版本下的Notification"><a href="#不同版本下的Notification" class="headerlink" title="不同版本下的Notification"></a>不同版本下的Notification</h4><p>对不同版本下的Notification作简要了解，我们主要关注Android8.0版本的Notification。</p>
+<ul>
+<li><p>Android 4.1（API 级别 16）</p>
+<p>引入了展开式通知模板（称为通知样式），可以提供较大的通知内容区域来显示信息。用户可以使用单指向上&#x2F;向下滑动的手势来展开通知。</p>
+</li>
+<li><p>Android 5.0（API 级别 21）</p>
+<p>引入了锁定屏幕和浮动通知。<br>向 API 集添加了通知是否在锁定屏幕上显示的方法 (setVisibility())，以及指定通知文本的“公开”版本的方法。<br>添加了 setPriority() 方法，告知系统该通知应具有的“干扰性”（例如，将其设置为“高”，可使该通知以浮动通知的形式显示）</p>
+</li>
+<li><p>Android 7.0（API 级别 24）</p>
+<p>用户可以使用内联回复直接在通知内回复（用户可以输入文本，然后将其发送给通知的父级应用）。</p>
+</li>
+<li><p>Android 8.0（API 级别 26）</p>
+<p>现在必须将单个通知放入特定渠道中。<br>用户现在可以按渠道关闭通知，而不是关闭应用的所有通知。<br>包含活动通知的应用会在应用图标上方显示通知“标志”。（小圆点或数字）<br>用户可以暂停抽屉式通知栏中的通知。您可以为通知设置自动超时。<br>可以设置通知的背景颜色。</p>
+</li>
+</ul>
+<h3 id="Notification使用"><a href="#Notification使用" class="headerlink" title="Notification使用"></a>Notification使用</h3><p>发送一条简单的通知只需要三步：</p>
+<ol>
+<li><p>创建渠道：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">private</span> String createNotificationChannel(String channelID, String channelNAME, int level) &#123;<br>       <span class="hljs-keyword">if</span> (android.os.Build.VERSION.SDK_INT &gt;= android.os.Build.VERSION_CODES.O) &#123;<br>           NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);<br>           NotificationChannel channel = new NotificationChannel(channelID, channelNAME, level);<br>           manager.createNotificationChannel(channel);<br>           <span class="hljs-keyword">return</span> channelID;<br>       &#125; <span class="hljs-keyword">else</span> &#123;<br>           <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>       &#125;<br>   &#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>设置点击事件</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">Intent intent = new Intent(<span class="hljs-keyword">this</span>, Main2Activity.<span class="hljs-keyword">class</span>);<br>intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);<br>PendingIntent pendingIntent = PendingIntent.getActivity(<span class="hljs-keyword">this</span>, <span class="hljs-number">0</span>, intent, <span class="hljs-number">0</span>);<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>构造Notification对象并显示通知</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">Intent intent = new Intent(<span class="hljs-keyword">this</span>, Main2Activity.<span class="hljs-keyword">class</span>);<br>intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);<br>PendingIntent pendingIntent = PendingIntent.getActivity(<span class="hljs-keyword">this</span>, <span class="hljs-number">0</span>, intent, <span class="hljs-number">0</span>);<br>String channelId = createNotificationChannel(<span class="hljs-string">&quot;my_channel_ID&quot;</span>, <span class="hljs-string">&quot;my_channel_NAME&quot;</span>, NotificationManager.IMPORTANCE_HIGH);<br>NotificationCompat.Builder notification = new NotificationCompat.Builder(<span class="hljs-keyword">this</span>, channelId)<br>            .setContentTitle(<span class="hljs-string">&quot;通知&quot;</span>)<br>            .setContentText(<span class="hljs-string">&quot;收到一条消息&quot;</span>)<br>            .setContentIntent(pendingIntent)<br>            .setSmallIcon(R.mipmap.ic_launcher)<br>            .setPriority(NotificationCompat.PRIORITY_HIGH)<br>            .setAutoCancel(<span class="hljs-literal">true</span>);<br>NotificationManagerCompat notificationManager = NotificationManagerCompat.from(<span class="hljs-keyword">this</span>);<br>notificationManager.notify(<span class="hljs-number">100</span>, notification.build());<br></code></pre></td></tr></table></figure></li>
+</ol>
+<p>通过RemoteView自定义Notification样式。</p>
+<h2 id="前台服务"><a href="#前台服务" class="headerlink" title="前台服务"></a>前台服务</h2><h1 id="BroadcastRecevier"><a href="#BroadcastRecevier" class="headerlink" title="BroadcastRecevier"></a>BroadcastRecevier</h1><p>在Android系统中，广播（Broadcast）是组件间传播数据的一种机制，对于不同进程中的组件，广播起到了进程间组件通信的作用。</p>
+<p>而广播接收器（BroadcastReceiver）则是<strong>对发送出来的Broadcast进行过滤、接受和响应</strong>的组件。</p>
+<p>Android中的广播（Broadcast）分为两种：</p>
+<ol>
+<li><strong>标准广播</strong>：标准广播是一种完全<strong>异步执行</strong>的广播，标准广播发出后，所有的广播接收器都会在同一时间接收到该广播，没有先后顺序，效率较高，且无法截断。</li>
+<li><strong>有序广播</strong>：有序广播是一种<strong>同步执行</strong>的广播，有序广播发出后同一时间只能有一个广播接收器能够接收到，优先级高的广播会先接受，可选择截断。</li>
+</ol>
+<h2 id="注册广播"><a href="#注册广播" class="headerlink" title="注册广播"></a>注册广播</h2><p>广播的注册方法有两种：静态注册和动态注册。</p>
+<h3 id="静态注册"><a href="#静态注册" class="headerlink" title="静态注册"></a>静态注册</h3><blockquote>
+<p>Android8.0以上静态注册的隐式广播无法发送，但仍然可以发送静态显示广播。</p>
+</blockquote>
+<p>首先创建一个简单的广播接收器，在其onReceive()方法内弹出一个Toast表示已收到广播：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyReceiver</span>: <span class="hljs-type">BroadcastReceiver</span>() &#123;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onReceive</span><span class="hljs-params">(context: <span class="hljs-type">Context</span>?, intent: <span class="hljs-type">Intent</span>?)</span></span> &#123;<br>        Toast.makeText(context, <span class="hljs-string">&quot;收到广播&quot;</span>, Toast.LENGTH_SHORT).show()<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>然后在<code>AndroidManifest.xml</code>里注册广播接收器组件：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">&lt;application&gt;<br>    &lt;receiver android:name=<span class="hljs-string">&quot;.broadcastreceiver.MyReceiver&quot;</span> /&gt;<br>&lt;/application&gt;<br></code></pre></td></tr></table></figure>
+
+<p>发送显示广播：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">sendBroadcast(Intent(<span class="hljs-keyword">this</span>, MyReceiver::<span class="hljs-keyword">class</span>.java))<br></code></pre></td></tr></table></figure>
+
+<h3 id="动态注册"><a href="#动态注册" class="headerlink" title="动态注册"></a>动态注册</h3><p>动态注册 BroadcastReceiver 是在代码中定义并设置好一个 <strong>IntentFilter</strong> 对象，然后在需要注册的地方调用 <strong>Context.registerReceiver()</strong> 方法，调用 <strong>Context.unregisterReceiver()</strong> 方法取消注册，此时就不需要在清单文件中注册 Receiver 了</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs kotlin">registerReceiver(<span class="hljs-keyword">object</span> : BroadcastReceiver()&#123;<br>    <span class="hljs-keyword">override</span> <span class="hljs-function"><span class="hljs-keyword">fun</span> <span class="hljs-title">onReceive</span><span class="hljs-params">(p0: <span class="hljs-type">Context</span>?, p1: <span class="hljs-type">Intent</span>?)</span></span> &#123;<br>        Toast.makeText(<span class="hljs-keyword">this</span><span class="hljs-symbol">@MainActivity</span>, <span class="hljs-string">&quot;收到广播&quot;</span>, Toast.LENGTH_SHORT).show()<br>    &#125;<br>&#125;, IntentFilter(<span class="hljs-string">&quot;com.course.broadcastreceiver&quot;</span>))<br></code></pre></td></tr></table></figure>
+
+<h1 id="ContentProvider"><a href="#ContentProvider" class="headerlink" title="ContentProvider"></a>ContentProvider</h1><p>ContentProvider主要用于在<strong>不同的应用程序之间实现数据共享</strong>的功能，它提供了一套完整的机制，允许一个程序访问另一个程序中的数据，同时还能保证被访问数据的安全性。目前，使用ContentProvider是Android实现跨程序共享数据的标准方式。</p>
+<p>具体在两方面发挥作用：</p>
+<ol>
+<li>获取其他进程的数据</li>
+<li>将自己的数据提供给其他进程</li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div></div>
+      <div>http://example.com/2022/10/19/Android四大组件/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>October 19, 2022</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>Licensed under</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/10/19/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" title="">
+                        <span class="hidden-mobile"></span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;Table of Contents</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
